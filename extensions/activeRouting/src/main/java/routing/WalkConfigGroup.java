@@ -34,6 +34,7 @@ public final class WalkConfigGroup extends ReflectiveConfigGroup {
 	private HashMap<String, Double> marginalCostVgvi = new HashMap<>();
 	private HashMap<String, Double> marginalCostLinkStress = new HashMap<>();
 	private HashMap<String, Double> marginalCostJctStress = new HashMap<>();
+	private HashMap<String, Double> marginalCostSpeed = new HashMap<>();
 
 	private String walkMode = "walk";
 
@@ -61,4 +62,8 @@ public final class WalkConfigGroup extends ReflectiveConfigGroup {
 	public String getWalkMode() {
 		return walkMode;
 	}
+
+    public HashMap<String, Double> getMarginalCostSpeed() {
+        return marginalCostSpeed;
+    }
 }

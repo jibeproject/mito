@@ -42,6 +42,9 @@ public class WalkTravelDisutility implements TravelDisutility {
             double linkTime = timeCalculator.getLinkTravelTime(link, 0., null, vehicle);
             double linkLength = link.getLength();
 
+            //speed
+            double speed = Math.min(1.,link.getFreespeed() / 22.35);
+
             // Gradient factor
             double gradient = Math.max(Math.min(Gradient.getGradient(link),0.5),0.);
 
@@ -63,17 +66,9 @@ public class WalkTravelDisutility implements TravelDisutility {
                     walkConfigGroup.getMarginalCostGradient().get(purpose) * gradient +
                     walkConfigGroup.getMarginalCostVgvi().get(purpose) * vgvi +
                     walkConfigGroup.getMarginalCostLinkStress().get(purpose) * linkStress +
-                    walkConfigGroup.getMarginalCostJctStress().get(purpose) * jctStress);
+                    walkConfigGroup.getMarginalCostJctStress().get(purpose) * jctStress +
+                    walkConfigGroup.getMarginalCostSpeed().get(purpose) * speed);
 
-            // Junction stress factor
-            if((boolean) link.getAttributes().getAttribute("crossVehicles")) {
-                double junctionStress = JctStress.getStress(link,TransportMode.walk);
-                double junctionWidth = (double) link.getAttributes().getAttribute("crossWidth");
-                if(junctionWidth > linkLength) junctionWidth = linkLength;
-                double junctionTime = linkTime * (junctionWidth / linkLength);
-
-                disutility += walkConfigGroup.getMarginalCostJctStress().get(purpose) * junctionTime * junctionStress;
-            }
 
             if(Double.isNaN(disutility)) {
                 throw new RuntimeException("Null JIBE disutility for link " + link.getId().toString());

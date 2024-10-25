@@ -34,6 +34,7 @@ public class BicycleConfigGroup extends ReflectiveConfigGroup {
 	private HashMap<String, Double> marginalCostVgvi = new HashMap<>();
 	private HashMap<String, Double> marginalCostLinkStress = new HashMap<>();
 	private HashMap<String, Double> marginalCostJctStress = new HashMap<>();
+	private HashMap<String, Double> marginalCostSpeed = new HashMap<>();
 
 	private double maxBicycleSpeedForRouting = 20./3.6;
 	private String bicycleMode = "bike";
@@ -67,4 +68,8 @@ public class BicycleConfigGroup extends ReflectiveConfigGroup {
 	public double getMaxBicycleSpeedForRouting() {
 		return maxBicycleSpeedForRouting;
 	}
+
+    public HashMap<String, Double> getMarginalCostSpeed() {
+        return marginalCostSpeed;
+    }
 }
