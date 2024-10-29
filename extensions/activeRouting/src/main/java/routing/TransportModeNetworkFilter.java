@@ -95,7 +95,7 @@ public final class TransportModeNetworkFilter {
 				link2.setAllowedModes(intersection);
 				//TODO: quick and dirty way to solve the bug that active links has no capacity. bike and ped are stucked in the simulation
 				if(!link.getAllowedModes().contains(TransportMode.car)){
-					link2.setCapacity(300.);
+					link2.setCapacity(3600.);
 				}else{
 					link2.setCapacity(link.getCapacity());
 				}
