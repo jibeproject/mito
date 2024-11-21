@@ -120,7 +120,6 @@ public class SummarizeData7daysMCR {
     public static void writeTrips(DataSet dataSet, PrintWriter pwh, Collection<MitoTrip> tripsToPrint) {
         pwh.println("hh.id,p.ID,t.id,origin,originX,originY,destination,destinationX,destinationY," +
                 "t.purpose,t.distance_walk,t.distance_bike,t.distance_auto,time_auto,time_pt," +
-                "cost_bike_commute,cost_bike_disc,cost_walk_commute,cost_walk_disc," +
                 "mode,departure_day,departure_time,departure_time_return");
 
         for(MitoTrip trip : tripsToPrint) {
@@ -204,20 +203,8 @@ public class SummarizeData7daysMCR {
                 pwh.print(",");
                 double timePt = dataSet.getTravelTimes().getTravelTime(origin, destination, dataSet.getPeakHour(), "pt");
                 pwh.print(timePt);
-                pwh.print(",");
-                double costBikeCommute = dataSet.getTravelTimes().getTravelTime(origin, destination, dataSet.getPeakHour(), "bikeCommute");
-                pwh.print(costBikeCommute);
-                pwh.print(",");
-                double costBikeDisc = dataSet.getTravelTimes().getTravelTime(origin, destination, dataSet.getPeakHour(), "bikeDiscretionary");
-                pwh.print(costBikeDisc);
-                pwh.print(",");
-                double costWalkCommute = dataSet.getTravelTimes().getTravelTime(origin, destination, dataSet.getPeakHour(), "walkCommute");
-                pwh.print(costWalkCommute);
-                pwh.print(",");
-                double costWalkDisc = dataSet.getTravelTimes().getTravelTime(origin, destination, dataSet.getPeakHour(), "walkDiscretionary");
-                pwh.print(costWalkDisc);
             } else {
-                pwh.print("NA,NA,NA,NA,NA,NA,NA,NA,NA");
+                pwh.print("NA,NA,NA,NA,NA");
             }
             pwh.print(",");
             pwh.print(trip.getTripMode());

@@ -49,26 +49,39 @@ public class OmxSkimsReaderMCR extends AbstractOmxReader implements SkimsReader 
     }
 
     private void readTravelTimeSkims() {
-        ((SkimTravelTimes) dataSet.getTravelTimes()).readSkim("car", Resources.instance.getRelativePath(Properties.AUTO_PEAK_SKIM).toString(),
-                Resources.instance.getString(Properties.AUTO_PEAK_SKIM_MATRIX), 1/60.); //convert second to min, because time is translated to min in mode choice estimation
-        ((SkimTravelTimes) dataSet.getTravelTimes()).readSkim("pt", Resources.instance.getRelativePath(Properties.PT_PEAK_SKIM).toString(),
-                Resources.instance.getString(Properties.PT_PEAK_SKIM_MATRIX), 1/60.);
-        //read bike walk generalized travel time by purpose
-        ((SkimTravelTimes) dataSet.getTravelTimes()).readSkim("bikeCommute", Resources.instance.getRelativePath(Properties.BIKE_COST_COMMUTE_SKIM).toString(),
-                Resources.instance.getString(Properties.BIKE_COST_COMMUTE_SKIM_MATRIX), 1.);
-        ((SkimTravelTimes) dataSet.getTravelTimes()).readSkim("bikeDiscretionary", Resources.instance.getRelativePath(Properties.BIKE_COST_DISC_SKIM).toString(),
-                Resources.instance.getString(Properties.BIKE_COST_DISC_SKIM_MATRIX), 1.);
-        //TODO: no bike time skim for HBA, NHBO, NHBW
+        // Travel time skims
+        readTravelTimeSkim("car",Properties.AUTO_PEAK_SKIM,Properties.AUTO_PEAK_SKIM_MATRIX);
+        readTravelTimeSkim("pt",Properties.PT_PEAK_SKIM,Properties.PT_PEAK_SKIM_MATRIX);
+        readTravelTimeSkim("bike",Properties.ACTIVE_TIME_SKIM,Properties.BIKE_COST_SKIM_MATRIX);
+        readTravelTimeSkim("walk",Properties.ACTIVE_TIME_SKIM,Properties.WALK_COST_SKIM_MATRIX);
 
-        ((SkimTravelTimes) dataSet.getTravelTimes()).readSkim("walkCommute", Resources.instance.getRelativePath(Properties.WALK_COST_COMMUTE_SKIM).toString(),
-                Resources.instance.getString(Properties.WALK_COST_COMMUTE_SKIM_MATRIX), 1.);
-        ((SkimTravelTimes) dataSet.getTravelTimes()).readSkim("walkDiscretionary", Resources.instance.getRelativePath(Properties.WALK_COST_DISC_SKIM).toString(),
-                Resources.instance.getString(Properties.WALK_COST_DISC_SKIM_MATRIX), 1.);
-        //TODO: no walk time skim for NHBW
-        ((SkimTravelTimes) dataSet.getTravelTimes()).readSkim("walkHBA", Resources.instance.getRelativePath(Properties.WALK_COST_HBA_SKIM).toString(),
-                Resources.instance.getString(Properties.WALK_COST_HBA_SKIM_MATRIX), 1/60.);
-        ((SkimTravelTimes) dataSet.getTravelTimes()).readSkim("walkNHBO", Resources.instance.getRelativePath(Properties.WALK_COST_NHBO_SKIM).toString(),
-                Resources.instance.getString(Properties.WALK_COST_NHBO_SKIM_MATRIX), 1/60.);
+        // HBW
+        readTravelTimeSkim("bike_HBW",Properties.ACTIVE_COST_HBW_SKIM,Properties.BIKE_COST_SKIM_MATRIX);
+        readTravelTimeSkim("bike_HBW_female",Properties.ACTIVE_COST_HBW_SKIM,Properties.BIKE_COST_FEMALE_SKIM_MATRIX);
+        readTravelTimeSkim("walk_HBW",Properties.ACTIVE_COST_HBW_SKIM,Properties.WALK_COST_SKIM_MATRIX);
+        
+        // HBE
+        readTravelTimeSkim("bike_HBE",Properties.ACTIVE_COST_HBE_SKIM,Properties.BIKE_COST_SKIM_MATRIX);
+        readTravelTimeSkim("walk_HBE",Properties.ACTIVE_COST_HBE_SKIM,Properties.WALK_COST_SKIM_MATRIX);
+        
+        // HBA
+        readTravelTimeSkim("walk_HBA",Properties.ACTIVE_COST_HBA_SKIM,Properties.WALK_COST_SKIM_MATRIX);
+        
+        // HBD
+        readTravelTimeSkim("bike_HBD",Properties.ACTIVE_COST_HBD_SKIM,Properties.BIKE_COST_SKIM_MATRIX);
+        readTravelTimeSkim("bike_HBD_child",Properties.ACTIVE_COST_HBD_SKIM,Properties.BIKE_COST_CHILD_SKIM_MATRIX);
+        readTravelTimeSkim("walk_HBD",Properties.ACTIVE_COST_HBD_SKIM,Properties.WALK_COST_SKIM_MATRIX);
+        readTravelTimeSkim("walk_HBD_child",Properties.ACTIVE_COST_HBD_SKIM,Properties.WALK_COST_CHILD_SKIM_MATRIX);
+        readTravelTimeSkim("walk_HBD_elderly",Properties.ACTIVE_COST_HBD_SKIM,Properties.WALK_COST_ELDERLY_SKIM_MATRIX);
+
+        // NHBO
+        readTravelTimeSkim("walk_NHBO",Properties.ACTIVE_COST_NHBO_SKIM,Properties.WALK_COST_SKIM_MATRIX);
+    }
+
+    private void readTravelTimeSkim(String name, String omxFilePath, String matrix) {
+        // convert second to min, because time is translated to min in mode choice estimatio
+        ((SkimTravelTimes) dataSet.getTravelTimes()).readSkim(name, Resources.instance.getRelativePath(omxFilePath).toString(),
+                Resources.instance.getString(matrix), 1/60.);
     }
 
     private void readTravelDistances(){

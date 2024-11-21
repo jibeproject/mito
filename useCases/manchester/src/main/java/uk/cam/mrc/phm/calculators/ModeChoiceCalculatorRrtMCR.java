@@ -82,7 +82,7 @@ public class ModeChoiceCalculatorRrtMCR extends AbstractModeChoiceCalculator {
 
             // Distance
             if(travelDistanceNMT == 0) {
-                logger.info("0 trip distance for RRT trip");
+//                logger.info("0 trip distance for RRT trip");
             } else {
                 utility += Math.log(travelDistanceNMT) * modeCoef.get("t.distance_T");
             }

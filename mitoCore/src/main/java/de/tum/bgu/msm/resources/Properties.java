@@ -104,22 +104,22 @@ public class Properties {
     public static final String POI_WEIGHTS = "poi.weights";
     public static final String PT_PEAK_SKIM = "transit.peak.travelTime";
     public static final String PT_PEAK_SKIM_MATRIX = "transit.travelTime.matrix";
+    public static final String ACTIVE_TIME_SKIM = "active.travelTime";
     public static final String BIKE_DIST_SKIM = "bike.travelDistance";
     public static final String BIKE_DIST_SKIM_MATRIX = "bike.travelDistance.matrix";
-    public static final String BIKE_COST_COMMUTE_SKIM = "bike.travelCost.commute";
-    public static final String BIKE_COST_COMMUTE_SKIM_MATRIX = "bike.travelCost.commute.matrix";
-    public static final String BIKE_COST_DISC_SKIM = "bike.travelCost.discretionary";
-    public static final String BIKE_COST_DISC_SKIM_MATRIX = "bike.travelCost.discretionary.matrix";
     public static final String WALK_DIST_SKIM = "walk.travelDistance";
     public static final String WALK_DIST_SKIM_MATRIX = "walk.travelDistance.matrix";
-    public static final String WALK_COST_COMMUTE_SKIM = "walk.travelCost.commute";
-    public static final String WALK_COST_COMMUTE_SKIM_MATRIX = "walk.travelCost.commute.matrix";
-    public static final String WALK_COST_DISC_SKIM = "walk.travelCost.discretionary";
-    public static final String WALK_COST_DISC_SKIM_MATRIX = "walk.travelCost.discretionary.matrix";
-    public static final String WALK_COST_HBA_SKIM = "walk.travelCost.hba";
-    public static final String WALK_COST_HBA_SKIM_MATRIX = "walk.travelCost.hba.matrix";
-    public static final String WALK_COST_NHBO_SKIM = "walk.travelCost.nhbo";
-    public static final String WALK_COST_NHBO_SKIM_MATRIX = "walk.travelCost.nhbo.matrix";
+    public static final String ACTIVE_COST_HBW_SKIM = "active.travelCost.hbw";
+    public static final String ACTIVE_COST_HBE_SKIM = "active.travelCost.hbe";
+    public static final String ACTIVE_COST_HBA_SKIM = "active.travelCost.hba";
+    public static final String ACTIVE_COST_HBD_SKIM = "active.travelCost.hbd";
+    public static final String ACTIVE_COST_NHBO_SKIM = "active.travelCost.nhbo";
+    public static final String WALK_COST_SKIM_MATRIX = "walk.travelCost.matrix";
+    public static final String WALK_COST_CHILD_SKIM_MATRIX = "walk.travelCost.child.matrix";
+    public static final String WALK_COST_ELDERLY_SKIM_MATRIX = "walk.travelCost.elderly.matrix";
+    public static final String BIKE_COST_SKIM_MATRIX = "bike.travelCost.matrix";
+    public static final String BIKE_COST_FEMALE_SKIM_MATRIX = "bike.travelCost.female.matrix";
+    public static final String BIKE_COST_CHILD_SKIM_MATRIX = "bike.travelCost.child.matrix";
 
     public static final String RUN_CALIBRATION_MC = "run.mc.calibration";
 
