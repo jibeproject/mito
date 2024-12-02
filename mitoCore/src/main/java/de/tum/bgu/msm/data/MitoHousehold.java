@@ -96,6 +96,11 @@ public class MitoHousehold implements Id, MicroLocation {
         }
     }
 
+    public void addTripsForPurpose(Purpose purpose, MitoTrip trip) {
+        tripsByPurpose.computeIfAbsent(purpose, k -> new ArrayList<>());
+        tripsByPurpose.get(purpose).add(trip);
+    }
+
     public synchronized void setTravelTimeBudgetByPurpose(Purpose purpose, double budget) {
         this.travelTimeBudgetByPurpose.put(purpose, budget);
     }

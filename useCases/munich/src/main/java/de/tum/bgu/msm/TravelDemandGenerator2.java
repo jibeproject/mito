@@ -124,7 +124,7 @@ public final class TravelDemandGenerator2 {
             discretionaryPurposes.removeAll(mandatoryPurposes);
 
             //from here
-            tripGenerationMandatory = new TripGeneration(dataSet, mandatoryPurposes);
+            tripGenerationMandatory = new TripGeneration(dataSet, mandatoryPurposes, new MitoTripFactoryImpl());
             mandatoryPurposes.forEach(purpose -> ((TripGeneration) tripGenerationMandatory).registerTripGenerator(purpose, new MitoTripFactoryImpl(), TripGeneratorType.PersonBasedHurdleNegBin,new TripGenCalculatorPersonBasedHurdleNegBin(dataSet),new AttractionCalculatorImpl(dataSet,purpose)));
 
             distributionMandatory = new TripDistribution(dataSet, mandatoryPurposes);
@@ -135,7 +135,7 @@ public final class TravelDemandGenerator2 {
 
             timeOfDayChoiceMandatory = new TimeOfDayChoice(dataSet, mandatoryPurposes);
 
-            tripGenerationDiscretionary = new TripGeneration(dataSet, discretionaryPurposes);
+            tripGenerationDiscretionary = new TripGeneration(dataSet, discretionaryPurposes, new MitoTripFactoryImpl());
             discretionaryPurposes.forEach(purpose -> ((TripGeneration) tripGenerationDiscretionary).registerTripGenerator(purpose, new MitoTripFactoryImpl(), TripGeneratorType.PersonBasedHurdleNegBin,new TripGenCalculatorPersonBasedHurdleNegBin(dataSet),new AttractionCalculatorImpl(dataSet,purpose)));
 
             distributionDiscretionary = new TripDistribution(dataSet, discretionaryPurposes);

@@ -26,11 +26,13 @@ public class TripGeneration extends Module {
     private final boolean addAirportDemand;
     private final Map<Purpose, TripGenerator> tripGeneratorByPurpose = new EnumMap<>(Purpose.class);
     private final Map<Purpose, AttractionCalculator> attractionCalculatorByPurpose = new EnumMap<>(Purpose.class);
+    private MitoTripFactory mitoTripFactory;
 
-    public TripGeneration(DataSet dataSet, List<Purpose> purposes) {
+    public TripGeneration(DataSet dataSet, List<Purpose> purposes, MitoTripFactory mitoTripFactory) {
         super(dataSet, purposes);
         //TODO: move to airport scenario
         addAirportDemand = Resources.instance.getBoolean(Properties.ADD_AIRPORT_DEMAND, false);
+        this.mitoTripFactory = mitoTripFactory;
     }
 
 
@@ -45,14 +47,14 @@ public class TripGeneration extends Module {
                 tripsByPurposeGenerator = new TripGeneratorHouseholdBasedHurdleNegBin(dataSet, purpose, mitoTripFactory, tripGenerationCalculator);
                 break;
             case PersonBasedHurdleNegBin:
-                tripsByPurposeGenerator = new TripGeneratorPersonBasedHurdleNegBin(dataSet, purpose, mitoTripFactory, tripGenerationCalculator);
+                tripsByPurposeGenerator = new TripGeneratorPersonBasedHurdleNegBin(dataSet, purpose, tripGenerationCalculator);
                 break;
             case PersonBasedHurdlePolr:
-                tripsByPurposeGenerator = new TripGeneratorPersonBasedHurdlePolr(dataSet, purpose, mitoTripFactory, tripGenerationCalculator);
+                tripsByPurposeGenerator = new TripGeneratorPersonBasedHurdlePolr(dataSet, purpose, tripGenerationCalculator);
                 break;
             default:
                 logger.warn("Trip generator type is not given. The default generator: " + TripGeneratorPersonBasedHurdleNegBin.class.getName() + " will be applied.");
-                tripsByPurposeGenerator = new TripGeneratorPersonBasedHurdleNegBin(dataSet, purpose, mitoTripFactory, tripGenerationCalculator);
+                tripsByPurposeGenerator = new TripGeneratorPersonBasedHurdleNegBin(dataSet, purpose, tripGenerationCalculator);
 
         }
 
@@ -81,7 +83,7 @@ public class TripGeneration extends Module {
     }
 
     private void generateRawTrips() {
-        RawTripGenerator rawTripGenerator = new RawTripGenerator(dataSet, tripGeneratorByPurpose, purposes);
+        RawTripGenerator rawTripGenerator = new RawTripGenerator(dataSet, tripGeneratorByPurpose, purposes, mitoTripFactory);
         rawTripGenerator.run();
     }
 

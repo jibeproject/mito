@@ -127,14 +127,14 @@ public final class TravelDemandGeneratorMCR {
             discretionaryPurposes.removeAll(mandatoryPurposes);
 
             //from here
-            tripGenerationMandatory = new TripGeneration(dataSet, mandatoryPurposes);
+            tripGenerationMandatory = new TripGeneration(dataSet, mandatoryPurposes, new MitoTripFactory7days());
             mandatoryPurposes.forEach(purpose -> ((TripGeneration) tripGenerationMandatory).registerTripGenerator(purpose, new MitoTripFactory7days(), TripGeneratorType.PersonBasedHurdlePolr,new TripGenCalculatorMCR(dataSet),
                     new AttractionCalculatorMCR(dataSet,purpose)));
 
             distributionMandatory = new TripDistribution(dataSet, mandatoryPurposes);
             mandatoryPurposes.forEach(purpose -> ((TripDistribution) distributionMandatory).registerDestinationUtilityCalculator(purpose, new DestinationUtilityCalculatorMCR(purpose)));
 
-            tripGenerationDiscretionary = new TripGeneration(dataSet, discretionaryPurposes);
+            tripGenerationDiscretionary = new TripGeneration(dataSet, discretionaryPurposes, new MitoTripFactory7days());
             discretionaryPurposes.forEach(purpose -> ((TripGeneration) tripGenerationDiscretionary).registerTripGenerator(purpose, new MitoTripFactory7days(),TripGeneratorType.PersonBasedHurdleNegBin,new TripGenCalculatorMCR(dataSet),
                     new AttractionCalculatorMCR(dataSet,purpose)));
 

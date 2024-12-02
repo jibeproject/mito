@@ -250,9 +250,13 @@ public class DataSetImpl implements DataSet {
     }
 
     public Map<Integer, MitoHousehold> getModelledHouseholds() {
-        return households.entrySet().stream()
-                .filter(household -> household.getValue().isModelled())
-                .collect(Collectors.toUnmodifiableMap(e -> e.getKey(), e -> e.getValue()));
+        LinkedHashMap<Integer, MitoHousehold> result = new LinkedHashMap<>();
+        for (Map.Entry<Integer, MitoHousehold> e : households.entrySet()) {
+            if(e.getValue().isModelled()){
+                result.put(e.getKey(), e.getValue());
+            }
+        }
+        return Collections.unmodifiableMap(result);
     }
 
 

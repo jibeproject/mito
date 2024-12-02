@@ -73,7 +73,7 @@ public final class MitoModelForModeChoiceCalibration {
         List<Purpose> purposes = Purpose.getAllPurposes();
 
         logger.info("Running Module: Microscopic Trip Generation");
-        TripGeneration tg = new TripGeneration(dataSet, purposes);
+        TripGeneration tg = new TripGeneration(dataSet, purposes, new MitoTripFactoryImpl());
         purposes.forEach(purpose -> {
             ((TripGeneration) tg).registerTripGenerator(purpose, new MitoTripFactoryImpl(), TripGeneratorType.SampleEnumeration,null,new AttractionCalculatorImpl(dataSet,purpose));
         });

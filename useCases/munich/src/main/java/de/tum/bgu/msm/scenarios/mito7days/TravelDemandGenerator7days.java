@@ -123,13 +123,13 @@ public final class TravelDemandGenerator7days {
             discretionaryPurposes.removeAll(mandatoryPurposes);
 
             //from here
-            tripGenerationMandatory = new TripGeneration(dataSet, mandatoryPurposes);
+            tripGenerationMandatory = new TripGeneration(dataSet, mandatoryPurposes, new MitoTripFactory7days());
             mandatoryPurposes.forEach(purpose -> ((TripGeneration) tripGenerationMandatory).registerTripGenerator(purpose, new MitoTripFactory7days(), TripGeneratorType.PersonBasedHurdlePolr,new TripGenCalculator7days(dataSet),new AttractionCalculatorImpl(dataSet,purpose)));
 
             distributionMandatory = new TripDistribution(dataSet, mandatoryPurposes);
             mandatoryPurposes.forEach(purpose -> ((TripDistribution) distributionMandatory).registerDestinationUtilityCalculator(purpose, new DestinationUtilityCalculatorImpl7days(purpose)));
 
-            tripGenerationDiscretionary = new TripGeneration(dataSet, discretionaryPurposes);
+            tripGenerationDiscretionary = new TripGeneration(dataSet, discretionaryPurposes, new MitoTripFactory7days());
             discretionaryPurposes.forEach(purpose -> ((TripGeneration) tripGenerationDiscretionary).registerTripGenerator(purpose, new MitoTripFactory7days(),TripGeneratorType.PersonBasedHurdleNegBin,new TripGenCalculator7days(dataSet),new AttractionCalculatorImpl(dataSet,purpose)));
 
             modeSetChoice = new ModeSetChoice(dataSet, purposes, new ModeSetCalculator7days(dataSet));
