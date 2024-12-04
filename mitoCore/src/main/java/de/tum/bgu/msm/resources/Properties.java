@@ -86,7 +86,8 @@ public class Properties {
     public static final String MC_CALIBRATON_REGIONS_FILE = "mc.calibration.regions.file";
     public static final String MC_CALIBRATION_ITERATIONS = "mc.calibration.iterations";
     public static final String MC_COEFFICIENTS = "mc.coefficient.file.suffix";
-
+    public static final String MC_STATIC_PERSON_ERROR_TERMS = "mc.static.person.error.terms";
+    public static final String MC_STATIC_PERSON_ERROR_TERMS_NEST_STRUCTURE = "mc.static.person.error.terms.nests";
     public static final String BIKE_OWNERSHIP_COEFFICIENTS = "bicycle.ownership.coefficients";
 
     public static final String BUS_TRAVEL_TIME_SKIM_MATRIX = "bus.travelTime.matrix";

@@ -16,7 +16,6 @@ public class ModeChoiceCalculator2008Impl extends AbstractModeChoiceCalculator {
 
     private final Purpose purpose;
     private final static Logger logger = Logger.getLogger(ModeChoiceCalculator2008Impl.class);
-    private final Map<Mode, Map<String, Double>> coef;
 
     public ModeChoiceCalculator2008Impl(Purpose purpose, DataSet dataSet) {
         this.purpose = purpose;

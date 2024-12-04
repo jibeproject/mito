@@ -244,16 +244,20 @@ public class DataSetImpl implements DataSet {
     }
 
     public Map<Integer, MitoPerson> getModelledPersons() {
-        return persons.entrySet().stream()
-                .filter(person -> person.getValue().getHousehold().isModelled())
-                .collect(Collectors.toUnmodifiableMap(e -> e.getKey(), e -> e.getValue()));
+        LinkedHashMap<Integer, MitoPerson> result = new LinkedHashMap<>();
+        for(Map.Entry<Integer,MitoPerson> e : persons.entrySet()) {
+            if(e.getValue().getHousehold().isModelled()) {
+                result.put(e.getKey(),e.getValue());
+            }
+        }
+        return Collections.unmodifiableMap(result);
     }
 
     public Map<Integer, MitoHousehold> getModelledHouseholds() {
         LinkedHashMap<Integer, MitoHousehold> result = new LinkedHashMap<>();
-        for (Map.Entry<Integer, MitoHousehold> e : households.entrySet()) {
-            if(e.getValue().isModelled()){
-                result.put(e.getKey(), e.getValue());
+        for(Map.Entry<Integer,MitoHousehold> e : households.entrySet()) {
+            if(e.getValue().isModelled()) {
+                result.put(e.getKey(),e.getValue());
             }
         }
         return Collections.unmodifiableMap(result);

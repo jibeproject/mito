@@ -18,7 +18,6 @@ import static de.tum.bgu.msm.data.Purpose.RRT;
 public class ModeChoiceCalculatorRrtImpl extends AbstractModeChoiceCalculator {
 
     private final static Logger logger = Logger.getLogger(ModeChoiceCalculatorRrtImpl.class);
-    private final Map<Mode, Map<String, Double>> coef;
 
     public ModeChoiceCalculatorRrtImpl(DataSet dataSet) {
         super();

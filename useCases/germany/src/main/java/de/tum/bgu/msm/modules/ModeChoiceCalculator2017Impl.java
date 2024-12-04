@@ -18,7 +18,6 @@ public class ModeChoiceCalculator2017Impl extends AbstractModeChoiceCalculator {
     private static final double SPEED_BICYCLE_KMH = 10;
     private final Purpose purpose;
     private final static Logger logger = Logger.getLogger(ModeChoiceCalculator2017Impl.class);
-    private final Map<Mode, Map<String, Double>> coef;
 
     public ModeChoiceCalculator2017Impl(Purpose purpose, DataSet dataSet) {
         this.purpose = purpose;

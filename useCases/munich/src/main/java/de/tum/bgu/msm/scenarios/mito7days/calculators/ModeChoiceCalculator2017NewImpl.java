@@ -14,8 +14,6 @@ import static de.tum.bgu.msm.data.Mode.*;
 
 public class ModeChoiceCalculator2017NewImpl extends AbstractModeChoiceCalculator {
 
-    private final Map<Mode, Map<String, Double>> coef;
-
     public ModeChoiceCalculator2017NewImpl(Purpose purpose, DataSet dataSet) {
         super();
         coef = new ModeChoiceCoefficientReader(dataSet, purpose, Resources.instance.getModeChoiceCoefficients(purpose)).readCoefficientsForThisPurpose();

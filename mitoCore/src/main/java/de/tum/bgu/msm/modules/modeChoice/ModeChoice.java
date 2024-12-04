@@ -4,18 +4,20 @@ import de.tum.bgu.msm.data.*;
 import de.tum.bgu.msm.data.travelTimes.TravelTimes;
 import de.tum.bgu.msm.modules.Module;
 import de.tum.bgu.msm.resources.Resources;
+import de.tum.bgu.msm.util.ErrorTerms;
+import de.tum.bgu.msm.util.LogitTools;
 import de.tum.bgu.msm.util.MitoUtil;
 import de.tum.bgu.msm.util.concurrent.ConcurrentExecutor;
-import de.tum.bgu.msm.util.concurrent.RandomizableConcurrentFunction;
 import org.apache.log4j.Logger;
 
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
-import static de.tum.bgu.msm.resources.Properties.AUTONOMOUS_VEHICLE_CHOICE;
+import static de.tum.bgu.msm.resources.Properties.*;
 
 public class ModeChoice extends Module {
 
@@ -42,9 +44,24 @@ public class ModeChoice extends Module {
         if (modeChoiceCalculatorByPurpose.isEmpty()){
             throw new RuntimeException("It is mandatory to define mode choice calculators. Look at TravelDemandGeneratorXXX.java");
         }
+        if(Resources.instance.getBoolean(MC_STATIC_PERSON_ERROR_TERMS,false)) {
+            samplePersonErrorTerms();
+        }
         logger.info(" Calculating mode choice probabilities for each trip");
         modeChoiceByPurpose();
         printModeShares();
+    }
+
+    private void samplePersonErrorTerms() {
+        Purpose refPurpose = Purpose.valueOf(Resources.instance.getString(MC_STATIC_PERSON_ERROR_TERMS_NEST_STRUCTURE));
+        ModeChoiceCalculator refCalculator = modeChoiceCalculatorByPurpose.get(refPurpose);
+        logger.info("Sampling person-level error terms based on choices and nesting structure for " + refPurpose + ".");
+        ErrorTerms<Mode> errorTermSampler = new ErrorTerms<>(Mode.class,refCalculator.getChoiceSet(),refCalculator.getNests(),MitoUtil.getRandomObject().nextInt());
+        for (MitoHousehold household : dataSet.getModelledHouseholds().values()) {
+            for(MitoPerson person : household.getPersons().values()) {
+                person.setErrorTerms(errorTermSampler.sampleErrorTerms());
+            }
+        }
     }
 
     private void modeChoiceByPurpose() {
@@ -109,20 +126,26 @@ public class ModeChoice extends Module {
         }
     }
 
-    static class ModeChoiceByPurpose extends RandomizableConcurrentFunction<Void> {
+    static class ModeChoiceByPurpose implements Callable<Void> {
 
         private final Purpose purpose;
         private final DataSet dataSet;
         private final TravelTimes travelTimes;
         private final ModeChoiceCalculator modeChoiceCalculator;
         private int countTripsSkipped;
+        private ErrorTerms<Mode> errorTermsSampler = null;
 
         ModeChoiceByPurpose(Purpose purpose, DataSet dataSet, ModeChoiceCalculator modeChoiceCalculator) {
-            super(MitoUtil.getRandomObject().nextLong());
             this.purpose = purpose;
             this.dataSet = dataSet;
             this.travelTimes = dataSet.getTravelTimes();
             this.modeChoiceCalculator = modeChoiceCalculator;
+            if(!Resources.instance.getBoolean(MC_STATIC_PERSON_ERROR_TERMS, false)) {
+                this.errorTermsSampler = new ErrorTerms<>(Mode.class,
+                        modeChoiceCalculator.getChoiceSet(),
+                        modeChoiceCalculator.getNests(),
+                        MitoUtil.getRandomObject().nextInt());
+            }
         }
 
         @Override
@@ -131,7 +154,7 @@ public class ModeChoice extends Module {
             try {
                 for (MitoHousehold household : dataSet.getModelledHouseholds().values()) {
                     for (MitoTrip trip : household.getTripsForPurpose(purpose)) {
-                        chooseMode(trip, calculateTripProbabilities(household, trip));
+                        chooseMode(trip, calculateTripUtilities(household, trip));
                     }
                 }
             } catch (Exception e) {
@@ -141,7 +164,7 @@ public class ModeChoice extends Module {
             return null;
         }
 
-        private EnumMap<Mode, Double> calculateTripProbabilities(MitoHousehold household, MitoTrip trip) {
+        private EnumMap<Mode, Double> calculateTripUtilities(MitoHousehold household, MitoTrip trip) {
             if (trip.getTripOrigin() == null || trip.getTripDestination() == null) {
                 countTripsSkipped++;
                 return null;
@@ -156,26 +179,30 @@ public class ModeChoice extends Module {
                     destinationId);
             final double travelDistanceNMT = dataSet.getTravelDistancesNMT().getTravelDistance(originId,
                     destinationId);
-            return modeChoiceCalculator.calculateProbabilities(purpose, household, trip.getPerson(), origin, destination, travelTimes, travelDistanceAuto,
+            return modeChoiceCalculator.calculateUtilities(purpose, household, trip.getPerson(), origin, destination, travelTimes, travelDistanceAuto,
                     travelDistanceNMT, dataSet.getPeakHour());
         }
 
-        private void chooseMode(MitoTrip trip, EnumMap<Mode, Double> probabilities) {
-            if (probabilities == null) {
+        private void chooseMode(MitoTrip trip, EnumMap<Mode, Double> utilities) {
+            if (utilities == null) {
                 countTripsSkipped++;
                 return;
             }
 
             //found Nan when there is no transit!!
-            probabilities.replaceAll((mode, probability) ->
-                    probability.isNaN() ? 0 : probability);
+            utilities.replaceAll((mode, utility) -> utility.isNaN() ? Double.NEGATIVE_INFINITY : utility);
 
-            double sum = MitoUtil.getSum(probabilities.values());
-            if (sum > 0) {
-                final Mode select = MitoUtil.select(probabilities, random);
+            Map<Mode,Double> errorTerms = trip.getPerson().getErrorTerms();
+            if(errorTerms == null) {
+                errorTerms = errorTermsSampler.sampleErrorTerms();
+            }
+
+            double sum = MitoUtil.getSum(utilities.values());
+            if (Double.isFinite(sum)) {
+                final Mode select = LogitTools.getHighest(utilities,errorTerms);
                 trip.setTripMode(select);
             } else {
-                logger.error("Negative probabilities for trip " + trip.getId());
+                logger.error("Infinite utilities for trip " + trip.getId());
                 trip.setTripMode(null);
             }
         }

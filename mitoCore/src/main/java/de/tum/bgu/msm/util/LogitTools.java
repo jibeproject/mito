@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 import org.matsim.core.utils.collections.Tuple;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class LogitTools<E extends Enum<E>> {
 
@@ -15,33 +14,6 @@ public class LogitTools<E extends Enum<E>> {
         this.enumClass = enumClass;
     }
 
-    // Not currently used
-    public List<Tuple<EnumSet<E>, Double>> identifyNests(EnumMap<E, Map<String, Double>> coefficients) {
-
-        Map<Integer,Tuple<EnumSet<E>, Double>> nests = new HashMap<>();
-
-        if(!coefficients.entrySet().iterator().next().getValue().containsKey("nestingCoefficient")) {
-            logger.info("Identified Multinomial Logit.");
-            return null;
-        } else {
-            for(E option : coefficients.keySet()) {
-                int nestCode = coefficients.get(option).get("nest").intValue();
-                if(nests.keySet().contains(nestCode)) {
-                    nests.get(nestCode).getFirst().add(option);
-                } else {
-                    nests.put(nestCode, new Tuple<>(EnumSet.of(option),coefficients.get(option).get("nestingCoefficient")));
-                }
-            }
-
-            logger.info("Identified Nested Logit. Nests:");
-            for(int code : nests.keySet()) {
-                logger.info("Nest " + code + ": " + nests.get(code).getFirst().stream().map(Enum::toString).collect(Collectors.joining(",")) +
-                        " | Coefficient: " + nests.get(code).getSecond());
-            }
-
-            return nests.values().stream().collect(Collectors.toList());
-        }
-    }
 
     public EnumMap<E, Double> getProbabilitiesMNL(EnumMap<E, Double> utilities) {
 
@@ -62,12 +34,28 @@ public class LogitTools<E extends Enum<E>> {
         return probabilities;
     }
 
+    public static <T> T getHighest(Map<T, Double> mappedUtilities, Map<T, Double> errorTerms) {
+        T chosen = null;
+        double maxUtility = Double.NEGATIVE_INFINITY;
+        for(Map.Entry<T,Double> e : mappedUtilities.entrySet()) {
+            double utility = e.getValue() + errorTerms.get(e.getKey());
+            if(utility > maxUtility) {
+                maxUtility = utility;
+                chosen = e.getKey();
+            }
+        }
+        if(chosen == null) {
+            throw new RuntimeException("No feasible alternative");
+        }
+        return chosen;
+    }
+
     public EnumMap<E, Double> getProbabilitiesNL(EnumMap<E, Double> utilities, List<Tuple<EnumSet<E>, Double>> nests) {
 
-        EnumMap<E, Double> expOptionUtils = new EnumMap(enumClass);
-        EnumMap<E, Double> expNestSums = new EnumMap(enumClass);
-        EnumMap<E, Double> expNestUtils = new EnumMap(enumClass);
-        EnumMap<E, Double> probabilities = new EnumMap(enumClass);
+        EnumMap<E, Double> expOptionUtils = new EnumMap<>(enumClass);
+        EnumMap<E, Double> expNestSums = new EnumMap<>(enumClass);
+        EnumMap<E, Double> expNestUtils = new EnumMap<>(enumClass);
+        EnumMap<E, Double> probabilities = new EnumMap<>(enumClass);
         double expSumRoot = 0;
 
         for (Tuple<EnumSet<E>, Double> nest : nests) {

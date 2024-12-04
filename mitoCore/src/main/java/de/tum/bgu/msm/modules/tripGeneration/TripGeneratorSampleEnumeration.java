@@ -17,7 +17,7 @@ class TripGeneratorSampleEnumeration extends RandomizableConcurrentFunction<Tupl
 
     private static final Logger logger = Logger.getLogger(TripGeneratorSampleEnumeration.class);
     private final boolean dropAtBorder = Resources.instance.getBoolean(Properties.REMOVE_TRIPS_AT_BORDER);
-    private Map<MitoHousehold, List<MitoTrip>> tripsByHH = new HashMap<>();
+    private Map<MitoHousehold, List<MitoTrip>> tripsByHH = new LinkedHashMap<>();
     private final DataSet dataSet;
     private final Purpose purpose;
     private final HouseholdTypeManager householdTypeManager;

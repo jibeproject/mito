@@ -10,12 +10,10 @@ import org.matsim.core.utils.collections.Tuple;
 
 import java.util.*;
 
-import static de.tum.bgu.msm.modules.tripGeneration.RawTripGenerator.TRIP_ID_COUNTER;
-
 public class TripGeneratorPersonBasedHurdlePolr extends RandomizableConcurrentFunction<Tuple<Purpose, Map<MitoPerson, Integer>>> implements TripGenerator {
 
     private static final Logger logger = Logger.getLogger(TripGeneratorPersonBasedHurdlePolr.class);
-    private Map<MitoPerson, Integer> tripCountsByPP = new HashMap<>();
+    private Map<MitoPerson, Integer> tripCountsByPP = new LinkedHashMap<>();
     private final DataSet dataSet;
     private final Purpose purpose;
     private final TripGenPredictor tripGenerationCalculator;

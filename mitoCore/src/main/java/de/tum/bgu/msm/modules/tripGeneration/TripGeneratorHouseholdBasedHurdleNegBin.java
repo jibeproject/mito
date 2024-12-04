@@ -16,7 +16,7 @@ import static de.tum.bgu.msm.modules.tripGeneration.RawTripGenerator.TRIP_ID_COU
 public class TripGeneratorHouseholdBasedHurdleNegBin extends RandomizableConcurrentFunction<Tuple<Purpose, Map<MitoHousehold, List<MitoTrip>>>> implements TripGenerator {
 
     private static final Logger logger = Logger.getLogger(TripGeneratorHouseholdBasedHurdleNegBin.class);
-    private Map<MitoHousehold, List<MitoTrip>> tripsByHH = new HashMap<>();
+    private Map<MitoHousehold, List<MitoTrip>> tripsByHH = new LinkedHashMap<>();
 
     private final DataSet dataSet;
     private final Purpose purpose;

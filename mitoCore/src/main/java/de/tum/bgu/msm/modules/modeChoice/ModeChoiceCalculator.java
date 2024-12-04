@@ -2,8 +2,11 @@ package de.tum.bgu.msm.modules.modeChoice;
 
 import de.tum.bgu.msm.data.*;
 import de.tum.bgu.msm.data.travelTimes.TravelTimes;
+import org.matsim.core.utils.collections.Tuple;
 
 import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.List;
 
 public interface ModeChoiceCalculator {
 
@@ -17,6 +20,14 @@ public interface ModeChoiceCalculator {
      * [5] probability tram or metro
      * [6] probability walk
      */
+    default List<Tuple<EnumSet<Mode>, Double>> getNests() {
+        return null;
+    }
+
+    default EnumSet<Mode> getChoiceSet() {
+        return null;
+    }
+
     EnumMap<Mode, Double> calculateProbabilities(Purpose purpose,
                                                  MitoHousehold household,
                                                  MitoPerson person,

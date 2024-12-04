@@ -24,6 +24,7 @@ public class MitoPersonImpl implements MitoPerson {
     private final MitoHousehold household;
     private Optional<Boolean> hasBicycle = Optional.empty();
     private Set<MitoTrip> trips = new LinkedHashSet<>();
+    private EnumMap<Mode,Double> errorTerms;
 
     public MitoPersonImpl(int id, MitoHousehold household, MitoOccupationStatus mitoOccupationStatus, MitoOccupation occupation, int age, MitoGender mitoGender, boolean driversLicense) {
         this.id = id;
@@ -38,6 +39,16 @@ public class MitoPersonImpl implements MitoPerson {
     @Override
     public MitoOccupation getOccupation() {
         return occupation;
+    }
+
+    @Override
+    public void setErrorTerms(EnumMap<Mode, Double> errorTerms) {
+        this.errorTerms = errorTerms;
+    }
+
+    @Override
+    public Map<Mode,Double> getErrorTerms() {
+        return errorTerms;
     }
 
     @Override

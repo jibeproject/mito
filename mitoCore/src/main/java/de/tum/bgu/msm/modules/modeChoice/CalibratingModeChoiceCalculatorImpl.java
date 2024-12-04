@@ -4,6 +4,7 @@ import de.tum.bgu.msm.data.*;
 import de.tum.bgu.msm.data.travelTimes.TravelTimes;
 
 import java.util.EnumMap;
+import java.util.EnumSet;
 
 public class CalibratingModeChoiceCalculatorImpl extends AbstractModeChoiceCalculator {
 
@@ -14,7 +15,11 @@ public class CalibratingModeChoiceCalculatorImpl extends AbstractModeChoiceCalcu
         super();
         this.base = base;
         this.calibrationData = calibrationData;
-        super.setNests(((AbstractModeChoiceCalculator)base).getNests());
+        super.setNests(base.getNests());
+    }
+
+    public EnumSet<Mode> getChoiceSet() {
+        return base.getChoiceSet();
     }
 
     @Override

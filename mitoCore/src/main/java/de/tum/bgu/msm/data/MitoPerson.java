@@ -1,8 +1,6 @@
 package de.tum.bgu.msm.data;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public interface MitoPerson extends Id {
     MitoOccupation getOccupation();
@@ -17,6 +15,10 @@ public interface MitoPerson extends Id {
     MitoGender getMitoGender();
 
     boolean hasDriversLicense();
+
+    void setErrorTerms(EnumMap<Mode, Double> errorTerms);
+
+    Map<Mode,Double> getErrorTerms();
 
     Set<MitoTrip> getTrips();
 

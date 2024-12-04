@@ -14,7 +14,7 @@ import java.util.*;
 public class TripGeneratorPersonBasedHurdleNegBin extends RandomizableConcurrentFunction<Tuple<Purpose, Map<MitoPerson, Integer>>> implements TripGenerator {
 
     private static final Logger logger = Logger.getLogger(TripGeneratorPersonBasedHurdleNegBin.class);
-    private Map<MitoPerson, Integer> tripCountsByPP = new HashMap<>();
+    private Map<MitoPerson, Integer> tripCountsByPP = new LinkedHashMap<>();
 
     private final DataSet dataSet;
     private final Purpose purpose;
