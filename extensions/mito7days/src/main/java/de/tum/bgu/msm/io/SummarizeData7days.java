@@ -85,9 +85,11 @@ public class SummarizeData7days {
                     pwp.print(",");
                     pwp.print(pp.hasDriversLicense());
                     pwp.print(",");
-                    pwp.print(pp.getHasBicycle());
+                    Optional<Boolean> bicycle = pp.getHasBicycle();
+                    pwp.print(bicycle.isPresent() ? bicycle.get() : "null");
                     pwp.print(",");
-                    pwp.print(((MitoPerson7days)pp).getModeSet().toString());
+                    ModeSet modeSet = ((MitoPerson7days)pp).getModeSet();
+                    pwp.print(modeSet != null ? modeSet.toString() : "null");
                     pwp.print(",");
                     pwp.print(pp.getTrips().size());
                     pwp.print(",");

@@ -284,8 +284,8 @@ public final class TravelDemandGeneratorMCR {
 //        ((TravelTimeBudgetModule) travelTimeBudgetDiscretionary).adjustDiscretionaryPurposeBudgets();
 
 
-        logger.info("Running Module: Mode set choice");
         if(Resources.instance.getBoolean(Properties.RUN_MODESET,false)) {
+            logger.info("Running Module: Mode set choice");
             modeSetChoice.run();
         }
 

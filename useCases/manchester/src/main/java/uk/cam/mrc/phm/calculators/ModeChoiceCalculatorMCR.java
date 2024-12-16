@@ -4,7 +4,6 @@ import de.tum.bgu.msm.data.*;
 import de.tum.bgu.msm.data.travelTimes.TravelTimes;
 import de.tum.bgu.msm.io.input.readers.ModeChoiceCoefficientReader;
 import de.tum.bgu.msm.modules.modeChoice.AbstractModeChoiceCalculator;
-import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import org.apache.log4j.Logger;
 import org.matsim.core.utils.collections.Tuple;
@@ -47,12 +46,8 @@ public class ModeChoiceCalculatorMCR extends AbstractModeChoiceCalculator {
 
         EnumMap<Mode, Double> utilities = new EnumMap<>(Mode.class);
 
-        Set<Mode> availableModes;
-        if(Resources.instance.getBoolean(Properties.RUN_MODESET,false)){
-            availableModes = new HashSet<>(Objects.requireNonNull(((MitoPerson7days) person).getModeSet().getModesMNL()));
-        }else {
-            availableModes = new HashSet<>(coef.keySet());
-        }
+        Set<Mode> availableModes = Objects.requireNonNull(((MitoPerson7days) person).getModeSet().getModesMNL());
+        availableModes.retainAll(coef.keySet());
 
         // Restrict availability in certain cases
         if(age < 15 || (purpose.equals(Purpose.NHBO) && hhAutos == 0)) {

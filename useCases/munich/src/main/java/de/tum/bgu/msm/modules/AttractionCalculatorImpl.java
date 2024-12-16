@@ -9,7 +9,6 @@ import de.tum.bgu.msm.modules.tripGeneration.AttractionCalculator;
 import de.tum.bgu.msm.modules.tripGeneration.ExplanatoryVariable;
 import org.apache.log4j.Logger;
 
-import java.util.List;
 
 public class AttractionCalculatorImpl implements AttractionCalculator {
 
@@ -52,7 +51,7 @@ public class AttractionCalculatorImpl implements AttractionCalculator {
                             attribute = zone.getSchoolEnrollment();
                             break;
                         default:
-                            logger.warn("Unknown trip attraction Variable: " + variable);
+//                            logger.warn("Unknown trip attraction Variable: " + variable);
                             continue;
                     }
                     Double rate = purpose.getTripAttractionForVariable(variable);

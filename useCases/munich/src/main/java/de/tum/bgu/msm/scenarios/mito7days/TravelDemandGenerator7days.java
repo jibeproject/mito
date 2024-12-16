@@ -7,6 +7,7 @@ import de.tum.bgu.msm.modules.*;
 import de.tum.bgu.msm.modules.Module;
 import de.tum.bgu.msm.modules.modeChoice.CalibratingModeChoiceCalculatorImpl;
 import de.tum.bgu.msm.modules.modeChoice.ModeChoice;
+import de.tum.bgu.msm.modules.modeChoice.ModeChoiceCalibrationData;
 import de.tum.bgu.msm.modules.plansConverter.externalFlows.LongDistanceTraffic;
 import de.tum.bgu.msm.modules.scaling.TripScaling;
 import de.tum.bgu.msm.modules.timeOfDay.TimeOfDayChoice;
@@ -277,9 +278,10 @@ public final class TravelDemandGenerator7days {
 //        travelTimeBudgetDiscretionary.run();
 //        ((TravelTimeBudgetModule) travelTimeBudgetDiscretionary).adjustDiscretionaryPurposeBudgets();
 
-
-        logger.info("Running Module: Mode set choice");
-        modeSetChoice.run();
+        if(Resources.instance.getBoolean(Properties.RUN_MODESET,false)) {
+            logger.info("Running Module: Mode set choice");
+            modeSetChoice.run();
+        }
 
         logger.info("Running Module: Microscopic Trip Distribution");
         distributionDiscretionary.run();
@@ -290,6 +292,21 @@ public final class TravelDemandGenerator7days {
 
         logger.info("Running Module: Trip to Mode Assignment (Mode Choice)");
         modeChoice.run();
+
+        // MODE CHOICE CALIBRATION CODE
+        List<Purpose> calibrationPurposes = getListedPurposes(Resources.instance.getString(Properties.TRIP_PURPOSES));
+        calibrationPurposes.remove(RRT);
+        if(Resources.instance.getBoolean(Properties.RUN_CALIBRATION_MC,false)) {
+            int modeChoiceCalibrationIterations = Resources.instance.getInt(Properties.MC_CALIBRATION_ITERATIONS, 0);
+            if (modeChoiceCalibrationIterations > 0) {
+                ModeChoiceCalibrationData modeChoiceCalibrationData = dataSet.getModeChoiceCalibrationData();
+                for (int i = 1; i <= modeChoiceCalibrationIterations; i++) {
+                    modeChoiceCalibrationData.updateCalibrationCoefficients(dataSet, i, calibrationPurposes);
+                    modeChoice.run();
+                }
+                modeChoiceCalibrationData.close();
+            }
+        }
 
         logger.info("Running day of week choice");
         dayOfWeekChoice.run();
@@ -312,18 +329,19 @@ public final class TravelDemandGenerator7days {
 
 
         if (Resources.instance.getBoolean(Properties.PRINT_MICRO_DATA, true)) {
-            SummarizeData.writeOutSyntheticPopulationWithTrips(dataSet);
-            for(Day day : Day.values()){
-                for(Mode mode : Mode.values()){
-                    Collection<MitoTrip> tripsToPrint = dataSet.getTrips().values().stream().filter(tt -> day.equals(((MitoTrip7days)tt).getDepartureDay()) & mode.equals(tt.getTripMode())).collect(Collectors.toList());
-                    if(tripsToPrint.size()>0){
-                        SummarizeData7days.writeOutTripsByDayByMode(dataSet,scenarioName,day,mode,tripsToPrint);
-                    }else{
-                        logger.info("No trips for mode: " + mode + ",day: " + day);
-                    }
-
-                }
-            }
+            SummarizeData7days.writeOutSyntheticPopulationWithTrips(dataSet);
+            SummarizeData7days.writeAllTrips(dataSet,scenarioName);
+//            for(Day day : Day.values()){
+//                for(Mode mode : Mode.values()){
+//                    Collection<MitoTrip> tripsToPrint = dataSet.getTrips().values().stream().filter(tt -> day.equals(((MitoTrip7days)tt).getDepartureDay()) & mode.equals(tt.getTripMode())).collect(Collectors.toList());
+//                    if(tripsToPrint.size()>0){
+//                        SummarizeData7days.writeOutTripsByDayByMode(dataSet,scenarioName,day,mode,tripsToPrint);
+//                    }else{
+//                        logger.info("No trips for mode: " + mode + ",day: " + day);
+//                    }
+//
+//                }
+//            }
         }
         if (Resources.instance.getBoolean(Properties.CREATE_CHARTS, true)) {
             DistancePlots.writeDistanceDistributions(dataSet, scenarioName);
