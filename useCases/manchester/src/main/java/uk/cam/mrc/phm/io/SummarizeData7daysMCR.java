@@ -198,7 +198,8 @@ public class SummarizeData7daysMCR {
                 double distanceAuto = dataSet.getTravelDistancesAuto().getTravelDistance(origin.getZoneId(), destination.getZoneId());
                 pwh.print(distanceAuto);
                 pwh.print(",");
-                double timeAuto = dataSet.getTravelTimes().getTravelTime(origin, destination, dataSet.getPeakHour(), "car");
+                //Use congested car travel time for write-out and post-analysis and plot. while use freespeed car travel time for mode choice to make it consistent with empirical model
+                double timeAuto = dataSet.getTravelTimes().getTravelTime(origin, destination, dataSet.getPeakHour(), "carCongested");
                 pwh.print(timeAuto);
                 pwh.print(",");
                 double timePt = dataSet.getTravelTimes().getTravelTime(origin, destination, dataSet.getPeakHour(), "pt");
@@ -254,7 +255,7 @@ public class SummarizeData7daysMCR {
         for (MitoTrip trip : dataSet.getTrips().values()) {
             final Location tripOrigin = trip.getTripOrigin();
             if (trip.getTripPurpose() == purpose && tripOrigin != null && trip.getTripDestination() != null) {
-                travelTimes.add(dataSet.getTravelTimes().getTravelTime(tripOrigin, trip.getTripDestination(), dataSet.getPeakHour(), "car"));
+                travelTimes.add(dataSet.getTravelTimes().getTravelTime(tripOrigin, trip.getTripDestination(), dataSet.getPeakHour(), "carCongested"));
                 double travelDistance = dataSet.getTravelDistancesAuto().getTravelDistance(tripOrigin.getZoneId(), trip.getTripDestination().getZoneId());
 //                travelDistances.add(travelDistance);
                 tripsByZone.add(dataSet.getZones().get(tripOrigin.getZoneId()));

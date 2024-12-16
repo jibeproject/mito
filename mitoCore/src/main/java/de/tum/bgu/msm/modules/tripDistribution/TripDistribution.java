@@ -1,5 +1,7 @@
 package de.tum.bgu.msm.modules.tripDistribution;
 
+import cern.colt.list.tdouble.DoubleArrayList;
+import cern.jet.stat.tdouble.DoubleDescriptive;
 import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.AtomicDouble;
 import de.tum.bgu.msm.data.*;
@@ -90,7 +92,7 @@ public class TripDistribution extends Module {
         distributeTrips(purposes);
     }
 
-    public void calibrate(Purpose purpose, double[] referenceMeans) {
+    public void calibrate(Purpose purpose,double[] reference, boolean useMedian) {
         double[] adjustments;
         int iterations = 0;
         do {
@@ -101,7 +103,11 @@ public class TripDistribution extends Module {
             initialise(purpose);
             buildMatrices(Collections.singletonList(purpose));
             distributeTrips(Collections.singletonList(purpose));
-            adjustments = getAdjustments(purpose, referenceMeans);
+            if(useMedian){
+                adjustments = getAdjustmentsByMedianValue(purpose, reference);
+            }else {
+                adjustments = getAdjustments(purpose, reference);
+            }
             tripDistributionCalculatorsByPurpose.get(purpose).getFirst().adjustDistanceParams(adjustments, logger);
         } while (Arrays.stream(adjustments).map(b -> Math.abs(b-1.)).max().orElseThrow() > 0.01);
         logger.info("Calibration complete! \uD83C\uDF89");
@@ -181,7 +187,7 @@ public class TripDistribution extends Module {
         List<Callable<Void>> otherTasks = new ArrayList<>();
         //for (final List<MitoHousehold> partition : partitions) {
             for (Purpose purpose : purposes) {
-                if (Purpose.getHomeBasedPurposes().contains(purpose)) {
+                if (getHomeBasedPurposes().contains(purpose)) {
                     homeBasedTasks.add(getDistributor(purpose,households, tripDistributionCalculatorsByPurpose.get(purpose).getSecond()));
                 } else {
                     otherTasks.add(getDistributor(purpose,households, tripDistributionCalculatorsByPurpose.get(purpose).getSecond()));
@@ -295,6 +301,45 @@ public class TripDistribution extends Module {
                 adjustments[i] = Math.max(0.5, Math.min(2, mean / referenceMeans[i]));
                 logger.info("Index: "+ i + " Mean: " + mean + " Ref: " + referenceMeans[i] + " Adjustment: " + adjustments[i]);
             }
+        }
+
+        return adjustments;
+
+    }
+
+    private double[] getAdjustmentsByMedianValue(Purpose purpose, double[] referenceMedian) {
+
+        List<tripDistributionData> calibrationData = tripDistributionDataByPurpose.get(purpose);
+        int categories = calibrationData.size();
+
+        double[] adjustments = new double[categories];
+
+        Map<Integer, DoubleArrayList> simulatedDistance = new HashMap<>();
+        Set<MitoTrip> tripsForThisPurpose = dataSet.getTrips().values().stream().filter(t -> purpose.equals(t.getTripPurpose())).collect(Collectors.toSet());
+
+        if(purpose.equals(HBW) || purpose.equals(HBE)){
+            for (MitoTrip trip : tripsForThisPurpose) {
+                if (trip.getPerson().getOccupation() == null && trip.getTripDestination() != null) {
+                    int category = personCategories.get(purpose).get(trip.getPerson().getId());
+                    simulatedDistance.putIfAbsent(category, new DoubleArrayList());
+                    simulatedDistance.get(category).add(dataSet.getTravelDistancesAuto().getTravelDistance(trip.getTripOrigin().getZoneId(),trip.getTripDestination().getZoneId()));
+                }
+            }
+        }else{
+            for (MitoTrip trip : tripsForThisPurpose) {
+                if (trip.getTripDestination() != null) {
+                    int category = personCategories.get(purpose).get(trip.getPerson().getId());
+                    simulatedDistance.putIfAbsent(category, new DoubleArrayList());
+                    simulatedDistance.get(category).add(dataSet.getTravelDistancesAuto().getTravelDistance(trip.getTripOrigin().getZoneId(),trip.getTripDestination().getZoneId()));
+                }
+            }
+        }
+
+        for(int i = 0 ; i < categories ; i++) {
+            simulatedDistance.get(i).sort();
+            double median = DoubleDescriptive.median(simulatedDistance.get(i));
+            adjustments[i] = Math.max(0.5, Math.min(2, median / referenceMedian[i]));
+            logger.info("Index: "+ i + " Median: " + median + " Ref: " + referenceMedian[i] + " Adjustment: " + adjustments[i]);
         }
 
         return adjustments;

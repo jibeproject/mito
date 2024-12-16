@@ -14,7 +14,7 @@ import java.util.function.Predicate;
 
 public class DestinationUtilityCalculatorRrtMCR extends AbstractDestinationUtilityCalculator {
 
-    private final static double[] DISTANCE_PARAMS_RRT_noModeSet = {-0.3695279713696964, -0.11012406018149026, -0.11420908279680453};
+    private final static double[] DISTANCE_PARAMS_RRT_noModeSet = {-0.7226231467004061, -0.2135749210668592, -0.18329824253133586};
     private final static double IMPEDANCE_PARAM_RRT_noModeSet = 20;
 
     private final static double[] DISTANCE_PARAMS_RRT_withModeSet = {-0.42720955240418723, -0.11091417841660255, -0.11442498509125135}; //TODO: calibrate
@@ -45,8 +45,8 @@ public class DestinationUtilityCalculatorRrtMCR extends AbstractDestinationUtili
             filters.add(2,p -> (!((MitoPerson7days)p).getModeSet().getModes().contains(Mode.walk) && ((MitoPerson7days)p).getModeSet().getModes().contains(Mode.bicycle)));
         }else{
             filters.add(0,p -> p.getHousehold().getAutos() == 0);
-            filters.add(1,p -> p.getHousehold().getAutos() == 1);
-            filters.add(2,p -> p.getHousehold().getAutos() > 1);
+            filters.add(1,p -> p.getHousehold().getAutosPerAdult() > 0 && p.getHousehold().getAutosPerAdult() < 1);
+            filters.add(2,p -> p.getHousehold().getAutosPerAdult() >= 1);
         }
 
         return filters;

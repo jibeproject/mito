@@ -282,7 +282,7 @@ public final class TravelDemandGenerator2 {
         distributionDiscretionary.run();
 
         // Trip distribution calibration example: todo: specify these in properties file, keep in generator and do similar for mode choice.
-        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBR, new double[] {8.,11.,13.});
+        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBR, new double[] {8.,11.,13.}, false);
 
         logger.info("Running Module: Trip to Mode Assignment (Mode Choice)");
         modeChoiceDiscretionary.run();

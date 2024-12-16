@@ -51,6 +51,7 @@ public class OmxSkimsReaderMCR extends AbstractOmxReader implements SkimsReader 
     private void readTravelTimeSkims() {
         // Travel time skims
         readTravelTimeSkim("car",Properties.AUTO_PEAK_SKIM,Properties.AUTO_PEAK_SKIM_MATRIX);
+        readTravelTimeSkim("carCongested",Properties.AUTO_PEAK_SKIM,Properties.AUTO_PEAK_CONGESTED_SKIM_MATRIX);
         readTravelTimeSkim("pt",Properties.PT_PEAK_SKIM,Properties.PT_PEAK_SKIM_MATRIX);
         readTravelTimeSkim("bike",Properties.ACTIVE_TIME_SKIM,Properties.BIKE_COST_SKIM_MATRIX);
         readTravelTimeSkim("walk",Properties.ACTIVE_TIME_SKIM,Properties.WALK_COST_SKIM_MATRIX);

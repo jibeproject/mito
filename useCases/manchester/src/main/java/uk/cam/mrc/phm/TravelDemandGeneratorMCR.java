@@ -293,18 +293,27 @@ public final class TravelDemandGeneratorMCR {
         distributionDiscretionary.run();
 
         // Trip distribution calibration example: todo: specify these in properties file, keep in generator and do similar for mode choice.
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBW, new double[] {5.195,8.976,11.525});
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBE, new double[] {2.546,3.395,2.617});
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBS, new double[] {2.579,4.19,4.919});
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBO, new double[] {3.641,5.633,7.071});
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBR, new double[] {3.592,5.793,6.842});
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBO, new double[] {1.588,4.179,4.916});
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBW, new double[] {1.764,5.172,7.817});
-//       ((TripDistribution) distributionDiscretionary).calibrate(Purpose.RRT, new double[] {0.622,1.427,1.427});
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBA, new double[] {1.383,3.940,3.850});
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBW, new double[] {5.195,8.976,11.525},false);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBE, new double[] {2.546,3.395,2.617},false);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBS, new double[] {2.579,4.19,4.919},false);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBO, new double[] {3.641,5.633,7.071},false);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBR, new double[] {3.592,5.793,6.842},false);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBO, new double[] {1.588,4.179,4.916},false);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBW, new double[] {1.764,5.172,7.817},false);
+//       ((TripDistribution) distributionDiscretionary).calibrate(Purpose.RRT, new double[] {0.622,1.427,1.427},false);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBA, new double[] {1.383,3.940,3.850},false);
 
 
-
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBW, new double[] {3.081,6.274,8.618},true);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBE, new double[] {1.547,1.793,1.793},true);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBS, new double[] {1.572,2.395,2.967},true);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBO, new double[] {1.613,3.029,3.926},true);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBR, new double[] {1.62,3.03,3.732},true);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBO, new double[] {0.837,2.232,2.691},true);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBW, new double[] {1.083,2.537,5.206},true);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.RRT, new double[] {0.361,0.721,0.806},true);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBA, new double[] {0.846,1.955,2.077},true);
+//
 
         logger.info("Running Module: Trip to Mode Assignment (Mode Choice)");
         modeChoice.run();
