@@ -14,7 +14,7 @@ import org.matsim.api.core.v01.network.Network;
 import org.matsim.contrib.dvrp.router.TimeAsTravelDisutility;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
-import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
+import org.matsim.core.config.groups.ScoringConfigGroup;
 import org.matsim.core.events.EventsManagerImpl;
 import org.matsim.core.mobsim.framework.Mobsim;
 import org.matsim.core.mobsim.qsim.QSimBuilder;
@@ -63,7 +63,7 @@ public class ConvertNetworkChangeEventsToSkim {
 
         MutableScenario scenario = ScenarioUtils.createMutableScenario(ConfigUtils.createConfig());
         scenario.setNetwork(network);
-        TravelTime travelTime = new FreespeedTravelTimeAndDisutility(new PlanCalcScoreConfigGroup());
+        TravelTime travelTime = new FreespeedTravelTimeAndDisutility(new ScoringConfigGroup());
 
 
         IndexedDoubleMatrix2D travelTimeSkim = new IndexedDoubleMatrix2D(dataset.getZones().values(), dataset.getZones().values());

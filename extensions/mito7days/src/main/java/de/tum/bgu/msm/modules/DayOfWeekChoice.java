@@ -4,14 +4,15 @@ import com.google.common.collect.Lists;
 import de.tum.bgu.msm.data.*;
 import de.tum.bgu.msm.io.DaysOfWeekReader;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
 
 public final class DayOfWeekChoice extends Module {
 
-    private static final Logger logger = Logger.getLogger(DayOfWeekChoice.class);
+    private static final Logger logger = LogManager.getLogger(DayOfWeekChoice.class);
 
     private final EnumMap<Purpose, ArrayList<LinkedHashMap<String,Integer>>> probabilitiesByPurpose;
 

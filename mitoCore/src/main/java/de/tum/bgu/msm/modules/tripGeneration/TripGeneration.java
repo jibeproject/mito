@@ -7,7 +7,8 @@ import de.tum.bgu.msm.modules.Module;
 import de.tum.bgu.msm.modules.tripGeneration.airport.AirportTripGeneration;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.Map;
 
 public class TripGeneration extends Module {
 
-    private static final Logger logger = Logger.getLogger(TripGeneration.class);
+    private static final Logger logger = LogManager.getLogger(TripGeneration.class);
     private final boolean addAirportDemand;
     private final Map<Purpose, TripGenerator> tripGeneratorByPurpose = new EnumMap<>(Purpose.class);
     private final Map<Purpose, AttractionCalculator> attractionCalculatorByPurpose = new EnumMap<>(Purpose.class);

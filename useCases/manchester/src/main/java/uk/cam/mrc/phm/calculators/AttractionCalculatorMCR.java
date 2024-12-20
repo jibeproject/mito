@@ -7,7 +7,8 @@ import de.tum.bgu.msm.data.jobTypes.Category;
 import de.tum.bgu.msm.io.input.readers.TripAttractionRatesReader;
 import de.tum.bgu.msm.modules.tripGeneration.AttractionCalculator;
 import de.tum.bgu.msm.modules.tripGeneration.ExplanatoryVariable;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import static de.tum.bgu.msm.modules.tripGeneration.ExplanatoryVariable.HH;
 
@@ -15,7 +16,7 @@ public class AttractionCalculatorMCR implements AttractionCalculator {
 
     private final Purpose purpose;
 
-    private static final Logger logger = Logger.getLogger(AttractionCalculatorMCR.class);
+    private static final Logger logger = LogManager.getLogger(AttractionCalculatorMCR.class);
 
     private final DataSet dataSet;
 

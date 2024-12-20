@@ -10,7 +10,8 @@ import de.tum.bgu.msm.modules.tripDistribution.tripDistributors.*;
 import de.tum.bgu.msm.util.concurrent.ConcurrentExecutor;
 import de.tum.bgu.msm.util.matrices.IndexedDoubleMatrix2D;
 import org.apache.commons.lang3.tuple.Triple;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.core.utils.collections.Tuple;
 
 import java.util.*;
@@ -27,7 +28,7 @@ import static de.tum.bgu.msm.data.Purpose.*;
 public class TripDistribution extends Module {
 
 
-    private final static Logger logger = Logger.getLogger(TripDistribution.class);
+    private final static Logger logger = LogManager.getLogger(TripDistribution.class);
 
     protected final EnumMap<Purpose, List<tripDistributionData>> tripDistributionDataByPurpose = new EnumMap<>(Purpose.class);
     protected final EnumMap<Purpose,Map<Integer,Integer>> personCategories = new EnumMap<>(Purpose.class);

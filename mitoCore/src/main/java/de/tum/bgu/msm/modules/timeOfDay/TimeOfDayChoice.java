@@ -8,7 +8,8 @@ import de.tum.bgu.msm.modules.Module;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public final class TimeOfDayChoice extends Module {
 
-    private static final Logger logger = Logger.getLogger(TimeOfDayChoice.class);
+    private static final Logger logger = LogManager.getLogger(TimeOfDayChoice.class);
 
     private EnumMap<Purpose, DoubleMatrix1D> arrivalMinuteCumProbByPurpose;
     private EnumMap<Purpose, DoubleMatrix1D> durationMinuteCumProbByPurpose;

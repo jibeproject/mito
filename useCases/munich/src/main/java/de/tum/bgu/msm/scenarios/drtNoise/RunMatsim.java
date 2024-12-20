@@ -37,8 +37,8 @@ public class RunMatsim {
 
         new MatsimNetworkReader(scenario.getNetwork()).readFile("C:\\Users\\Nico\\tum\\fabilut\\gitproject\\muc\\input\\mito\\trafficAssignment\\studyNetworkDense.xml");
 
-        config.controler().setOutputDirectory("./drtFull");
-        config.strategy().setMaxAgentPlanMemorySize(3);
+        config.controller().setOutputDirectory("./drtFull");
+        config.replanning().setMaxAgentPlanMemorySize(3);
         Controler controler = new Controler(scenario);
         controler.run();
     }

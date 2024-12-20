@@ -6,9 +6,11 @@ import de.tum.bgu.msm.data.MitoZone;
 import de.tum.bgu.msm.io.input.AbstractCsvReader;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.geotools.api.feature.simple.SimpleFeature;
 import org.matsim.api.core.v01.network.Node;
-import org.opengis.feature.simple.SimpleFeature;
+
 
 import java.nio.file.Path;
 import java.util.List;
@@ -28,7 +30,7 @@ public class HouseholdsCoordReaderMCR extends AbstractCsvReader {
 
     private SimpleFeature shapeFeature; // Alona added
 
-    private static final Logger logger = Logger.getLogger(HouseholdsCoordReaderMCR.class);
+    private static final Logger logger = LogManager.getLogger(HouseholdsCoordReaderMCR.class);
 
     public HouseholdsCoordReaderMCR(DataSet dataSet) {
         super(dataSet);

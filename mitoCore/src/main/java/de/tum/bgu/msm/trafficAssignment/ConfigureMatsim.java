@@ -5,10 +5,8 @@ import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
-import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
-import org.matsim.core.config.groups.PlansCalcRouteConfigGroup;
+import org.matsim.core.config.groups.*;
 import org.matsim.core.config.groups.QSimConfigGroup;
-import org.matsim.core.config.groups.StrategyConfigGroup;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
 
 import java.util.HashSet;
@@ -21,102 +19,102 @@ public class ConfigureMatsim {
 
 
         //String outputDirectory = outputDirectoryRoot + "/" + runId + "/";
-        //matsimConfig.controler().setRunId(runId);
-        //matsimConfig.controler().setOutputDirectory(outputDirectory);
+        //matsimConfig.controller().setRunId(runId);
+        //matsimConfig.controller().setOutputDirectory(outputDirectory);
         Config config = ConfigUtils.createConfig();
-        config.controler().setFirstIteration(0);
-        config.controler().setMobsim("qsim");
-        config.controler().setWritePlansInterval(config.controler().getLastIteration());
-        config.controler().setWriteEventsInterval(config.controler().getLastIteration());
-        config.controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
+        config.controller().setFirstIteration(0);
+        config.controller().setMobsim("qsim");
+        config.controller().setWritePlansInterval(config.controller().getLastIteration());
+        config.controller().setWriteEventsInterval(config.controller().getLastIteration());
+        config.controller().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
 
         config.qsim().setEndTime(26 * 3600);
         config.qsim().setTrafficDynamics(QSimConfigGroup.TrafficDynamics.withHoles);
         config.vspExperimental().setWritingOutputEvents(true); // writes final events into toplevel directory
 
         {
-            StrategyConfigGroup.StrategySettings strategySettings = new StrategyConfigGroup.StrategySettings();
+            ReplanningConfigGroup.StrategySettings strategySettings = new ReplanningConfigGroup.StrategySettings();
             strategySettings.setStrategyName("ChangeExpBeta");
             strategySettings.setWeight(0.8);
-            config.strategy().addStrategySettings(strategySettings);
+            config.replanning().addStrategySettings(strategySettings);
         }
         {
-            StrategyConfigGroup.StrategySettings strategySettings = new StrategyConfigGroup.StrategySettings();
+            ReplanningConfigGroup.StrategySettings strategySettings = new ReplanningConfigGroup.StrategySettings();
             strategySettings.setStrategyName("ReRoute");
             strategySettings.setWeight(0.2);
-            config.strategy().addStrategySettings(strategySettings);
+            config.replanning().addStrategySettings(strategySettings);
         }
 //        {
 //            config.timeAllocationMutator().setMutationRange(1800);
 //            config.timeAllocationMutator().setAffectingDuration(true);
-//            StrategyConfigGroup.StrategySettings strategySettings = new StrategyConfigGroup.StrategySettings();
+//            ReplanningConfigGroup.StrategySettings strategySettings = new ReplanningConfigGroup.StrategySettings();
 //            strategySettings.setStrategyName(DefaultPlanStrategiesModule.DefaultStrategy.TimeAllocationMutator_ReRoute);
 //            strategySettings.setWeight(0.1);
-//            config.strategy().addStrategySettings(strategySettings);
+//            config.replanning().addStrategySettings(strategySettings);
 //        }
 
-        config.strategy().setFractionOfIterationsToDisableInnovation(0.8);
-        config.strategy().setMaxAgentPlanMemorySize(4);
+        config.replanning().setFractionOfIterationsToDisableInnovation(0.8);
+        config.replanning().setMaxAgentPlanMemorySize(4);
 
-        PlanCalcScoreConfigGroup.ActivityParams homeActivity = new PlanCalcScoreConfigGroup.ActivityParams("home");
+        ScoringConfigGroup.ActivityParams homeActivity = new ScoringConfigGroup.ActivityParams("home");
         homeActivity.setTypicalDuration(12 * 60 * 60);
-        config.planCalcScore().addActivityParams(homeActivity);
+        config.scoring().addActivityParams(homeActivity);
 
-        PlanCalcScoreConfigGroup.ActivityParams workActivity = new PlanCalcScoreConfigGroup.ActivityParams("work");
+        ScoringConfigGroup.ActivityParams workActivity = new ScoringConfigGroup.ActivityParams("work");
         workActivity.setTypicalDuration(8 * 60 * 60);
-        config.planCalcScore().addActivityParams(workActivity);
+        config.scoring().addActivityParams(workActivity);
 
-        PlanCalcScoreConfigGroup.ActivityParams educationActivity = new PlanCalcScoreConfigGroup.ActivityParams("education");
+        ScoringConfigGroup.ActivityParams educationActivity = new ScoringConfigGroup.ActivityParams("education");
         educationActivity.setTypicalDuration(8 * 60 * 60);
-        config.planCalcScore().addActivityParams(educationActivity);
+        config.scoring().addActivityParams(educationActivity);
 
-        PlanCalcScoreConfigGroup.ActivityParams shoppingActivity = new PlanCalcScoreConfigGroup.ActivityParams("shopping");
+        ScoringConfigGroup.ActivityParams shoppingActivity = new ScoringConfigGroup.ActivityParams("shopping");
         shoppingActivity.setTypicalDuration(1 * 60 * 60);
-        config.planCalcScore().addActivityParams(shoppingActivity);
+        config.scoring().addActivityParams(shoppingActivity);
 
-        PlanCalcScoreConfigGroup.ActivityParams recreationActivity = new PlanCalcScoreConfigGroup.ActivityParams("recreation");
+        ScoringConfigGroup.ActivityParams recreationActivity = new ScoringConfigGroup.ActivityParams("recreation");
         recreationActivity.setTypicalDuration(1 * 60 * 60);
-        config.planCalcScore().addActivityParams(recreationActivity);
+        config.scoring().addActivityParams(recreationActivity);
 
-        PlanCalcScoreConfigGroup.ActivityParams otherActivity = new PlanCalcScoreConfigGroup.ActivityParams("other");
+        ScoringConfigGroup.ActivityParams otherActivity = new ScoringConfigGroup.ActivityParams("other");
         otherActivity.setTypicalDuration(1 * 60 * 60);
-        config.planCalcScore().addActivityParams(otherActivity);
+        config.scoring().addActivityParams(otherActivity);
 
-        PlanCalcScoreConfigGroup.ActivityParams airportActivity = new PlanCalcScoreConfigGroup.ActivityParams("airport");
+        ScoringConfigGroup.ActivityParams airportActivity = new ScoringConfigGroup.ActivityParams("airport");
         airportActivity.setTypicalDuration(1 * 60 * 60);
-        config.planCalcScore().addActivityParams(airportActivity);
+        config.scoring().addActivityParams(airportActivity);
 
-        PlansCalcRouteConfigGroup.ModeRoutingParams carPassengerParams = new PlansCalcRouteConfigGroup.ModeRoutingParams("car_passenger");
+        RoutingConfigGroup.ModeRoutingParams carPassengerParams = new RoutingConfigGroup.ModeRoutingParams("car_passenger");
         carPassengerParams.setTeleportedModeFreespeedFactor(1.0);
-        config.plansCalcRoute().addModeRoutingParams(carPassengerParams);
+        config.routing().addModeRoutingParams(carPassengerParams);
 
-        PlansCalcRouteConfigGroup.ModeRoutingParams ptParams = new PlansCalcRouteConfigGroup.ModeRoutingParams("pt");
+        RoutingConfigGroup.ModeRoutingParams ptParams = new RoutingConfigGroup.ModeRoutingParams("pt");
         ptParams.setBeelineDistanceFactor(1.5);
         ptParams.setTeleportedModeSpeed(50 / 3.6);
-        config.plansCalcRoute().addModeRoutingParams(ptParams);
+        config.routing().addModeRoutingParams(ptParams);
 
-        PlansCalcRouteConfigGroup.ModeRoutingParams bicycleParams = new PlansCalcRouteConfigGroup.ModeRoutingParams("bike");
+        RoutingConfigGroup.ModeRoutingParams bicycleParams = new RoutingConfigGroup.ModeRoutingParams("bike");
         bicycleParams.setBeelineDistanceFactor(1.3);
         bicycleParams.setTeleportedModeSpeed(15 / 3.6);
-        config.plansCalcRoute().addModeRoutingParams(bicycleParams);
+        config.routing().addModeRoutingParams(bicycleParams);
 
-        PlansCalcRouteConfigGroup.ModeRoutingParams walkParams = new PlansCalcRouteConfigGroup.ModeRoutingParams("walk");
+        RoutingConfigGroup.ModeRoutingParams walkParams = new RoutingConfigGroup.ModeRoutingParams("walk");
         walkParams.setBeelineDistanceFactor(1.3);
         walkParams.setTeleportedModeSpeed(5 / 3.6);
-        config.plansCalcRoute().addModeRoutingParams(walkParams);
+        config.routing().addModeRoutingParams(walkParams);
 
         String runId = "mito_assignment";
-        config.controler().setRunId(runId);
+        config.controller().setRunId(runId);
         config.network().setInputFile(Resources.instance.getBaseDirectory().toString() + "/" + Resources.instance.getString(Properties.MATSIM_NETWORK_FILE));
 
         config.qsim().setNumberOfThreads(16);
         config.global().setNumberOfThreads(16);
-        config.parallelEventHandling().setNumberOfThreads(16);
+        config.global().setNumberOfThreads(16);
         //config.qsim().setUsingThreadpool(false); removed for compatibility with 14.0
 
-        config.controler().setLastIteration(Resources.instance.getInt(Properties.MATSIM_ITERATIONS));
-        config.controler().setWritePlansInterval(config.controler().getLastIteration());
-        config.controler().setWriteEventsInterval(config.controler().getLastIteration());
+        config.controller().setLastIteration(Resources.instance.getInt(Properties.MATSIM_ITERATIONS));
+        config.controller().setWritePlansInterval(config.controller().getLastIteration());
+        config.controller().setWriteEventsInterval(config.controller().getLastIteration());
 
         config.qsim().setStuckTime(10);
 
@@ -136,7 +134,7 @@ public class ConfigureMatsim {
             }
         }
 
-        config.plansCalcRoute().setNetworkModes(networkModesSet);
+        config.routing().setNetworkModes(networkModesSet);
 
         return config;
     }
@@ -150,32 +148,32 @@ public class ConfigureMatsim {
         config.qsim().setFlowCapFactor(siloSamplingFactor * Double.parseDouble(Resources.instance.getString(Properties.TRIP_SCALING_FACTOR)));
         config.qsim().setStorageCapFactor(siloSamplingFactor * Double.parseDouble(Resources.instance.getString(Properties.TRIP_SCALING_FACTOR)));
 
-        PlanCalcScoreConfigGroup.ActivityParams homeActivity = new PlanCalcScoreConfigGroup.ActivityParams("home");
+        ScoringConfigGroup.ActivityParams homeActivity = new ScoringConfigGroup.ActivityParams("home");
         homeActivity.setTypicalDuration(12 * 60 * 60);
-        config.planCalcScore().addActivityParams(homeActivity);
+        config.scoring().addActivityParams(homeActivity);
 
-        PlanCalcScoreConfigGroup.ActivityParams workActivity = new PlanCalcScoreConfigGroup.ActivityParams("work");
+        ScoringConfigGroup.ActivityParams workActivity = new ScoringConfigGroup.ActivityParams("work");
         workActivity.setTypicalDuration(8 * 60 * 60);
-        config.planCalcScore().addActivityParams(workActivity);
+        config.scoring().addActivityParams(workActivity);
 
-        PlanCalcScoreConfigGroup.ActivityParams educationActivity = new PlanCalcScoreConfigGroup.ActivityParams("education");
+        ScoringConfigGroup.ActivityParams educationActivity = new ScoringConfigGroup.ActivityParams("education");
         educationActivity.setTypicalDuration(8 * 60 * 60);
-        config.planCalcScore().addActivityParams(educationActivity);
+        config.scoring().addActivityParams(educationActivity);
 
-        PlanCalcScoreConfigGroup.ActivityParams shoppingActivity = new PlanCalcScoreConfigGroup.ActivityParams("shopping");
+        ScoringConfigGroup.ActivityParams shoppingActivity = new ScoringConfigGroup.ActivityParams("shopping");
         shoppingActivity.setTypicalDuration(1 * 60 * 60);
-        config.planCalcScore().addActivityParams(shoppingActivity);
+        config.scoring().addActivityParams(shoppingActivity);
 
-        PlanCalcScoreConfigGroup.ActivityParams recreationActivity = new PlanCalcScoreConfigGroup.ActivityParams("recreation");
+        ScoringConfigGroup.ActivityParams recreationActivity = new ScoringConfigGroup.ActivityParams("recreation");
         recreationActivity.setTypicalDuration(1 * 60 * 60);
-        config.planCalcScore().addActivityParams(recreationActivity);
+        config.scoring().addActivityParams(recreationActivity);
 
-        PlanCalcScoreConfigGroup.ActivityParams otherActivity = new PlanCalcScoreConfigGroup.ActivityParams("other");
+        ScoringConfigGroup.ActivityParams otherActivity = new ScoringConfigGroup.ActivityParams("other");
         otherActivity.setTypicalDuration(1 * 60 * 60);
-        config.planCalcScore().addActivityParams(otherActivity);
+        config.scoring().addActivityParams(otherActivity);
 
-        PlanCalcScoreConfigGroup.ActivityParams airportActivity = new PlanCalcScoreConfigGroup.ActivityParams("airport");
+        ScoringConfigGroup.ActivityParams airportActivity = new ScoringConfigGroup.ActivityParams("airport");
         airportActivity.setTypicalDuration(1 * 60 * 60);
-        config.planCalcScore().addActivityParams(airportActivity);
+        config.scoring().addActivityParams(airportActivity);
     }
 }

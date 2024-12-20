@@ -4,11 +4,12 @@ import de.tum.bgu.msm.data.DataSet;
 import de.tum.bgu.msm.io.input.AbstractCsvReader;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class BorderDampersReader extends AbstractCsvReader {
 
-    private static final Logger logger = Logger.getLogger(BorderDampersReader.class);
+    private static final Logger logger = LogManager.getLogger(BorderDampersReader.class);
 
     private int zoneIndex;
     private int damperIndex;

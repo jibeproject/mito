@@ -1,6 +1,7 @@
 package de.tum.bgu.msm.util.js;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.script.*;
 import java.io.BufferedReader;
@@ -14,7 +15,7 @@ import java.io.Reader;
 @Deprecated
 public abstract class JavaScriptCalculator<T> {
 
-    protected static final Logger logger = Logger.getLogger(JavaScriptCalculator.class);
+    protected static final Logger logger = LogManager.getLogger(JavaScriptCalculator.class);
 
     protected CompiledScript compiledScript;
     protected Invocable invocable;

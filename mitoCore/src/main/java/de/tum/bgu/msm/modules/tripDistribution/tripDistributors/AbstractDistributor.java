@@ -6,7 +6,8 @@ import de.tum.bgu.msm.modules.tripDistribution.TripDistribution;
 import de.tum.bgu.msm.util.MitoUtil;
 import de.tum.bgu.msm.util.concurrent.RandomizableConcurrentFunction;
 import de.tum.bgu.msm.util.matrices.IndexedDoubleMatrix2D;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
@@ -15,7 +16,7 @@ import java.util.*;
  */
 public abstract class AbstractDistributor extends RandomizableConcurrentFunction<Void> {
 
-    protected final static Logger logger = Logger.getLogger(AbstractDistributor.class);
+    protected final static Logger logger = LogManager.getLogger(AbstractDistributor.class);
     protected final List<TripDistribution.tripDistributionData> tripDistributionData;
     private final Map<Integer,Integer> personCategories;
 

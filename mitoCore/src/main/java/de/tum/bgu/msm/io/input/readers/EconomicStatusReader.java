@@ -5,7 +5,8 @@ import de.tum.bgu.msm.data.MitoHousehold;
 import de.tum.bgu.msm.io.input.AbstractCsvReader;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.Map;
 public class EconomicStatusReader extends AbstractCsvReader {
 
 
-    private static final Logger logger = Logger.getLogger(EconomicStatusReader.class);
+    private static final Logger logger = LogManager.getLogger(EconomicStatusReader.class);
     private final Map<String, Integer> economicStatusDefinition = new HashMap<>();
 
     private int hhSizeFactorIndex;

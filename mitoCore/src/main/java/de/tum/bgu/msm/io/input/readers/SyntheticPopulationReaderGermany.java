@@ -4,7 +4,8 @@ import de.tum.bgu.msm.data.*;
 import de.tum.bgu.msm.data.jobTypes.JobTypeFactory;
 import de.tum.bgu.msm.io.input.AbstractCsvReader;
 import de.tum.bgu.msm.resources.Resources;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.locationtech.jts.geom.Coordinate;
 
 import java.nio.file.Path;
@@ -14,7 +15,7 @@ import java.util.List;
 
 public class SyntheticPopulationReaderGermany extends AbstractCsvReader {
 
-    private static final Logger logger = Logger.getLogger(SyntheticPopulationReaderGermany.class);
+    private static final Logger logger = LogManager.getLogger(SyntheticPopulationReaderGermany.class);
     private final JobTypeFactory factory;
 
     // Person

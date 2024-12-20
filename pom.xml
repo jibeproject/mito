@@ -162,6 +162,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <matsimVersion>14.0</matsimVersion>
+        <matsimVersion>2025.0-PR3643</matsimVersion>
     </properties>
 </project>

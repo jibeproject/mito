@@ -6,14 +6,15 @@ import de.tum.bgu.msm.data.MitoZone;
 import de.tum.bgu.msm.io.input.AbstractCsvReader;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author Hema
  */
 public class ModeChoiceInputReader extends AbstractCsvReader {
 
-    private final static Logger logger = Logger.getLogger(ModeChoiceInputReader.class);
+    private final static Logger logger = LogManager.getLogger(ModeChoiceInputReader.class);
 
     private int railDistIndex;
     private int zoneIndex;

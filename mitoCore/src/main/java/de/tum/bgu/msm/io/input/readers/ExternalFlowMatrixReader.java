@@ -6,7 +6,8 @@ import de.tum.bgu.msm.modules.plansConverter.externalFlows.ExternalFlowType;
 import de.tum.bgu.msm.modules.plansConverter.externalFlows.ExternalFlowZone;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -17,7 +18,7 @@ import java.util.Map;
 
 public class ExternalFlowMatrixReader {
 
-    private static Logger logger = Logger.getLogger(ExternalFlowMatrixReader.class);
+    private static Logger logger = LogManager.getLogger(ExternalFlowMatrixReader.class);
     private final Map<Integer, ExternalFlowZone> zones;
 
     //hard coded for the specific format of matrices

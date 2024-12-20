@@ -8,7 +8,8 @@ import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.matrices.IndexedDoubleMatrix2D;
 import de.tum.bgu.msm.util.skim.Matsim2Skim;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.core.controler.Controler;
@@ -17,7 +18,7 @@ import org.matsim.core.router.util.TravelTime;
 
 public class CarSkimUpdater {
 
-    private final static Logger logger = Logger.getLogger(CarSkimUpdater.class);
+    private final static Logger logger = LogManager.getLogger(CarSkimUpdater.class);
     private final Matsim2Skim matsim2Skim;
     private final Network network;
     private final static int NUMBER_OF_CALC_POINTS = 1;

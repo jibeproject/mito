@@ -4,7 +4,8 @@ import de.tum.bgu.msm.data.DataSet;
 import de.tum.bgu.msm.data.Day;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
@@ -13,10 +14,10 @@ import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Population;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
-import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ActivityParams;
-import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ModeParams;
+import org.matsim.core.config.groups.ReplanningConfigGroup;
+import org.matsim.core.config.groups.ScoringConfigGroup.ActivityParams;
+import org.matsim.core.config.groups.ScoringConfigGroup.ModeParams;
 import org.matsim.core.config.groups.QSimConfigGroup;
-import org.matsim.core.config.groups.StrategyConfigGroup;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.network.NetworkUtils;
@@ -35,7 +36,7 @@ import java.util.*;
 
 public class RunMatsimActiveMode {
 
-    private static final Logger logger = Logger.getLogger(RunMatsimActiveMode.class);
+    private static final Logger logger = LogManager.getLogger(RunMatsimActiveMode.class);
     private static final double MAX_WALKSPEED = 5.0;
     private static final double MAX_CYCLESPEED = 15.0;
     private static final String MATSIM_NETWORK = "F:\\models\\silo_manchester\\input/mito/trafficAssignment/network.xml";
@@ -89,8 +90,8 @@ public class RunMatsimActiveMode {
             for (Day day : MATSIM_DAY) {
                 logger.info("Starting " + day.toString().toUpperCase() + " MATSim simulation");
                 String outputSubDirectory = "scenOutput/" + model.getScenarioName() + "/" + dataSet.getYear();
-                bikePedConfig.controler().setOutputDirectory(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment/" + day + "/bikePed/");
-                bikePedConfig.controler().setRunId(String.valueOf(dataSet.getYear()));
+                bikePedConfig.controller().setOutputDirectory(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment/" + day + "/bikePed/");
+                bikePedConfig.controller().setRunId(String.valueOf(dataSet.getYear()));
 
 
                 //initialize scenario
@@ -131,10 +132,10 @@ public class RunMatsimActiveMode {
 
     private static void fillBikePedConfig(Config bikePedConfig) {
         // set input file and basic controler settings
-        bikePedConfig.controler().setLastIteration(1);
-        bikePedConfig.controler().setWritePlansInterval(Math.max(bikePedConfig.controler().getLastIteration(), 1));
-        bikePedConfig.controler().setWriteEventsInterval(Math.max(bikePedConfig.controler().getLastIteration(), 1));
-        bikePedConfig.controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
+        bikePedConfig.controller().setLastIteration(1);
+        bikePedConfig.controller().setWritePlansInterval(Math.max(bikePedConfig.controller().getLastIteration(), 1));
+        bikePedConfig.controller().setWriteEventsInterval(Math.max(bikePedConfig.controller().getLastIteration(), 1));
+        bikePedConfig.controller().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
 
         // set qsim - passingQ
         bikePedConfig.qsim().setFlowCapFactor(1.);
@@ -147,10 +148,10 @@ public class RunMatsimActiveMode {
         mainModeList.add(TransportMode.bike);
         mainModeList.add(TransportMode.walk);
         bikePedConfig.qsim().setMainModes(mainModeList);
-        bikePedConfig.plansCalcRoute().setNetworkModes(mainModeList);
-        bikePedConfig.plansCalcRoute().removeModeRoutingParams("bike");
-        bikePedConfig.plansCalcRoute().removeModeRoutingParams("walk");
-        bikePedConfig.plansCalcRoute().removeModeRoutingParams("pt");
+        bikePedConfig.routing().setNetworkModes(mainModeList);
+        bikePedConfig.routing().removeModeRoutingParams("bike");
+        bikePedConfig.routing().removeModeRoutingParams("walk");
+        bikePedConfig.routing().removeModeRoutingParams("pt");
 
         // set walk/bike routing parameters
         BicycleConfigGroup bicycleConfigGroup = (BicycleConfigGroup) bikePedConfig.getModules().get(BicycleConfigGroup.GROUP_NAME);
@@ -180,50 +181,50 @@ public class RunMatsimActiveMode {
         bicycleParams.setMarginalUtilityOfDistance(-0.0004 );
         bicycleParams.setMarginalUtilityOfTraveling(-6.0 );
         bicycleParams.setMonetaryDistanceRate(0. );
-        bikePedConfig.planCalcScore().addModeParams(bicycleParams);
+        bikePedConfig.scoring().addModeParams(bicycleParams);
 
         ModeParams walkParams = new ModeParams(TransportMode.walk);
         walkParams.setConstant(0. );
         walkParams.setMarginalUtilityOfDistance(-0.0004 );
         walkParams.setMarginalUtilityOfTraveling(-6.0 );
         walkParams.setMonetaryDistanceRate(0. );
-        bikePedConfig.planCalcScore().addModeParams(walkParams);
+        bikePedConfig.scoring().addModeParams(walkParams);
 
         ActivityParams homeActivity = new ActivityParams("home").setTypicalDuration(12 * 60 * 60);
-        bikePedConfig.planCalcScore().addActivityParams(homeActivity);
+        bikePedConfig.scoring().addActivityParams(homeActivity);
 
         ActivityParams workActivity = new ActivityParams("work").setTypicalDuration(8 * 60 * 60);
-        bikePedConfig.planCalcScore().addActivityParams(workActivity);
+        bikePedConfig.scoring().addActivityParams(workActivity);
 
         ActivityParams educationActivity = new ActivityParams("education").setTypicalDuration(8 * 60 * 60);
-        bikePedConfig.planCalcScore().addActivityParams(educationActivity);
+        bikePedConfig.scoring().addActivityParams(educationActivity);
 
         ActivityParams shoppingActivity = new ActivityParams("shopping").setTypicalDuration(1 * 60 * 60);
-        bikePedConfig.planCalcScore().addActivityParams(shoppingActivity);
+        bikePedConfig.scoring().addActivityParams(shoppingActivity);
 
         ActivityParams recreationActivity = new ActivityParams("recreation").setTypicalDuration(1 * 60 * 60);
-        bikePedConfig.planCalcScore().addActivityParams(recreationActivity);
+        bikePedConfig.scoring().addActivityParams(recreationActivity);
 
         ActivityParams otherActivity = new ActivityParams("other").setTypicalDuration(1 * 60 * 60);
-        bikePedConfig.planCalcScore().addActivityParams(otherActivity);
+        bikePedConfig.scoring().addActivityParams(otherActivity);
 
         ActivityParams airportActivity = new ActivityParams("airport").setTypicalDuration(1 * 60 * 60);
-        bikePedConfig.planCalcScore().addActivityParams(airportActivity);
+        bikePedConfig.scoring().addActivityParams(airportActivity);
 
         //Set strategy
-        bikePedConfig.strategy().setMaxAgentPlanMemorySize(5);
+        bikePedConfig.replanning().setMaxAgentPlanMemorySize(5);
         {
-            StrategyConfigGroup.StrategySettings strategySettings = new StrategyConfigGroup.StrategySettings();
+            ReplanningConfigGroup.StrategySettings strategySettings = new ReplanningConfigGroup.StrategySettings();
             strategySettings.setStrategyName("ChangeExpBeta");
             strategySettings.setWeight(0.8);
-            bikePedConfig.strategy().addStrategySettings(strategySettings);
+            bikePedConfig.replanning().addStrategySettings(strategySettings);
         }
 
         {
-            StrategyConfigGroup.StrategySettings strategySettings = new StrategyConfigGroup.StrategySettings();
+            ReplanningConfigGroup.StrategySettings strategySettings = new ReplanningConfigGroup.StrategySettings();
             strategySettings.setStrategyName("ReRoute");
             strategySettings.setWeight(0.2);
-            bikePedConfig.strategy().addStrategySettings(strategySettings);
+            bikePedConfig.replanning().addStrategySettings(strategySettings);
         }
 
 

@@ -1,6 +1,7 @@
 package de.tum.bgu.msm.data;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.locationtech.jts.geom.Coordinate;
 
 import java.util.*;
@@ -14,7 +15,7 @@ import java.util.*;
 
 public class MitoHousehold implements Id, MicroLocation {
 
-    private static final Logger logger = Logger.getLogger(MitoHousehold.class);
+    private static final Logger logger = LogManager.getLogger(MitoHousehold.class);
 
     private final int hhId;
     private int monthlyIncome_EUR;

@@ -1,7 +1,8 @@
 package de.tum.bgu.msm.calibration;
 
 import de.tum.bgu.msm.util.MunichImplementationConfig;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Implements the Transport in Microsimulation Orchestrator (MITO)
@@ -11,7 +12,7 @@ import org.apache.log4j.Logger;
  */
 class CalibrateModeChoice {
 
-    private static final Logger logger = Logger.getLogger(CalibrateModeChoice.class);
+    private static final Logger logger = LogManager.getLogger(CalibrateModeChoice.class);
 
     public static void main(String[] args) {
         logger.info("Started the Microsimulation Transport Orchestrator (MITO)");

@@ -1,6 +1,7 @@
 package de.tum.bgu.msm.data;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.population.Person;
 
 /**
@@ -12,7 +13,7 @@ import org.matsim.api.core.v01.population.Person;
 public class MitoTrip7days implements MitoTrip {
 
     private final MitoTrip delegate;
-    private static final Logger logger = Logger.getLogger(MitoTrip7days.class);
+    private static final Logger logger = LogManager.getLogger(MitoTrip7days.class);
     private Day departureDay;
 
     public MitoTrip7days(MitoTrip delegate) {

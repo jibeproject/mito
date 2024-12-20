@@ -3,7 +3,8 @@ package de.tum.bgu.msm.io;
 import de.tum.bgu.msm.data.*;
 import de.tum.bgu.msm.io.input.AbstractCsvReader;
 import de.tum.bgu.msm.resources.Resources;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class PersonsReader7days extends AbstractCsvReader {
 
-    private static final Logger logger = Logger.getLogger(PersonsReader7days.class);
+    private static final Logger logger = LogManager.getLogger(PersonsReader7days.class);
 
     private int posId = -1;
     private int posHhId = -1;

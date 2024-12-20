@@ -6,7 +6,8 @@ import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
 import edu.emory.mathcs.utils.ConcurrencyUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.*;
@@ -21,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public final class MatsimPopulationGenerator extends Module {
 
-    private static final Logger logger = Logger.getLogger(MatsimPopulationGenerator.class);
+    private static final Logger logger = LogManager.getLogger(MatsimPopulationGenerator.class);
 
     private final Set<Mode> modeSet = new HashSet<>();
 

@@ -1,6 +1,7 @@
 package de.tum.bgu.msm.util.charts;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
@@ -20,7 +21,7 @@ import java.util.Map;
 
 public final class ScatterPlot {
 
-    private final static Logger logger = Logger.getLogger(ScatterPlot.class);
+    private final static Logger logger = LogManager.getLogger(ScatterPlot.class);
 
     private ScatterPlot() {
 

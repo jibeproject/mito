@@ -6,7 +6,8 @@ import de.tum.bgu.msm.modules.modeChoice.calculators.AirportModeChoiceCalculator
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -16,7 +17,7 @@ public class AirportTripGeneration {
     private final DataSet dataSet;
     private final static AtomicInteger TRIP_ID_COUNTER = new AtomicInteger();
     private int counter = 0;
-    private final static Logger LOGGER = Logger.getLogger(AirportTripGeneration.class);
+    private final static Logger LOGGER = LogManager.getLogger(AirportTripGeneration.class);
     private final int airportZoneId;
 
     private final AirportTripGenerator numberOfTripsCalculator;

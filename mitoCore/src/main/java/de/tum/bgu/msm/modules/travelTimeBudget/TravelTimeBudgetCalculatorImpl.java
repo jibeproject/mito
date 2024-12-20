@@ -1,11 +1,12 @@
 package de.tum.bgu.msm.modules.travelTimeBudget;
 
 import de.tum.bgu.msm.data.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 class TravelTimeBudgetCalculatorImpl implements TravelTimeBudgetCalculator {
 
-    private final static Logger logger = Logger.getLogger(TravelTimeBudgetCalculatorImpl.class);
+    private final static Logger logger = LogManager.getLogger(TravelTimeBudgetCalculatorImpl.class);
 
     @Override
     public double calculateBudget(MitoHousehold household, String purpose) {

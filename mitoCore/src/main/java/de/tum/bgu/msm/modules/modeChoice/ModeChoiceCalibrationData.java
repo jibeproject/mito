@@ -1,7 +1,8 @@
 package de.tum.bgu.msm.modules.modeChoice;
 
 import de.tum.bgu.msm.data.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,7 +20,7 @@ public class ModeChoiceCalibrationData {
 
     private PrintWriter pw = null;
 
-    private static Logger logger = Logger.getLogger(ModeChoiceCalibrationData.class);
+    private static Logger logger = LogManager.getLogger(ModeChoiceCalibrationData.class);
 
     public ModeChoiceCalibrationData() {
         this.observedModalShare = new HashMap<>();

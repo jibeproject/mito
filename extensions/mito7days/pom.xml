@@ -21,7 +21,7 @@
         <dependency>
             <groupId>org.matsim</groupId>
             <artifactId>matsim</artifactId>
-            <version>14.0</version>
+            <version>${matsimVersion}</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>

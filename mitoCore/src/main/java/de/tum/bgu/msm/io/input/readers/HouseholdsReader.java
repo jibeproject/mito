@@ -6,7 +6,8 @@ import de.tum.bgu.msm.io.input.AbstractCsvReader;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.nio.file.Path;
 
@@ -18,7 +19,7 @@ public class HouseholdsReader extends AbstractCsvReader {
     private int posId = -1;
     private int posTaz = -1;
     private int posAutos = -1;
-    private static final Logger logger = Logger.getLogger(HouseholdsReader.class);
+    private static final Logger logger = LogManager.getLogger(HouseholdsReader.class);
     private static final double scaleFactorForTripGeneration = Resources.instance.getDouble(Properties.SCALE_FACTOR_FOR_TRIP_GENERATION, 1.0);
 
     public HouseholdsReader(DataSet dataSet) {

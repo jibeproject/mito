@@ -19,7 +19,8 @@ import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.GermanyImplementationConfig;
 import de.tum.bgu.msm.util.ImplementationConfig;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +49,7 @@ import java.util.Random;
 
 public final class CalibrateDestinationChoiceGermany {
 
-    private static final Logger logger = Logger.getLogger(CalibrateDestinationChoiceGermany.class);
+    private static final Logger logger = LogManager.getLogger(CalibrateDestinationChoiceGermany.class);
     private final String scenarioName;
 
     private DataSetImpl dataSet;

@@ -17,7 +17,8 @@ import de.tum.bgu.msm.modules.tripGeneration.TripGeneration;
 import de.tum.bgu.msm.modules.tripGeneration.TripGeneratorType;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import uk.cam.mrc.phm.calculators.*;
 import uk.cam.mrc.phm.io.SummarizeData7daysMCR;
 
@@ -37,7 +38,7 @@ import static de.tum.bgu.msm.data.Purpose.getListedPurposes;
  */
 public final class TravelDemandGeneratorMCR {
 
-    private static final Logger logger = Logger.getLogger(TravelDemandGeneratorMCR.class);
+    private static final Logger logger = LogManager.getLogger(TravelDemandGeneratorMCR.class);
 
     private final DataSet dataSet;
 

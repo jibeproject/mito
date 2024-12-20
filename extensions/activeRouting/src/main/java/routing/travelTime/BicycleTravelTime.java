@@ -1,7 +1,8 @@
 package routing.travelTime;
 
 import com.google.inject.Inject;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.contrib.bicycle.BicycleLinkSpeedCalculator;
@@ -16,7 +17,7 @@ import static routing.components.LinkStressDiscrete.*;
  */
 public class BicycleTravelTime implements TravelTime {
 
-    private static final Logger logger = Logger.getLogger(BicycleTravelTime.class);
+    private static final Logger logger = LogManager.getLogger(BicycleTravelTime.class);
 
     @Inject
     private BicycleLinkSpeedCalculator linkSpeedCalculator;

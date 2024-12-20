@@ -5,7 +5,8 @@ import de.tum.bgu.msm.io.input.readers.TripGenerationHurdleCoefficientReader;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
 import de.tum.bgu.msm.util.concurrent.RandomizableConcurrentFunction;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.core.utils.collections.Tuple;
 import umontreal.ssj.probdist.NegativeBinomialDist;
 
@@ -13,7 +14,7 @@ import java.util.*;
 
 public class TripGeneratorPersonBasedHurdleNegBin extends RandomizableConcurrentFunction<Tuple<Purpose, Map<MitoPerson, Integer>>> implements TripGenerator {
 
-    private static final Logger logger = Logger.getLogger(TripGeneratorPersonBasedHurdleNegBin.class);
+    private static final Logger logger = LogManager.getLogger(TripGeneratorPersonBasedHurdleNegBin.class);
     private Map<MitoPerson, Integer> tripCountsByPP = new LinkedHashMap<>();
 
     private final DataSet dataSet;

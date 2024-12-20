@@ -9,7 +9,8 @@ import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.ImplementationConfig;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import uk.cam.mrc.phm.io.*;
 import uk.cam.mrc.phm.io.BicycleOwnershipReaderAndModel;
 
@@ -35,7 +36,7 @@ import java.util.Random;
  */
 public final class MitoModelMCR {
 
-    private static final Logger logger = Logger.getLogger(MitoModelMCR.class);
+    private static final Logger logger = LogManager.getLogger(MitoModelMCR.class);
     private final String scenarioName;
 
     private DataSet dataSet;

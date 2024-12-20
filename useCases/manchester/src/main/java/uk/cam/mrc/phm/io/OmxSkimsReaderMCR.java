@@ -9,11 +9,12 @@ import de.tum.bgu.msm.io.input.readers.SkimsReader;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.matrices.IndexedDoubleMatrix2D;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class OmxSkimsReaderMCR extends AbstractOmxReader implements SkimsReader {
 
-    private static final Logger LOGGER = Logger.getLogger(OmxSkimsReaderMCR.class);
+    private static final Logger LOGGER = LogManager.getLogger(OmxSkimsReaderMCR.class);
 
     public OmxSkimsReaderMCR(DataSet dataSet) {
         super(dataSet);

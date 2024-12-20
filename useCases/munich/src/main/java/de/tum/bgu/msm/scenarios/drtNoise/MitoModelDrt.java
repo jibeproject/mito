@@ -12,14 +12,15 @@ import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.ImplementationConfig;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.locationtech.jts.geom.Geometry;
 
 import java.util.Random;
 
 public class MitoModelDrt {
 
-    private static final Logger logger = Logger.getLogger(MitoModelDrt.class);
+    private static final Logger logger = LogManager.getLogger(MitoModelDrt.class);
     private final String scenarioName;
 
     private DataSetImpl dataSet;

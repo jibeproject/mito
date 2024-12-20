@@ -4,7 +4,8 @@ import de.tum.bgu.msm.data.DataSet;
 import de.tum.bgu.msm.data.Mode;
 import de.tum.bgu.msm.data.Purpose;
 import de.tum.bgu.msm.resources.Resources;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.PieChartBuilder;
 import org.knowm.xchart.internal.chartpart.Chart;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public final class ModeChoicePlots {
 
-    private final static Logger logger = Logger.getLogger(ModeChoicePlots.class);
+    private final static Logger logger = LogManager.getLogger(ModeChoicePlots.class);
 
 
     public static void writeModeChoice(DataSet dataSet, String scenarioName) {

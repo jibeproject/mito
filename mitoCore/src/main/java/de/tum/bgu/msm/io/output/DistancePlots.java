@@ -6,7 +6,8 @@ import de.tum.bgu.msm.data.MitoTrip;
 import de.tum.bgu.msm.data.Mode;
 import de.tum.bgu.msm.data.Purpose;
 import de.tum.bgu.msm.resources.Resources;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 
 public class DistancePlots {
 
-    private final static Logger logger = Logger.getLogger(DistancePlots.class);
+    private final static Logger logger = LogManager.getLogger(DistancePlots.class);
 
     public static void writeDistanceDistributions(DataSet dataSet, String scenarioName) {
 

@@ -8,7 +8,8 @@ import de.tum.bgu.msm.util.ErrorTerms;
 import de.tum.bgu.msm.util.LogitTools;
 import de.tum.bgu.msm.util.MitoUtil;
 import de.tum.bgu.msm.util.concurrent.ConcurrentExecutor;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -21,7 +22,7 @@ import static de.tum.bgu.msm.resources.Properties.*;
 
 public class ModeChoice extends Module {
 
-    private final static Logger logger = Logger.getLogger(ModeChoice.class);
+    private final static Logger logger = LogManager.getLogger(ModeChoice.class);
 
     private final Map<Purpose, ModeChoiceCalculator> modeChoiceCalculatorByPurpose = new EnumMap<>(Purpose.class);
 

@@ -7,7 +7,8 @@ import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.trafficAssignment.CarSkimUpdater;
 import de.tum.bgu.msm.trafficAssignment.ConfigureMatsim;
 import de.tum.bgu.msm.util.MunichImplementationConfig;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.controler.Controler;
@@ -22,7 +23,7 @@ import org.matsim.core.scenario.ScenarioUtils;
  */
 class MitoMuc {
 
-    private static final Logger logger = Logger.getLogger(MitoMuc.class);
+    private static final Logger logger = LogManager.getLogger(MitoMuc.class);
 
     public static void main(String[] args) {
         logger.info("Started the Microsimulation Transport Orchestrator (MITO)");
@@ -45,7 +46,7 @@ class MitoMuc {
             }
 
             String outputSubDirectory = "scenOutput/" + model.getScenarioName() + "/" + dataSet.getYear();
-            config.controler().setOutputDirectory(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment");
+            config.controller().setOutputDirectory(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment");
 
             MutableScenario matsimScenario = (MutableScenario) ScenarioUtils.loadScenario(config);
             matsimScenario.setPopulation(dataSet.getPopulation());

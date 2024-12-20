@@ -6,7 +6,8 @@ import de.tum.bgu.msm.trafficAssignment.CarSkimUpdater;
 import de.tum.bgu.msm.util.MitoUtil;
 import de.tum.bgu.msm.util.concurrent.ConcurrentExecutor;
 import de.tum.bgu.msm.util.matrices.IndexedDoubleMatrix2D;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Network;
@@ -23,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Matsim2Skim {
 
-    private final static org.apache.log4j.Logger logger = Logger.getLogger(CarSkimUpdater.class);
+    private final static Logger logger = LogManager.getLogger(CarSkimUpdater.class);
     private final Network network;
     private final TravelDisutility travelDisutility;
     private final TravelTime travelTime;

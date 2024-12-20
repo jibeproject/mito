@@ -1,15 +1,12 @@
 package uk.cam.mrc.phm.io;
 
-import de.tum.bgu.msm.data.AreaTypes;
 import de.tum.bgu.msm.data.DataSet;
-import de.tum.bgu.msm.data.MitoZone;
 import de.tum.bgu.msm.io.input.AbstractCsvReader;
-import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.locationtech.jts.geom.Geometry;
-import org.matsim.core.utils.gis.ShapeFileReader;
-import org.opengis.feature.simple.SimpleFeature;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import java.util.HashMap;
 
@@ -18,7 +15,7 @@ import java.util.HashMap;
  */
 public class PoiWeightsReader extends AbstractCsvReader {
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(PoiWeightsReader.class);
+    private static final Logger LOGGER = LogManager.getLogger(PoiWeightsReader.class);
     private int idIndex;
     private HashMap<String, Integer> poiIndex = new HashMap<>();
 

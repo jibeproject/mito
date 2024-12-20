@@ -20,7 +20,8 @@ package routing;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.core.controler.AbstractModule;
 import routing.travelDisutility.WalkTravelDisutilityFactory;
 import routing.travelTime.WalkTravelTime;
@@ -28,7 +29,7 @@ import routing.travelTime.WalkTravelTime;
 
 public class WalkModule extends AbstractModule {
 
-	private static final Logger LOG = Logger.getLogger(WalkModule.class);
+	private static final Logger LOG = LogManager.getLogger(WalkModule.class);
 
 	@Inject
 	private WalkConfigGroup walkConfigGroup;

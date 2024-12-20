@@ -5,12 +5,13 @@ import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.trafficAssignment.ConfigureMatsim;
 import de.tum.bgu.msm.util.MunichImplementationConfig;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.locationtech.jts.geom.Geometry;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
-import org.matsim.core.config.groups.StrategyConfigGroup;
+import org.matsim.core.config.groups.ReplanningConfigGroup;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.network.NetworkUtils;
@@ -22,7 +23,7 @@ import org.matsim.core.utils.gis.ShapeFileReader;
 
 public class RunMitoDrt {
 
-    private static final Logger logger = Logger.getLogger(RunMitoDrt.class);
+    private static final Logger logger = LogManager.getLogger(RunMitoDrt.class);
 
     private static final String serviceAreaShapeFile = "D:\\resultStorage\\moia-msm\\abmtrans\\shapesServiceAreas\\HolzkirchenServiceArea.shp";
 
@@ -55,56 +56,56 @@ public class RunMitoDrt {
             }
 
             String outputSubDirectory = "scenOutput/" + model.getScenarioName() + "/" + dataSet.getYear();
-            config.controler().setOutputDirectory(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment");
+            config.controller().setOutputDirectory(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment");
 
             MutableScenario matsimScenario = (MutableScenario) ScenarioUtils.loadScenario(config);
             matsimScenario.setPopulation(dataSet.getPopulation());
 
             ConfigureMatsim.setDemandSpecificConfigSettings(config);
-            config.controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
+            config.controller().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
 
 
             config.qsim().setNumberOfThreads(16);
             config.global().setNumberOfThreads(16);
-            config.parallelEventHandling().setNumberOfThreads(16);
+            config.global().setNumberOfThreads(16);
 //            config.qsim().setUsingThreadpool(true);
 
-            config.controler().setFirstIteration(0);
-            config.controler().setLastIteration(150);
-            config.controler().setMobsim("qsim");
-            config.controler().setWritePlansInterval(25);
-            config.controler().setWriteEventsInterval(25);
-            config.controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
+            config.controller().setFirstIteration(0);
+            config.controller().setLastIteration(150);
+            config.controller().setMobsim("qsim");
+            config.controller().setWritePlansInterval(25);
+            config.controller().setWriteEventsInterval(25);
+            config.controller().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
 
             config.qsim().setEndTime(28 * 3600);
             //config.qsim().setTrafficDynamics(QSimConfigGroup.TrafficDynamics.kinematicWaves);
             config.vspExperimental().setWritingOutputEvents(true); // writes final events into toplevel directory
 
             {
-                StrategyConfigGroup.StrategySettings strategySettings = new StrategyConfigGroup.StrategySettings();
+                ReplanningConfigGroup.StrategySettings strategySettings = new ReplanningConfigGroup.StrategySettings();
                 strategySettings.setStrategyName("ChangeExpBeta");
                 strategySettings.setWeight(0.8);
-                config.strategy().addStrategySettings(strategySettings);
+                config.replanning().addStrategySettings(strategySettings);
             }
             {
-                StrategyConfigGroup.StrategySettings strategySettings = new StrategyConfigGroup.StrategySettings();
+                ReplanningConfigGroup.StrategySettings strategySettings = new ReplanningConfigGroup.StrategySettings();
                 strategySettings.setStrategyName("ReRoute");
                 strategySettings.setWeight(0.15);
-                config.strategy().addStrategySettings(strategySettings);
+                config.replanning().addStrategySettings(strategySettings);
             }
 
             {
-                StrategyConfigGroup.StrategySettings strategySettings = new StrategyConfigGroup.StrategySettings();
+                ReplanningConfigGroup.StrategySettings strategySettings = new ReplanningConfigGroup.StrategySettings();
                 strategySettings.setStrategyName(DefaultPlanStrategiesModule.DefaultStrategy.TimeAllocationMutator_ReRoute);
                 strategySettings.setWeight(0.05);
-                config.strategy().addStrategySettings(strategySettings);
+                config.replanning().addStrategySettings(strategySettings);
             }
 
             config.timeAllocationMutator().setMutationRange(1200);
 
 
-            config.strategy().setFractionOfIterationsToDisableInnovation(0.85);
-            config.strategy().setMaxAgentPlanMemorySize(5);
+            config.replanning().setFractionOfIterationsToDisableInnovation(0.85);
+            config.replanning().setMaxAgentPlanMemorySize(5);
 
             Network network = NetworkUtils.createNetwork();
 

@@ -1,4 +1,5 @@
 package de.tum.bgu.msm.modules.plansConverter.externalFlows;
+import org.geotools.api.feature.simple.SimpleFeature;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -6,7 +7,6 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.shape.random.RandomPointsBuilder;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.core.utils.geometry.geotools.MGC;
-import org.opengis.feature.simple.SimpleFeature;
 
 public class ExternalFlowZone {
 

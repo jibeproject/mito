@@ -10,7 +10,8 @@ import de.tum.bgu.msm.modules.Module;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.*;
 
@@ -20,7 +21,7 @@ import java.util.Map;
 
 public class LongDistanceTraffic extends Module {
 
-    private static Logger logger = Logger.getLogger(LongDistanceTraffic.class);
+    private static Logger logger = LogManager.getLogger(LongDistanceTraffic.class);
 
     private Map<Integer, ExternalFlowZone> zones;
     private Map<ExternalFlowType, HashBasedTable<Integer, Integer, Float>> externalFlows;

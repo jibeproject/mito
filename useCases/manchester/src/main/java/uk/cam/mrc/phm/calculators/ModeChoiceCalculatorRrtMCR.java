@@ -6,7 +6,8 @@ import de.tum.bgu.msm.io.input.readers.ModeChoiceCoefficientReader;
 import de.tum.bgu.msm.modules.modeChoice.AbstractModeChoiceCalculator;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -18,7 +19,7 @@ import static de.tum.bgu.msm.data.Purpose.RRT;
 
 public class ModeChoiceCalculatorRrtMCR extends AbstractModeChoiceCalculator {
 
-    private final static Logger logger = Logger.getLogger(ModeChoiceCalculatorRrtMCR.class);
+    private final static Logger logger = LogManager.getLogger(ModeChoiceCalculatorRrtMCR.class);
 
     public ModeChoiceCalculatorRrtMCR(DataSet dataSet) {
         super();

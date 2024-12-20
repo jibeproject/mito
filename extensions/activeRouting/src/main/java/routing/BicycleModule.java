@@ -20,7 +20,8 @@ package routing;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.contrib.bicycle.BicycleLinkSpeedCalculator;
 import org.matsim.core.controler.AbstractModule;
 import routing.travelDisutility.BicycleTravelDisutilityFactory;
@@ -30,7 +31,7 @@ import routing.travelTime.speed.BicycleLinkSpeedCalculatorDefaultImpl;
 
 public class BicycleModule extends AbstractModule {
 
-	private static final Logger LOG = Logger.getLogger(BicycleModule.class);
+	private static final Logger LOG = LogManager.getLogger(BicycleModule.class);
 
 	@Inject
 	private BicycleConfigGroup bicycleConfigGroup;

@@ -4,14 +4,15 @@ import de.tum.bgu.msm.data.*;
 import de.tum.bgu.msm.io.input.AbstractCsvReader;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class BicycleOwnershipReaderAndModel extends AbstractCsvReader {
 
-    private final Logger logger = Logger.getLogger(BicycleOwnershipReaderAndModel.class);
+    private final Logger logger = LogManager.getLogger(BicycleOwnershipReaderAndModel.class);
     private final Map<String, Double> coefficients = new HashMap<>();
     private int variableIndex;
     private int valueIndex;

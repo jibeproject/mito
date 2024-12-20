@@ -17,7 +17,8 @@ import de.tum.bgu.msm.modules.tripGeneration.TripGeneratorType;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.scenarios.mito7days.calculators.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +35,7 @@ import static de.tum.bgu.msm.data.Purpose.*;
  */
 public final class TravelDemandGenerator7days {
 
-    private static final Logger logger = Logger.getLogger(TravelDemandGenerator7days.class);
+    private static final Logger logger = LogManager.getLogger(TravelDemandGenerator7days.class);
 
     private final DataSet dataSet;
 

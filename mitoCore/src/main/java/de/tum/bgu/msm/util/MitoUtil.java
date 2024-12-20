@@ -2,7 +2,8 @@ package de.tum.bgu.msm.util;
 
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.text.DecimalFormat;
@@ -23,7 +24,7 @@ public final class MitoUtil {
     private MitoUtil() {
     }
 
-    private static final Logger logger = Logger.getLogger(MitoUtil.class);
+    private static final Logger logger = LogManager.getLogger(MitoUtil.class);
     private static Random rand;
 
 

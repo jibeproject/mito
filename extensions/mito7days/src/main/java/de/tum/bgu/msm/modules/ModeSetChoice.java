@@ -4,7 +4,8 @@ import de.tum.bgu.msm.data.*;
 import de.tum.bgu.msm.io.ModeSetCoefficientReader;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.nio.file.Path;
 import java.util.EnumMap;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class ModeSetChoice extends Module {
 
-    private final static Logger logger = Logger.getLogger(ModeSetChoice.class);
+    private final static Logger logger = LogManager.getLogger(ModeSetChoice.class);
     private final static Path modeSetCoefficientsPath = Resources.instance.getModeSetCoefficients();
     private final static Path modeSetConstantsPath = Resources.instance.getModeSetConstants();
     private final static String[] MODES = {"auto", "publicTransport", "walk", "bicycle"};

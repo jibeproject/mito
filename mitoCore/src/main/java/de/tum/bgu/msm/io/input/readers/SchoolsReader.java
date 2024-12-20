@@ -6,14 +6,15 @@ import de.tum.bgu.msm.data.MitoZone;
 import de.tum.bgu.msm.io.input.AbstractCsvReader;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.locationtech.jts.geom.Coordinate;
 
 import java.nio.file.Path;
 
 public class SchoolsReader extends AbstractCsvReader {
 
-    private static final Logger logger = Logger.getLogger(JobReader.class);
+    private static final Logger logger = LogManager.getLogger(JobReader.class);
 
     private int posId = -1;
     private int posZone = -1;

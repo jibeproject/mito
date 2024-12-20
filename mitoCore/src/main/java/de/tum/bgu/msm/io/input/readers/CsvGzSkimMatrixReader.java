@@ -3,7 +3,8 @@ package de.tum.bgu.msm.io.input.readers;
 import de.tum.bgu.msm.data.Id;
 import de.tum.bgu.msm.util.MitoUtil;
 import de.tum.bgu.msm.util.matrices.IndexedDoubleMatrix2D;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -19,7 +20,7 @@ public class CsvGzSkimMatrixReader {
     private int positionDestination;
     private int positionvalue;
 
-    private static final Logger logger = Logger.getLogger(CsvGzSkimMatrixReader.class);
+    private static final Logger logger = LogManager.getLogger(CsvGzSkimMatrixReader.class);
 
     private BufferedReader reader;
 

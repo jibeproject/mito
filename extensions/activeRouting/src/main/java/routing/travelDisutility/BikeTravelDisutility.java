@@ -1,7 +1,8 @@
 package routing.travelDisutility;
 
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
@@ -20,7 +21,7 @@ import routing.components.LinkStress;
  */
 public class BikeTravelDisutility implements TravelDisutility {
 
-    private final static Logger logger = Logger.getLogger(BikeTravelDisutility.class);
+    private final static Logger logger = LogManager.getLogger(BikeTravelDisutility.class);
     private final TravelTime timeCalculator;
     private final BicycleConfigGroup bicycleConfigGroup;
 

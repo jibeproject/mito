@@ -20,7 +20,8 @@ import de.tum.bgu.msm.modules.tripGeneration.TripGeneration;
 import de.tum.bgu.msm.modules.tripGeneration.TripGeneratorType;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.core.population.PopulationUtils;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ import static de.tum.bgu.msm.data.Purpose.*;
  */
 public final class TravelDemandGeneratorGermany {
 
-    private static final Logger logger = Logger.getLogger(TravelDemandGeneratorGermany.class);
+    private static final Logger logger = LogManager.getLogger(TravelDemandGeneratorGermany.class);
     private static final List<Purpose> PURPOSES = List.of(HBW,HBE,HBS,HBR,HBO,NHBW,NHBO); // todo: check whether HBR should be here
     private final DataSetImpl dataSet;
 

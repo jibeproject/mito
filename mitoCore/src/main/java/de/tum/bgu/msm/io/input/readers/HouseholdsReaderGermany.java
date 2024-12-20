@@ -7,7 +7,8 @@ import de.tum.bgu.msm.io.input.AbstractCsvReader;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.locationtech.jts.geom.Coordinate;
 
 import java.nio.file.Path;
@@ -26,7 +27,7 @@ public class HouseholdsReaderGermany extends AbstractCsvReader {
 
     private int counter = 0;
 
-    private static final Logger logger = Logger.getLogger(HouseholdsReaderGermany.class);
+    private static final Logger logger = LogManager.getLogger(HouseholdsReaderGermany.class);
     private final int thisPortion;
 
     private static final double scaleFactorForTripGeneration = Resources.instance.getDouble(Properties.SCALE_FACTOR_FOR_TRIP_GENERATION, 1.0);

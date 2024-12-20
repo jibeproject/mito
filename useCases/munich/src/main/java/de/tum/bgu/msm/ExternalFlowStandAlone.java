@@ -6,7 +6,8 @@ import de.tum.bgu.msm.modules.plansConverter.externalFlows.LongDistanceTraffic;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Population;
 import org.matsim.api.core.v01.population.PopulationWriter;
@@ -23,7 +24,7 @@ import java.util.Arrays;
 
 public class ExternalFlowStandAlone {
 
-    private static Logger logger = Logger.getLogger(ExternalFlowStandAlone.class);
+    private static Logger logger = LogManager.getLogger(ExternalFlowStandAlone.class);
 
 
     public static void main (String args[]){

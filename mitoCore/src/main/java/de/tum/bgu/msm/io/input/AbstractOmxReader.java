@@ -6,7 +6,8 @@ import de.tum.bgu.msm.util.matrices.Matrices;
 import omx.OmxFile;
 import omx.OmxLookup;
 import omx.hdf5.OmxHdf5Datatype;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -16,7 +17,7 @@ import java.util.Set;
  */
 public abstract class AbstractOmxReader extends AbstractInputReader{
 
-    private final static Logger logger = Logger.getLogger(AbstractOmxReader.class);
+    private final static Logger logger = LogManager.getLogger(AbstractOmxReader.class);
 
     protected AbstractOmxReader(DataSet dataSet) {
         super(dataSet);

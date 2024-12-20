@@ -4,7 +4,8 @@ import de.tum.bgu.msm.data.DataSet;
 import de.tum.bgu.msm.data.MitoHousehold;
 import de.tum.bgu.msm.data.Purpose;
 import de.tum.bgu.msm.modules.Module;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -21,7 +22,7 @@ import java.util.concurrent.Future;
  */
 public class TravelTimeBudgetModule extends Module {
 
-    private static final Logger logger = Logger.getLogger(TravelTimeBudgetModule.class);
+    private static final Logger logger = LogManager.getLogger(TravelTimeBudgetModule.class);
 
     private EnumSet<Purpose> discretionaryPurposes = EnumSet.of(Purpose.HBS, Purpose.HBO, Purpose.NHBW, Purpose.NHBO);
     private final TravelTimeBudgetCalculatorImpl travelTimeCalc;

@@ -15,7 +15,7 @@
         <dependency>
             <groupId>org.matsim.contrib</groupId>
             <artifactId>bicycle</artifactId>
-            <version>14.0</version>
+            <version>${matsimVersion}</version>
         </dependency>
     </dependencies>
 

@@ -6,9 +6,10 @@ import de.tum.bgu.msm.modules.plansConverter.externalFlows.ExternalFlowZoneType;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
+import org.geotools.api.feature.simple.SimpleFeature;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.core.utils.gis.ShapeFileReader;
-import org.opengis.feature.simple.SimpleFeature;
+
 
 import java.nio.file.Path;
 import java.util.HashMap;

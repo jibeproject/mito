@@ -9,6 +9,8 @@ import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
 import de.tum.bgu.msm.util.charts.Histogram;
 import de.tum.bgu.msm.util.charts.ScatterPlot;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.population.PopulationWriter;
 import org.matsim.core.utils.geometry.CoordUtils;
@@ -23,7 +25,7 @@ import java.util.*;
  * Created on 11/07/2017.
  */
 public class SummarizeData {
-    private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(SummarizeData.class);
+    private static final Logger LOGGER = LogManager.getLogger(SummarizeData.class);
 
     public static void writeOutSyntheticPopulationWithTrips(DataSet dataSet) {
 

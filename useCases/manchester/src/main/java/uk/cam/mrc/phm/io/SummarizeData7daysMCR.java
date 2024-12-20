@@ -10,6 +10,8 @@ import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
 import de.tum.bgu.msm.util.charts.Histogram;
 import de.tum.bgu.msm.util.charts.ScatterPlot;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Population;
@@ -28,7 +30,7 @@ import java.util.*;
  * Created on 11/07/2017.
  */
 public class SummarizeData7daysMCR {
-    private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(SummarizeData.class);
+    private static final Logger LOGGER = LogManager.getLogger(SummarizeData.class);
 
     public static void writeOutSyntheticPopulationWithTrips(DataSet dataSet) {
 
@@ -119,7 +121,7 @@ public class SummarizeData7daysMCR {
 
     public static void writeTrips(DataSet dataSet, PrintWriter pwh, Collection<MitoTrip> tripsToPrint) {
         pwh.println("hh.id,p.ID,t.id,origin,originX,originY,destination,destinationX,destinationY," +
-                "t.purpose,t.distance_walk,t.distance_bike,t.distance_auto,time_auto,time_pt," +
+                "t.purpose,t.distance_walk,t.distance_bike,t.distance_auto,time_auto,time_pt,time_walk,time_bike," +
                 "mode,departure_day,departure_time,departure_time_return");
 
         for(MitoTrip trip : tripsToPrint) {
@@ -204,8 +206,14 @@ public class SummarizeData7daysMCR {
                 pwh.print(",");
                 double timePt = dataSet.getTravelTimes().getTravelTime(origin, destination, dataSet.getPeakHour(), "pt");
                 pwh.print(timePt);
+                pwh.print(",");
+                double timeWalk = dataSet.getTravelTimes().getTravelTime(origin, destination, dataSet.getPeakHour(), "walk");
+                pwh.print(timeWalk);
+                pwh.print(",");
+                double timeBike = dataSet.getTravelTimes().getTravelTime(origin, destination, dataSet.getPeakHour(), "bike");
+                pwh.print(timeBike);
             } else {
-                pwh.print("NA,NA,NA,NA,NA");
+                pwh.print("NA,NA,NA,NA,NA,NA,NA");
             }
             pwh.print(",");
             pwh.print(trip.getTripMode());

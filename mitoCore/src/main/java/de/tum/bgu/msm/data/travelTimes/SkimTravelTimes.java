@@ -12,7 +12,8 @@ import omx.OmxFile;
 import omx.OmxLookup;
 import omx.OmxMatrix;
 import omx.hdf5.OmxHdf5Datatype;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.TransportMode;
 
 import java.util.*;
@@ -21,7 +22,7 @@ import java.util.concurrent.ConcurrentMap;
 
 public class SkimTravelTimes implements TravelTimes {
 
-    private final static Logger logger = Logger.getLogger(SkimTravelTimes.class);
+    private final static Logger logger = LogManager.getLogger(SkimTravelTimes.class);
 
     private final ConcurrentMap<String, IndexedDoubleMatrix2D> matricesByMode = new ConcurrentHashMap<>();
 

@@ -1,6 +1,7 @@
 package de.tum.bgu.msm.data;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Holds person objects for the Microsimulation Transport Orchestrator (MITO)
@@ -10,7 +11,7 @@ import org.apache.log4j.Logger;
  */
 public class MitoPerson7days extends MitoPersonImpl {
 
-    private static final Logger logger = Logger.getLogger(MitoPerson7days.class);
+    private static final Logger logger = LogManager.getLogger(MitoPerson7days.class);
     private ModeSet modeSet = ModeSet.AutoPtCycleWalk;
 
     public MitoPerson7days(int id, MitoHousehold household, MitoOccupationStatus mitoOccupationStatus, MitoOccupation occupation, int age, MitoGender mitoGender, boolean driversLicense) {

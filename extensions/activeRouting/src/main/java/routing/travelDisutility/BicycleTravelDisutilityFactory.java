@@ -19,7 +19,8 @@
 package routing.travelDisutility;
 
 import com.google.inject.Inject;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.core.router.costcalculators.TravelDisutilityFactory;
 import org.matsim.core.router.util.TravelDisutility;
 import org.matsim.core.router.util.TravelTime;
@@ -34,7 +35,7 @@ import routing.BicycleConfigGroup;
 public final class BicycleTravelDisutilityFactory implements TravelDisutilityFactory {
 	// public-final is ok since ctor is package-private: can only be used through injection
 
-	private static final Logger LOG = Logger.getLogger(BicycleTravelDisutilityFactory.class);
+	private static final Logger LOG = LogManager.getLogger(BicycleTravelDisutilityFactory.class);
 
 	@Inject
 	BicycleConfigGroup bicycleConfigGroup;

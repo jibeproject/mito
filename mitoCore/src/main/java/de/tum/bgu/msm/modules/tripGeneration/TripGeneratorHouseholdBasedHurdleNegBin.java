@@ -5,7 +5,8 @@ import de.tum.bgu.msm.io.input.readers.TripGenerationHurdleCoefficientReader;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
 import de.tum.bgu.msm.util.concurrent.RandomizableConcurrentFunction;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.core.utils.collections.Tuple;
 import umontreal.ssj.probdist.NegativeBinomialDist;
 
@@ -15,7 +16,7 @@ import static de.tum.bgu.msm.modules.tripGeneration.RawTripGenerator.TRIP_ID_COU
 
 public class TripGeneratorHouseholdBasedHurdleNegBin extends RandomizableConcurrentFunction<Tuple<Purpose, Map<MitoHousehold, List<MitoTrip>>>> implements TripGenerator {
 
-    private static final Logger logger = Logger.getLogger(TripGeneratorHouseholdBasedHurdleNegBin.class);
+    private static final Logger logger = LogManager.getLogger(TripGeneratorHouseholdBasedHurdleNegBin.class);
     private Map<MitoHousehold, List<MitoTrip>> tripsByHH = new LinkedHashMap<>();
 
     private final DataSet dataSet;

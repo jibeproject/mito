@@ -21,7 +21,8 @@ import de.tum.bgu.msm.modules.tripGeneration.TripGeneration;
 import de.tum.bgu.msm.modules.tripGeneration.TripGeneratorType;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ import static de.tum.bgu.msm.data.Purpose.*;
  */
 public final class TravelDemandGenerator {
 
-    private static final Logger logger = Logger.getLogger(TravelDemandGenerator.class);
+    private static final Logger logger = LogManager.getLogger(TravelDemandGenerator.class);
 
     private static final List<Purpose> PURPOSES = List.of(HBW,HBE,HBS,HBR,HBO,NHBW,NHBO);
     private final DataSet dataSet;

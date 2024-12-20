@@ -7,14 +7,15 @@ import de.tum.bgu.msm.data.travelDistances.TravelDistances;
 import de.tum.bgu.msm.util.matrices.IndexedDoubleMatrix2D;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 public class DestinationUtilityByPurposeGenerator implements Callable<Triple<Purpose,Integer, IndexedDoubleMatrix2D>> {
 
-    private final static Logger logger = Logger.getLogger(DestinationUtilityByPurposeGenerator.class);
+    private final static Logger logger = LogManager.getLogger(DestinationUtilityByPurposeGenerator.class);
 
     private final AbstractDestinationUtilityCalculator calculator;
     private final Purpose purpose;

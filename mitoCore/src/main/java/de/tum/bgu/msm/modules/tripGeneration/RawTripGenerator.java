@@ -3,7 +3,8 @@ package de.tum.bgu.msm.modules.tripGeneration;
 import de.tum.bgu.msm.data.*;
 import de.tum.bgu.msm.util.MitoUtil;
 import de.tum.bgu.msm.util.concurrent.ConcurrentExecutor;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.core.utils.collections.Tuple;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.stream.IntStream;
  */
 public class RawTripGenerator {
 
-    private static final Logger logger = Logger.getLogger(RawTripGenerator.class);
+    private static final Logger logger = LogManager.getLogger(RawTripGenerator.class);
 
     final static AtomicInteger DROPPED_TRIPS_AT_BORDER_COUNTER = new AtomicInteger();
     final static AtomicInteger TRIP_ID_COUNTER = new AtomicInteger();

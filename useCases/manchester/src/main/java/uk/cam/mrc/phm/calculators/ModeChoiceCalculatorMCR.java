@@ -5,7 +5,8 @@ import de.tum.bgu.msm.data.travelTimes.TravelTimes;
 import de.tum.bgu.msm.io.input.readers.ModeChoiceCoefficientReader;
 import de.tum.bgu.msm.modules.modeChoice.AbstractModeChoiceCalculator;
 import de.tum.bgu.msm.resources.Resources;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.core.utils.collections.Tuple;
 
 import java.util.*;
@@ -14,7 +15,7 @@ import static de.tum.bgu.msm.data.Mode.*;
 
 public class ModeChoiceCalculatorMCR extends AbstractModeChoiceCalculator {
 
-    private static final Logger LOGGER = Logger.getLogger(ModeChoiceCalculatorMCR.class);
+    private static final Logger LOGGER = LogManager.getLogger(ModeChoiceCalculatorMCR.class);
     private final DataSet dataSet;
 
     public ModeChoiceCalculatorMCR(Purpose purpose, DataSet dataSet) {

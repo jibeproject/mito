@@ -5,13 +5,14 @@ import de.tum.bgu.msm.data.MitoZone;
 import de.tum.bgu.msm.data.Purpose;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
 public class TripBalancer {
 
-    private static final Logger logger = Logger.getLogger(TripBalancer.class);
+    private static final Logger logger = LogManager.getLogger(TripBalancer.class);
 
     private final DataSet dataSet;
     private final List<Purpose> purposes;

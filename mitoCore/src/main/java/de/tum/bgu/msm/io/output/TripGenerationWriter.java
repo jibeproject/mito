@@ -7,7 +7,8 @@ import de.tum.bgu.msm.data.Purpose;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -19,7 +20,7 @@ import java.util.Map;
  */
 public class TripGenerationWriter {
 
-    private static final Logger logger = Logger.getLogger(TripGenerationWriter.class);
+    private static final Logger logger = LogManager.getLogger(TripGenerationWriter.class);
 
     public static void writeTripsByPurposeAndZone(DataSet dataSet, String scenarioName) {
         // write number of trips by purpose and zone to output file

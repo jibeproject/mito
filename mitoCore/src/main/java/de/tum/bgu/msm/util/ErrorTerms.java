@@ -4,7 +4,8 @@ import org.apache.commons.math3.distribution.ExponentialDistribution;
 import org.apache.commons.math3.distribution.GumbelDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 import org.apache.commons.math3.random.Well19937c;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.core.utils.collections.Tuple;
 
 import java.util.EnumMap;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class ErrorTerms<E extends Enum<E>> {
 
-    private static final Logger logger = Logger.getLogger(ErrorTerms.class);
+    private static final Logger logger = LogManager.getLogger(ErrorTerms.class);
     private final Class<E> enumClass;
     private final EnumSet<E> choiceSet;
     private final UniformRealDistribution uniformRealDitribution;

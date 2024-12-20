@@ -1,6 +1,7 @@
 package de.tum.bgu.msm.util.charts;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
@@ -22,7 +23,7 @@ import java.io.IOException;
 
 public final class Histogram {
 
-    private final static Logger logger = Logger.getLogger(Histogram.class);
+    private final static Logger logger = LogManager.getLogger(Histogram.class);
 
     private Histogram() {
 

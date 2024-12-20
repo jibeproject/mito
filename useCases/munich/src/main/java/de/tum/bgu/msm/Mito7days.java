@@ -8,7 +8,8 @@ import de.tum.bgu.msm.scenarios.mito7days.MitoModel7days;
 import de.tum.bgu.msm.trafficAssignment.CarSkimUpdater;
 import de.tum.bgu.msm.trafficAssignment.ConfigureMatsim;
 import de.tum.bgu.msm.util.MunichImplementationConfig;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Population;
 import org.matsim.core.config.Config;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 
 public class Mito7days {
 
-    private static final Logger logger = Logger.getLogger(Mito7days.class);
+    private static final Logger logger = LogManager.getLogger(Mito7days.class);
 
     public static void main(String[] args) {
         logger.info("Started the Microsimulation Transport Orchestrator (MITO) based on 2017 models");
@@ -60,7 +61,7 @@ public class Mito7days {
 
             for (Day day : Day.values()) {
                 logger.info("Starting " + day.toString().toUpperCase() + " MATSim simulation");
-                config.controler().setOutputDirectory(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment/" + day.toString());
+                config.controller().setOutputDirectory(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment/" + day.toString());
                 MutableScenario matsimScenario = (MutableScenario) ScenarioUtils.loadScenario(config);
                 matsimScenario.setPopulation(populationByDay.get(day));
                 controlers.put(day, new Controler(matsimScenario));

@@ -1,6 +1,7 @@
 package de.tum.bgu.msm;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.core.network.NetworkUtils;
@@ -19,7 +20,7 @@ public class NetworkAnalyser {
     private static final String CSV_SEPARATOR = "\t";
     private static final String QUESTIONABLE_LINKS_FILE_NAME = "questionableLinks.csv";
 
-    private static final Logger logger = Logger.getLogger(NetworkAnalyser.class);
+    private static final Logger logger = LogManager.getLogger(NetworkAnalyser.class);
 
     public NetworkAnalyser() {
 

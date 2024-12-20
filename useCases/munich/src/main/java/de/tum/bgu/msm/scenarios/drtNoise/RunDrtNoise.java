@@ -57,33 +57,31 @@ public class RunDrtNoise {
         final Config config = ConfigUtils.loadConfig(configPath, multiModeDrtConfigGroup,
                 new DvrpConfigGroup());
 
-        config.controler().setLastIteration(numberOfIterations); // Number of simulation iterations
-        config.controler().setWriteEventsInterval(numberOfIterations); // Write Events file every x-Iterations
-        config.controler().setWritePlansInterval(numberOfIterations); // Write Plan file every x-Iterations
+        config.controller().setLastIteration(numberOfIterations); // Number of simulation iterations
+        config.controller().setWriteEventsInterval(numberOfIterations); // Write Events file every x-Iterations
+        config.controller().setWritePlansInterval(numberOfIterations); // Write Plan file every x-Iterations
 
 
         config.plans().setInputFile(demandPath);
         config.network().setInputFile(networkPath);
+        config.controller().setOutputDirectory(outputDir);
         DrtConfigGroup drt = DrtConfigGroup.getSingleModeDrtConfig(config);
-        drt.setMaxTravelTimeBeta(600.0);
+        //TODO: move config to xml file
+        /*drt.setMaxTravelTimeBeta(600.0);
         drt.setMaxTravelTimeAlpha(1.5);
         drt.setMaxWaitTime(600.0);
         drt.setStopDuration(30.0);
         drt.setRejectRequestIfMaxWaitOrTravelTimeViolated(rejections);
         drt.setTransitStopFile(null); //door-to-door approach for now?
         drt.setMaxWalkDistance(1000.0);
-        config.controler().setOutputDirectory(outputDir);
         drt.setVehiclesFile(fleetPath);
         drt.setIdleVehiclesReturnToDepots(false);
         drt.setPlotDetailedCustomerStats(true);
-
         drt.setOperationalScheme(DrtConfigGroup.OperationalScheme.door2door);
-
-
         if (stopbased) {
             drt.setOperationalScheme(DrtConfigGroup.OperationalScheme.stopbased);
         }
-        drt.setTransitStopFile(stopPath);
+        drt.setTransitStopFile(stopPath);*/
 
         Scenario scenario = DrtControlerCreator.createScenarioWithDrtRouteFactory(config);
         ScenarioUtils.loadScenario(scenario);

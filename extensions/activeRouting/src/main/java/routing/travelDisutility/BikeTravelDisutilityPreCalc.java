@@ -2,7 +2,8 @@ package routing.travelDisutility;
 
 
 import de.tum.bgu.msm.data.Purpose;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
@@ -26,7 +27,7 @@ import java.util.Map;
  */
 public class BikeTravelDisutilityPreCalc implements TravelDisutility {
 
-    private final static Logger logger = Logger.getLogger(BikeTravelDisutilityPreCalc.class);
+    private final static Logger logger = LogManager.getLogger(BikeTravelDisutilityPreCalc.class);
     private final TravelTime timeCalculator;
     private final BicycleConfigGroup bicycleConfigGroup;
     private Network network;

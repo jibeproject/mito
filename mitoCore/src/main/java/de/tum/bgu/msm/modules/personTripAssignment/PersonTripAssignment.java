@@ -3,7 +3,8 @@ package de.tum.bgu.msm.modules.personTripAssignment;
 import de.tum.bgu.msm.data.*;
 import de.tum.bgu.msm.modules.Module;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,7 +17,7 @@ import static de.tum.bgu.msm.data.Purpose.*;
 
 public class PersonTripAssignment extends Module {
 
-    private static final Logger logger = Logger.getLogger(PersonTripAssignment.class);
+    private static final Logger logger = LogManager.getLogger(PersonTripAssignment.class);
 
     public PersonTripAssignment(DataSet dataSet, List<Purpose> purposes) {
         super(dataSet, purposes);

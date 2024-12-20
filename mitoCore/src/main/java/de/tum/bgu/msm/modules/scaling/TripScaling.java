@@ -6,14 +6,15 @@ import de.tum.bgu.msm.modules.Module;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
 public class TripScaling extends Module {
 
     private double tripScalingFactor;
-    private static final Logger logger = Logger.getLogger(TripScaling.class);
+    private static final Logger logger = LogManager.getLogger(TripScaling.class);
 
     public TripScaling(DataSet dataSet, List<Purpose> purposes) {
         super(dataSet, purposes);

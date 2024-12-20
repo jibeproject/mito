@@ -3,7 +3,8 @@ package de.tum.bgu.msm.scenarios.telework;
 import de.tum.bgu.msm.data.*;
 import de.tum.bgu.msm.modules.Module;
 import de.tum.bgu.msm.util.MitoUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashSet;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.Set;
 public class Telework extends Module {
 
     private final double percentage;
-    private final Logger logger = Logger.getLogger(Telework.class);
+    private final Logger logger = LogManager.getLogger(Telework.class);
 
     public Telework(DataSet dataSet, List<Purpose> purposes, double percentage) {
         super(dataSet, purposes);

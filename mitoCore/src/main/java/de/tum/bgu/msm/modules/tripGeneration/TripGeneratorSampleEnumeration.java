@@ -5,7 +5,8 @@ import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
 import de.tum.bgu.msm.util.concurrent.RandomizableConcurrentFunction;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.core.utils.collections.Tuple;
 
 import java.util.*;
@@ -15,7 +16,7 @@ import static de.tum.bgu.msm.modules.tripGeneration.RawTripGenerator.TRIP_ID_COU
 
 class TripGeneratorSampleEnumeration extends RandomizableConcurrentFunction<Tuple<Purpose, Map<MitoHousehold, List<MitoTrip>>>> implements TripGenerator {
 
-    private static final Logger logger = Logger.getLogger(TripGeneratorSampleEnumeration.class);
+    private static final Logger logger = LogManager.getLogger(TripGeneratorSampleEnumeration.class);
     private final boolean dropAtBorder = Resources.instance.getBoolean(Properties.REMOVE_TRIPS_AT_BORDER);
     private Map<MitoHousehold, List<MitoTrip>> tripsByHH = new LinkedHashMap<>();
     private final DataSet dataSet;
