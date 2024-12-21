@@ -43,6 +43,7 @@ public final class MitoModel7days {
         this.dataSet = dataSet;
         this.scenarioName = scenarioName;
         MitoUtil.initializeRandomNumber();
+        MitoUtil.loadHdf5Lib();
     }
 
     public static MitoModel7days standAloneModel(String propertiesFile, ImplementationConfig config) {

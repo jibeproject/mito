@@ -44,6 +44,7 @@ public class ConvertNetworkChangeEventsToSkim {
 
         Resources.initializeResources(PROPERTIES_PATH);
         MitoUtil.initializeRandomNumber();
+        MitoUtil.loadHdf5Lib();
 
         DataSet dataset = new DataSetImpl();
         new ZonesReader(dataset).read();

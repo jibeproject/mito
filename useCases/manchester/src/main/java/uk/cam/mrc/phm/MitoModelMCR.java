@@ -45,6 +45,7 @@ public final class MitoModelMCR {
         this.dataSet = dataSet;
         this.scenarioName = scenarioName;
         MitoUtil.initializeRandomNumber();
+        MitoUtil.loadHdf5Lib();
     }
 
     public static MitoModelMCR standAloneModel(String propertiesFile, ImplementationConfig config) {

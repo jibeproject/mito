@@ -31,6 +31,7 @@ public class MitoModelDrt {
         this.scenarioName = scenarioName;
         this.serviceArea = serviceArea;
         MitoUtil.initializeRandomNumber();
+        MitoUtil.loadHdf5Lib();
     }
 
     public static MitoModelDrt standAloneModel(String propertiesFile, ImplementationConfig config, Geometry serviceArea) {

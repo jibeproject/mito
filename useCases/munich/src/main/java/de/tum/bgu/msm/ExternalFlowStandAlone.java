@@ -31,6 +31,7 @@ public class ExternalFlowStandAlone {
 
         Resources.initializeResources(args[0]);
         MitoUtil.initializeRandomNumber();
+        MitoUtil.loadHdf5Lib();
 
         float scalingFactor = 0.05f;
 

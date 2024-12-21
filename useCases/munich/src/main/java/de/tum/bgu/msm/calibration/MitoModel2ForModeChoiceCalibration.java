@@ -55,6 +55,7 @@ public final class MitoModel2ForModeChoiceCalibration {
         this.dataSet = dataSet;
         this.scenarioName = scenarioName;
         MitoUtil.initializeRandomNumber();
+        MitoUtil.loadHdf5Lib();
     }
 
     public static MitoModel2ForModeChoiceCalibration standAloneModel(String propertiesFile, ImplementationConfig config) {
