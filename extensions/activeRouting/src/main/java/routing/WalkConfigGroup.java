@@ -18,52 +18,27 @@
  * *********************************************************************** */
 package routing;
 
-import org.matsim.core.config.ReflectiveConfigGroup;
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author smetzler, dziemke
  */
-public final class WalkConfigGroup extends ReflectiveConfigGroup {
+public final class WalkConfigGroup extends ActiveConfigGroup {
 	// necessary to have this public
 
 	public static final String GROUP_NAME = "walk";
-	private HashMap<String, Double> marginalCostGradient = new HashMap<>();
-	private HashMap<String, Double> marginalCostVgvi = new HashMap<>();
-	private HashMap<String, Double> marginalCostLinkStress = new HashMap<>();
-	private HashMap<String, Double> marginalCostJctStress = new HashMap<>();
-	private HashMap<String, Double> marginalCostSpeed = new HashMap<>();
+	private static final String WALK_MODE = "walk";
 
-	private String walkMode = "walk";
+	private static final double DEFAULT_MAX_WALK_SPEED = 5./3.;
+
 
 	public WalkConfigGroup() {
 		super(GROUP_NAME);
 	}
 
-
-	public HashMap<String, Double> getMarginalCostGradient() {
-		return marginalCostGradient;
+	public String getMode() {
+		return WALK_MODE;
 	}
 
-	public HashMap<String, Double> getMarginalCostVgvi() {
-		return marginalCostVgvi;
+	public double getDefaultMaxWalkSpeed() {
+		return DEFAULT_MAX_WALK_SPEED;
 	}
-
-	public HashMap<String, Double> getMarginalCostLinkStress() {
-		return marginalCostLinkStress;
-	}
-
-	public HashMap<String, Double> getMarginalCostJctStress() {
-		return marginalCostJctStress;
-	}
-
-	public String getWalkMode() {
-		return walkMode;
-	}
-
-    public HashMap<String, Double> getMarginalCostSpeed() {
-        return marginalCostSpeed;
-    }
 }

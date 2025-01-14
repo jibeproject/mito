@@ -21,7 +21,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -123,6 +122,8 @@ public final class TravelDemandGenerator7days {
             mandatoryPurposes.retainAll(Purpose.getMandatoryPurposes());
             List<Purpose> discretionaryPurposes = new ArrayList<>(purposes);
             discretionaryPurposes.removeAll(mandatoryPurposes);
+            List<Purpose> nonRrtPurposes = new ArrayList<>(purposes);
+            nonRrtPurposes.remove(RRT);
 
             //from here
             tripGenerationMandatory = new TripGeneration(dataSet, mandatoryPurposes, new MitoTripFactory7days());
@@ -138,7 +139,7 @@ public final class TravelDemandGenerator7days {
 
             distributionDiscretionary = new TripDistribution(dataSet, discretionaryPurposes);
             // Register ALL purposes here, because we need the mandatory purpose matrices for NHBW / NHBO
-            purposes.forEach(purpose -> ((TripDistribution) distributionDiscretionary).registerDestinationUtilityCalculator(purpose, new DestinationUtilityCalculatorImpl7days(purpose)));
+            nonRrtPurposes.forEach(purpose -> ((TripDistribution) distributionDiscretionary).registerDestinationUtilityCalculator(purpose, new DestinationUtilityCalculatorImpl7days(purpose)));
             //Override the calculator for RRT, because the categorisePerson is different
             ((TripDistribution) distributionDiscretionary).registerDestinationUtilityCalculator(RRT, new DestinationUtilityCalculatorImplRrt7days(RRT));
 

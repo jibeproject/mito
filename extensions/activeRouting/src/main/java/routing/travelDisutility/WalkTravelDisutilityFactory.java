@@ -24,7 +24,6 @@ import org.apache.logging.log4j.Logger;
 import org.matsim.core.router.costcalculators.TravelDisutilityFactory;
 import org.matsim.core.router.util.TravelDisutility;
 import org.matsim.core.router.util.TravelTime;
-import routing.BicycleConfigGroup;
 import routing.WalkConfigGroup;
 
 //import org.matsim.api.core.v01.Scenario;
@@ -47,6 +46,6 @@ public final class WalkTravelDisutilityFactory implements TravelDisutilityFactor
 	}
 	@Override
 	public TravelDisutility createTravelDisutility(TravelTime timeCalculator) {
-		return new WalkTravelDisutility(walkConfigGroup, timeCalculator);
+		return new ActiveDisutility(walkConfigGroup, timeCalculator);
 	}
 }

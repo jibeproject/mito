@@ -20,18 +20,15 @@ package routing;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.matsim.contrib.bicycle.BicycleLinkSpeedCalculator;
+import org.matsim.contrib.bicycle.BicycleTravelTime;
 import org.matsim.core.controler.AbstractModule;
+import org.matsim.core.mobsim.qsim.AbstractQSimModule;
 import routing.travelDisutility.BicycleTravelDisutilityFactory;
-import routing.travelTime.BicycleTravelTime;
-import routing.travelTime.speed.BicycleLinkSpeedCalculatorDefaultImpl;
+import routing.travelTime.BicycleLinkSpeedCalculatorImpl;
 
 
 public class BicycleModule extends AbstractModule {
-
-	private static final Logger LOG = LogManager.getLogger(BicycleModule.class);
 
 	@Inject
 	private BicycleConfigGroup bicycleConfigGroup;
@@ -41,8 +38,15 @@ public class BicycleModule extends AbstractModule {
 
 	@Override
 	public void install() {
-		addTravelTimeBinding(bicycleConfigGroup.getBicycleMode()).to(BicycleTravelTime.class).in(Singleton.class);
-		addTravelDisutilityFactoryBinding(bicycleConfigGroup.getBicycleMode()).to(BicycleTravelDisutilityFactory.class).in(Singleton.class);
-		bind( BicycleLinkSpeedCalculator.class ).to( BicycleLinkSpeedCalculatorDefaultImpl.class) ;
+		addTravelTimeBinding(bicycleConfigGroup.getMode()).to(BicycleTravelTime.class).in(Singleton.class);
+		addTravelDisutilityFactoryBinding(bicycleConfigGroup.getMode()).to(BicycleTravelDisutilityFactory.class).in(Singleton.class);
+		this.installOverridingQSimModule(new AbstractQSimModule() {
+			@Override
+			protected void configureQSim() {
+				this.addLinkSpeedCalculator().to(BicycleLinkSpeedCalculator.class);
+			}
+
+		});
+		bind( BicycleLinkSpeedCalculator.class ).to( BicycleLinkSpeedCalculatorImpl.class ) ;
 	}
 }

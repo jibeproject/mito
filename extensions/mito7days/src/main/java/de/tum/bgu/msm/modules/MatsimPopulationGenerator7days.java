@@ -55,7 +55,8 @@ public final class MatsimPopulationGenerator7days extends Module {
                     Person person = factory.createPerson(Id.createPersonId(trip.getId()));
                     person.getAttributes().putAttribute("age", Math.min(trip.getPerson().getAge(), 100));
                     person.getAttributes().putAttribute("sex",trip.getPerson().getMitoGender());
-                    person.getAttributes().putAttribute("purpose",getTripPurpose(trip));
+                    person.getAttributes().putAttribute("purpose",trip.getTripPurpose());
+                    person.getAttributes().putAttribute("mode",Mode.getMatsimMode(trip.getTripMode()));
                     //use for 7 day extension
                     person.getAttributes().putAttribute("day",((MitoTrip7days)trip).getDepartureDay().toString());
                     trip.setMatsimPerson(person);
@@ -149,17 +150,6 @@ public final class MatsimPopulationGenerator7days extends Module {
             }
         } else {
             return "other";
-        }
-    }
-
-    private static String getTripPurpose(MitoTrip trip){
-        Purpose purpose = trip.getTripPurpose();
-        if (purpose.equals(Purpose.HBW)){
-            return "commute";
-        } else if (purpose.equals(Purpose.HBE)){
-            return "commute";
-        } else {
-            return "nonCommute";
         }
     }
 }

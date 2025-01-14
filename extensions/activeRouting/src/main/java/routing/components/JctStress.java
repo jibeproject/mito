@@ -7,6 +7,15 @@ import static routing.components.Crossing.*;
 
 public class JctStress {
 
+    public static double getStressProp(Link link, String mode) {
+        double jctStress = 0;
+        if((boolean) link.getAttributes().getAttribute("crossVehicles")) {
+            double junctionWidth = Math.min(link.getLength(),(double) link.getAttributes().getAttribute("crossWidth"));
+            jctStress = (junctionWidth / link.getLength()) * JctStress.getStress(link,mode);
+        }
+        return jctStress;
+    }
+
     public static double getStress(Link link, String mode) {
 
         if(!mode.equals("walk") && !mode.equals("bike")) {

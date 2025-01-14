@@ -23,7 +23,10 @@ import com.google.inject.Singleton;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.matsim.core.controler.AbstractModule;
+import org.matsim.core.mobsim.qsim.AbstractQSimModule;
 import routing.travelDisutility.WalkTravelDisutilityFactory;
+import routing.travelTime.WalkLinkSpeedCalculator;
+import routing.travelTime.WalkLinkSpeedCalculatorImpl;
 import routing.travelTime.WalkTravelTime;
 
 
@@ -39,7 +42,14 @@ public class WalkModule extends AbstractModule {
 
 	@Override
 	public void install() {
-		this.addTravelTimeBinding(walkConfigGroup.getWalkMode()).to(WalkTravelTime.class).in(Singleton.class);
-		this.addTravelDisutilityFactoryBinding(walkConfigGroup.getWalkMode()).to(WalkTravelDisutilityFactory.class).in(Singleton.class);
+		this.addTravelTimeBinding(walkConfigGroup.getMode()).to(WalkTravelTime.class).in(Singleton.class);
+		this.addTravelDisutilityFactoryBinding(walkConfigGroup.getMode()).to(WalkTravelDisutilityFactory.class).in(Singleton.class);
+		this.installOverridingQSimModule(new AbstractQSimModule() {
+			@Override
+			protected void configureQSim() {
+				this.addLinkSpeedCalculator().to(WalkLinkSpeedCalculator.class);
+			}
+		});
+		bind(WalkLinkSpeedCalculator.class).to(WalkLinkSpeedCalculatorImpl.class);
 	}
 }

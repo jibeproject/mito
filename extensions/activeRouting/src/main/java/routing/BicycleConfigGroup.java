@@ -18,58 +18,32 @@
  * *********************************************************************** */
 package routing;
 
-import org.matsim.core.config.ReflectiveConfigGroup;
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author smetzler, dziemke
  */
-public class BicycleConfigGroup extends ReflectiveConfigGroup {
+public class BicycleConfigGroup extends ActiveConfigGroup {
 	// necessary to have this public
 
 	public static final String GROUP_NAME = "bike";
-	private HashMap<String, Double> marginalCostGradient = new HashMap<>();
-	private HashMap<String, Double> marginalCostVgvi = new HashMap<>();
-	private HashMap<String, Double> marginalCostLinkStress = new HashMap<>();
-	private HashMap<String, Double> marginalCostJctStress = new HashMap<>();
-	private HashMap<String, Double> marginalCostSpeed = new HashMap<>();
+	private static final String BICYCLE_MODE = "bike";
 
-	private double maxBicycleSpeedForRouting = 20./3.6;
-	private String bicycleMode = "bike";
+	private static final double DISMOUNT_FACTOR = 0.362;
+	private static final double DEFAULT_MAX_BIKE_SPEED = 5.5;
 
 
 	public BicycleConfigGroup() {
 		super(GROUP_NAME);
 	}
 
-
-	public HashMap<String, Double> getMarginalCostGradient() {
-		return marginalCostGradient;
+	public String getMode() {
+		return BICYCLE_MODE;
 	}
 
-	public HashMap<String, Double> getMarginalCostVgvi() {
-		return marginalCostVgvi;
+	public double getDismountFactor() {
+		return DISMOUNT_FACTOR;
 	}
 
-	public HashMap<String, Double> getMarginalCostLinkStress() {
-		return marginalCostLinkStress;
+	public double getDefaultMaxBikeSpeed() {
+		return DEFAULT_MAX_BIKE_SPEED;
 	}
-
-	public HashMap<String, Double> getMarginalCostJctStress() {
-		return marginalCostJctStress;
-	}
-
-	public String getBicycleMode() {
-		return bicycleMode;
-	}
-
-	public double getMaxBicycleSpeedForRouting() {
-		return maxBicycleSpeedForRouting;
-	}
-
-    public HashMap<String, Double> getMarginalCostSpeed() {
-        return marginalCostSpeed;
-    }
 }

@@ -48,6 +48,6 @@ public final class BicycleTravelDisutilityFactory implements TravelDisutilityFac
 	
 	@Override
 	public TravelDisutility createTravelDisutility(TravelTime timeCalculator) {
-		return new BikeTravelDisutility(bicycleConfigGroup, timeCalculator);
+		return new ActiveDisutility(bicycleConfigGroup, timeCalculator);
 	}
 }

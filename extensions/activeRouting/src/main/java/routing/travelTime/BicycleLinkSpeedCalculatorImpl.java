@@ -1,49 +1,61 @@
-package routing.travelTime.speed;
+package routing.travelTime;
 
+import jakarta.inject.Inject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.contrib.bicycle.BicycleLinkSpeedCalculator;
 import org.matsim.contrib.bicycle.BicycleUtils;
+import org.matsim.core.config.Config;
+import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.config.groups.QSimConfigGroup;
 import org.matsim.core.mobsim.qsim.qnetsimengine.QVehicle;
 import org.matsim.vehicles.Vehicle;
 import routing.BicycleConfigGroup;
 
-import javax.inject.Inject;
 import java.util.Objects;
 
-public class BicycleLinkSpeedCalculatorDefaultImpl implements BicycleLinkSpeedCalculator {
+public final class BicycleLinkSpeedCalculatorImpl implements BicycleLinkSpeedCalculator {
+    private static final Logger log = LogManager.getLogger(BicycleLinkSpeedCalculatorImpl.class);
 
     @Inject
     private BicycleConfigGroup bicycleConfigGroup;
-
-    @Inject
-    public BicycleLinkSpeedCalculatorDefaultImpl() {
+    @Inject private QSimConfigGroup qSimConfigGroup;
+    @Inject private Config config;
+    @Inject private BicycleLinkSpeedCalculatorImpl() {
     }
 
-    public BicycleLinkSpeedCalculatorDefaultImpl(BicycleConfigGroup bicycleConfigGroup) {
-        this.bicycleConfigGroup = bicycleConfigGroup;
+    /**
+     * for unit testing
+     */
+    BicycleLinkSpeedCalculatorImpl( Config config ) {
+        this.bicycleConfigGroup = ConfigUtils.addOrGetModule( config, BicycleConfigGroup.class );
+        this.qSimConfigGroup = config.qsim();
     }
 
     @Override
     public double getMaximumVelocity(QVehicle qVehicle, Link link, double time) {
+        if (qVehicle.getVehicle().getType().getNetworkMode().equals(bicycleConfigGroup.getMode())){
+            return getMaximumVelocityForLink( link, qVehicle.getVehicle() );
+        } else{
+            return Double.NaN;
+            // (this now works because the link speed calculator returns the default for all combinations of (vehicle, link, time) that
+            // are not answered by a specialized link speed calculator.  kai, jun'23)
+        }
 
-        if (isBike(qVehicle))
-            return getMaximumVelocityForLink(link, qVehicle.getVehicle());
-        else
-            return getDefaultMaximumVelocity(qVehicle, link, time);
     }
     @Override
     public double getMaximumVelocityForLink(Link link, Vehicle vehicle) {
-        double maxBicycleSpeed = vehicle == null ? bicycleConfigGroup.getMaxBicycleSpeedForRouting() : vehicle.getType().getMaximumVelocity();
-        double bicycleInfrastructureFactor = computeInfrastructureFactor(link);
+        double maxBicycleSpeed = vehicle == null ? bicycleConfigGroup.getDefaultMaxBikeSpeed() : vehicle.getType().getMaximumVelocity();
+        if((boolean) link.getAttributes().getAttribute("dismount")) {
+            maxBicycleSpeed *= bicycleConfigGroup.getDismountFactor();
+        }
         double surfaceFactor = computeSurfaceFactor(link);
         double gradientFactor = computeGradientFactor(link);
-        double speed = maxBicycleSpeed * bicycleInfrastructureFactor * surfaceFactor * gradientFactor;
+        double speed = maxBicycleSpeed * surfaceFactor * gradientFactor;
         return Math.min(speed, link.getFreespeed());
     }
 
-    private double getDefaultMaximumVelocity(QVehicle qVehicle, Link link, double time) {
-        return Math.min(qVehicle.getMaximumVelocity(), link.getFreespeed(time));
-    }
 
     /**
      * Based on "Flügel et al. -- Empirical speed models for cycling in the Oslo road network" (not yet published!)
@@ -52,7 +64,7 @@ public class BicycleLinkSpeedCalculatorDefaultImpl implements BicycleLinkSpeedCa
      * Negative gradients (downhill):
      * Not linear; highest speeds at 5% or 6% gradient; at gradients higher than 6% braking
      */
-    public double computeGradientFactor(Link link) {
+    private double computeGradientFactor(Link link) {
 
         double factor = 1;
         if (link.getFromNode().getCoord().hasZ() && link.getToNode().getCoord().hasZ()) {
@@ -67,7 +79,6 @@ public class BicycleLinkSpeedCalculatorDefaultImpl implements BicycleLinkSpeedCa
         return factor;
     }
 
-    // TODO combine this with comfort
     private double computeSurfaceFactor(Link link) {
         if (hasNotAttribute(link, BicycleUtils.WAY_TYPE)
                 || BicycleUtils.CYCLEWAY.equals(link.getAttributes().getAttribute(BicycleUtils.WAY_TYPE))
@@ -124,16 +135,8 @@ public class BicycleLinkSpeedCalculatorDefaultImpl implements BicycleLinkSpeedCa
         }
     }
 
-    private double computeInfrastructureFactor(Link link) {
-        var speedFactor = link.getAttributes().getAttribute(BicycleUtils.BICYCLE_INFRASTRUCTURE_SPEED_FACTOR);
-        return speedFactor == null ? 1.0 : Double.parseDouble(speedFactor.toString());
-    }
-
     private boolean hasNotAttribute(Link link, String attributeName) {
         return link.getAttributes().getAttribute(attributeName) == null;
     }
-
-    private boolean isBike(QVehicle qVehicle) {
-        return qVehicle.getVehicle().getType().getId().toString().equals(bicycleConfigGroup.getBicycleMode());
-    }
 }
+
