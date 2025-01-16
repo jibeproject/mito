@@ -78,23 +78,32 @@ public class TripGenCalculatorMCR implements TripGenPredictor {
 
         // Age
         int age = pp.getAge();
-        if (age <= 18) {
+        if (age <= 4) {
             predictor += coefficients.get("p.age_gr_1");
         }
-        else if (age <= 29) {
+        else if (age <= 10) {
             predictor += coefficients.get("p.age_gr_2");
         }
-        else if (age <= 49) {
+        else if (age <= 15) {
             predictor += coefficients.get("p.age_gr_3");
         }
-        else if (age <= 59) {
+        else if (age <= 17) {
             predictor += coefficients.get("p.age_gr_4");
         }
-        else if (age <= 69) {
+        else if (age <= 29) {
             predictor += coefficients.get("p.age_gr_5");
         }
-        else {
+        else if (age <= 49) {
             predictor += coefficients.get("p.age_gr_6");
+        }
+        else if (age <= 59){
+            predictor += coefficients.get("p.age_gr_7");
+        }
+        else if (age <= 69){
+            predictor += coefficients.get("p.age_gr_8");
+        }
+        else {
+            predictor += coefficients.get("p.age_gr_9");
         }
 
         // Female
