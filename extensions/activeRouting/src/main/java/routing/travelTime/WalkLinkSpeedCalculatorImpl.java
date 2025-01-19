@@ -2,8 +2,11 @@ package routing.travelTime;
 
 import jakarta.inject.Inject;
 import org.matsim.api.core.v01.network.Link;
+import org.matsim.core.config.Config;
+import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.mobsim.qsim.qnetsimengine.QVehicle;
 import org.matsim.vehicles.Vehicle;
+import routing.BicycleConfigGroup;
 import routing.WalkConfigGroup;
 import routing.components.Gradient;
 
@@ -11,6 +14,10 @@ public class WalkLinkSpeedCalculatorImpl implements WalkLinkSpeedCalculator {
 
     @Inject
     private WalkConfigGroup walkConfigGroup;
+
+    public WalkLinkSpeedCalculatorImpl( Config config ) {
+        this.walkConfigGroup = ConfigUtils.addOrGetModule( config, WalkConfigGroup.class );
+    }
 
     @Override
     public double getMaximumVelocity(QVehicle qVehicle, Link link, double time) {

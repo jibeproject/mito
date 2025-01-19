@@ -21,11 +21,11 @@ package routing;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.matsim.contrib.bicycle.BicycleLinkSpeedCalculator;
-import org.matsim.contrib.bicycle.BicycleTravelTime;
 import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.mobsim.qsim.AbstractQSimModule;
 import routing.travelDisutility.BicycleTravelDisutilityFactory;
 import routing.travelTime.BicycleLinkSpeedCalculatorImpl;
+import routing.travelTime.BicycleTravelTime;
 
 
 public class BicycleModule extends AbstractModule {

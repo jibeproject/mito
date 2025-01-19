@@ -14,6 +14,11 @@ public class WalkTravelTime implements TravelTime {
     @Inject WalkTravelTime() {
     }
 
+    @Inject public WalkTravelTime(WalkLinkSpeedCalculator linkSpeedCalculator) {
+        this.linkSpeedCalculator = linkSpeedCalculator;
+    }
+
+
     @Override
     public double getLinkTravelTime(Link link, double v, Person person, Vehicle vehicle) {
         return link.getLength() / linkSpeedCalculator.getMaximumVelocityForLink(link, vehicle);

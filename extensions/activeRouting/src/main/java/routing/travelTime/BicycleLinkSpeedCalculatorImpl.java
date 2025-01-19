@@ -25,10 +25,7 @@ public final class BicycleLinkSpeedCalculatorImpl implements BicycleLinkSpeedCal
     @Inject private BicycleLinkSpeedCalculatorImpl() {
     }
 
-    /**
-     * for unit testing
-     */
-    BicycleLinkSpeedCalculatorImpl( Config config ) {
+    public BicycleLinkSpeedCalculatorImpl( Config config ) {
         this.bicycleConfigGroup = ConfigUtils.addOrGetModule( config, BicycleConfigGroup.class );
         this.qSimConfigGroup = config.qsim();
     }
