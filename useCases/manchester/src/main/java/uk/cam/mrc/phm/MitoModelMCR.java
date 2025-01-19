@@ -5,12 +5,14 @@ import de.tum.bgu.msm.data.DataSetImpl;
 import de.tum.bgu.msm.data.travelTimes.SkimTravelTimes;
 import de.tum.bgu.msm.io.PersonsReader7days;
 import de.tum.bgu.msm.io.input.readers.*;
+import de.tum.bgu.msm.modules.modeChoice.DefaultModeChoiceCalibrationData;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.ImplementationConfig;
 import de.tum.bgu.msm.util.MitoUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.cam.mrc.phm.calculators.ModeChoiceCalibrationDataMCR;
 import uk.cam.mrc.phm.io.*;
 import uk.cam.mrc.phm.io.BicycleOwnershipReaderAndModel;
 
@@ -93,6 +95,7 @@ public final class MitoModelMCR {
     private void readAdditionalData() {
         new PoiWeightsReader(dataSet).read();
         //new ModeChoiceInputReader(dataSet).read();
+        dataSet.setModeChoiceCalibrationData(new ModeChoiceCalibrationDataMCR());
         new CalibrationDataReader(dataSet).read();
         new CalibrationRegionMapReader(dataSet).read();
         //TODO: bike model for Manchester?

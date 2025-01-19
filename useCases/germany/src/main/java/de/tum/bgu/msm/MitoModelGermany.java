@@ -3,6 +3,7 @@ package de.tum.bgu.msm;
 import de.tum.bgu.msm.data.DataSetImpl;
 import de.tum.bgu.msm.data.travelTimes.SkimTravelTimes;
 import de.tum.bgu.msm.io.input.readers.*;
+import de.tum.bgu.msm.modules.modeChoice.DefaultModeChoiceCalibrationData;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.ImplementationConfig;
@@ -93,6 +94,7 @@ public final class MitoModelGermany {
     private void readAdditionalData() {
         new ModeChoiceInputReader(dataSet).read();
         new EconomicStatusReader(dataSet).read();
+        dataSet.setModeChoiceCalibrationData(new DefaultModeChoiceCalibrationData());
         new CalibrationDataReader(dataSet).read();
         new CalibrationRegionMapReader(dataSet).read();
         new BicycleOwnershipReaderAndModel(dataSet).read();

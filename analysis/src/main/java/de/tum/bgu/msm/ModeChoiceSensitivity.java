@@ -5,6 +5,7 @@ import de.tum.bgu.msm.data.travelTimes.TravelTimes;
 import de.tum.bgu.msm.io.input.readers.CalibrationDataReader;
 import de.tum.bgu.msm.io.input.readers.CalibrationRegionMapReader;
 import de.tum.bgu.msm.modules.ModeChoiceCalculator2017Impl;
+import de.tum.bgu.msm.modules.modeChoice.DefaultModeChoiceCalibrationData;
 import de.tum.bgu.msm.modules.modeChoice.ModeChoiceCalculator;
 import de.tum.bgu.msm.modules.modeChoice.CalibratingModeChoiceCalculatorImpl;
 import de.tum.bgu.msm.resources.Resources;
@@ -57,6 +58,7 @@ public class ModeChoiceSensitivity {
         //origin.setAreaTypeHBWModeChoice(AreaType.HBW_mediumSizedCity);
 
         DataSet dataSet = new DataSetImpl();
+        dataSet.setModeChoiceCalibrationData(new DefaultModeChoiceCalibrationData());
         new CalibrationDataReader(dataSet).read();
         new CalibrationRegionMapReader(dataSet).read();
 

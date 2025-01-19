@@ -81,6 +81,8 @@ public interface DataSet {
 
     ModeChoiceCalibrationData getModeChoiceCalibrationData();
 
+    void setModeChoiceCalibrationData(ModeChoiceCalibrationData data);
+
     void setPopulation(Population population);
 
     Population getPopulation();

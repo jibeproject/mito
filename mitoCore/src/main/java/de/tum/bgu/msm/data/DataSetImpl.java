@@ -9,7 +9,6 @@ import de.tum.bgu.msm.modules.modeChoice.ModeChoiceCalibrationData;
 import org.matsim.api.core.v01.population.Population;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class DataSetImpl implements DataSet {
 
@@ -41,7 +40,7 @@ public class DataSetImpl implements DataSet {
     private EnumMap<Purpose, DoubleMatrix1D> departureMinuteCumProbByPurpose;
 
     private Population population;
-    private final ModeChoiceCalibrationData modeChoiceCalibrationData = new ModeChoiceCalibrationData();
+    private ModeChoiceCalibrationData modeChoiceCalibrationData;
 
     @Override
     public TravelDistances getTravelDistancesAuto(){return this.travelDistancesAuto;}
@@ -278,5 +277,9 @@ public class DataSetImpl implements DataSet {
 
     public void setTravelDistancesWalk(TravelDistances travelDistancesWalk) {
         this.travelDistancesWalk = travelDistancesWalk;
+    }
+
+    public void setModeChoiceCalibrationData(ModeChoiceCalibrationData modeChoiceCalibrationData) {
+        this.modeChoiceCalibrationData = modeChoiceCalibrationData;
     }
 }

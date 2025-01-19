@@ -89,13 +89,26 @@ public class OmxSkimsReaderMCR extends AbstractOmxReader implements SkimsReader 
     private void readTravelDistances(){
         IndexedDoubleMatrix2D distanceSkimAuto = AbstractOmxReader.readAndConvertToDoubleMatrix(Resources.instance.getRelativePath(Properties.AUTO_TRAVEL_DISTANCE_SKIM).toString(),
                 Resources.instance.getString(Properties.AUTO_TRAVEL_DISTANCE_SKIM_MATRIX), 1. / 1000.); //meter to km
-        dataSet.setTravelDistancesAuto(new MatrixTravelDistances(distanceSkimAuto));
+        dataSet.setTravelDistancesAuto(new MatrixTravelDistances(setMinimumIntrazonalDistances(distanceSkimAuto)));
         IndexedDoubleMatrix2D distanceSkimWalk = AbstractOmxReader.readAndConvertToDoubleMatrix(Resources.instance.getRelativePath(Properties.WALK_DIST_SKIM).toString(),
                 Resources.instance.getString(Properties.WALK_DIST_SKIM_MATRIX), 1. / 1000.);
-        ((DataSetImpl)dataSet).setTravelDistancesWalk(new MatrixTravelDistances(distanceSkimWalk));
-        dataSet.setTravelDistancesNMT(new MatrixTravelDistances(distanceSkimWalk));
+        ((DataSetImpl)dataSet).setTravelDistancesWalk(new MatrixTravelDistances(setMinimumIntrazonalDistances(distanceSkimWalk)));
+        dataSet.setTravelDistancesNMT(new MatrixTravelDistances(setMinimumIntrazonalDistances(distanceSkimWalk)));
         IndexedDoubleMatrix2D distanceSkimBike = AbstractOmxReader.readAndConvertToDoubleMatrix(Resources.instance.getRelativePath(Properties.BIKE_DIST_SKIM).toString(),
                 Resources.instance.getString(Properties.BIKE_DIST_SKIM_MATRIX), 1. / 1000.);
-        ((DataSetImpl)dataSet).setTravelDistancesBike(new MatrixTravelDistances(distanceSkimBike));
+        ((DataSetImpl)dataSet).setTravelDistancesBike(new MatrixTravelDistances(setMinimumIntrazonalDistances(distanceSkimBike)));
+    }
+
+    private IndexedDoubleMatrix2D setMinimumIntrazonalDistances(IndexedDoubleMatrix2D distanceMatrix){
+        for (int i = 0; i < Math.min(distanceMatrix.rows(), distanceMatrix.columns()); i++) {
+            double value = distanceMatrix.getIndexed(i, i);
+
+            // Set the minimum intrazonal distance to 33 meter
+            if (value < 33./1000.) {
+                distanceMatrix.setIndexed(i, i, 33./1000.);
+            }
+        }
+
+        return distanceMatrix;
     }
 }

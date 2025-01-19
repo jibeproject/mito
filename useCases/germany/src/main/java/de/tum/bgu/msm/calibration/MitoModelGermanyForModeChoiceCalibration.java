@@ -10,6 +10,7 @@ import de.tum.bgu.msm.modules.AttractionCalculatorGermany;
 import de.tum.bgu.msm.modules.DestinationUtilityCalculatorImplGermany;
 import de.tum.bgu.msm.modules.ModeChoiceCalculator2017Impl;
 import de.tum.bgu.msm.modules.TripGenCalculatorPersonBasedHurdleNegBin;
+import de.tum.bgu.msm.modules.modeChoice.DefaultModeChoiceCalibrationData;
 import de.tum.bgu.msm.modules.modeChoice.ModeChoice;
 import de.tum.bgu.msm.modules.modeChoice.calculators.AirportModeChoiceCalculator;
 import de.tum.bgu.msm.modules.modeChoice.CalibratingModeChoiceCalculatorImpl;
@@ -144,6 +145,7 @@ public final class MitoModelGermanyForModeChoiceCalibration {
     private void readAdditionalData() {
         new ModeChoiceInputReader(dataSet).read();
         new EconomicStatusReader(dataSet).read();
+        dataSet.setModeChoiceCalibrationData(new DefaultModeChoiceCalibrationData());
         new CalibrationDataReader(dataSet).read();
         new CalibrationRegionMapReader(dataSet).read();
         new BicycleOwnershipReaderAndModel(dataSet).read();

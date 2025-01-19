@@ -46,46 +46,26 @@ public class ModeChoiceCalculatorRrtMCR extends AbstractModeChoiceCalculator {
             // Intercept
             double utility = modeCoef.get("INTERCEPT");
 
-            // Household in urban region
-            if(!(household.getHomeZone().getAreaTypeR().equals(AreaTypes.RType.RURAL))) {
-                utility += modeCoef.get("hh.urban");
-            }
-
-            // Household size
-            int hhSize = household.getHhSize();
-            if (hhSize == 2) {
-                utility += modeCoef.get("hh.size_2");
-            } else if (hhSize == 3) {
-                utility += modeCoef.get("hh.size_3");
-            } else if (hhSize == 4) {
-                utility += modeCoef.get("hh.size_4");
-            } else if (hhSize >= 5) {
-                utility += modeCoef.get("hh.size_5");
-            }
-
             // Age
             int age = person.getAge();
-            if (age <= 18) {
-                utility += modeCoef.get("p.age_gr_1");
-            } else if (age <= 59) {
-                utility += 0.;
-            } else if (age <= 69) {
-                utility += modeCoef.get("p.age_gr_5");
-            } else {
-                utility += modeCoef.get("p.age_gr_6");
+            if (age <= 24) {
+                utility += modeCoef.get("age_5_24");
+            } else if (age >= 65) {
+                utility += modeCoef.get("age_65");
             }
 
             // Sex
             if(person.getMitoGender().equals(MitoGender.FEMALE)) {
-                utility += modeCoef.get("p.female");
+                utility += modeCoef.get("female");
+            }
+
+            // household car
+            if(person.getHousehold().getAutos() > 2) {
+                utility += modeCoef.get("cars_3");
             }
 
             // Distance
-            if(travelDistanceNMT == 0) {
-//                logger.info("0 trip distance for RRT trip");
-            } else {
-                utility += Math.log(travelDistanceNMT) * modeCoef.get("t.distance_T");
-            }
+            utility += Math.sqrt(travelDistanceNMT * 1000.) * modeCoef.get("dist_m_sqrt");
 
             utilities.put(mode, utility);
         }

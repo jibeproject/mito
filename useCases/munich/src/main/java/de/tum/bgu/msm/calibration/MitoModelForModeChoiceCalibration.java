@@ -9,6 +9,7 @@ import de.tum.bgu.msm.io.input.readers.*;
 import de.tum.bgu.msm.io.output.*;
 import de.tum.bgu.msm.modules.AttractionCalculatorImpl;
 import de.tum.bgu.msm.modules.DestinationUtilityCalculatorImpl;
+import de.tum.bgu.msm.modules.modeChoice.DefaultModeChoiceCalibrationData;
 import de.tum.bgu.msm.modules.modeChoice.ModeChoice;
 import de.tum.bgu.msm.modules.modeChoice.calculators.AirportModeChoiceCalculator;
 import de.tum.bgu.msm.modules.modeChoice.CalibratingModeChoiceCalculatorImpl;
@@ -160,6 +161,7 @@ public final class MitoModelForModeChoiceCalibration {
     private void readAdditionalData() {
         new ModeChoiceInputReader(dataSet).read();
         new EconomicStatusReader(dataSet).read();
+        dataSet.setModeChoiceCalibrationData(new DefaultModeChoiceCalibrationData());
         new CalibrationDataReader(dataSet).read();
         new CalibrationRegionMapReader(dataSet).read();
 
