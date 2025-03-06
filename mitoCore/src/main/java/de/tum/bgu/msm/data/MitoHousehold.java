@@ -13,7 +13,7 @@ import java.util.*;
  *
  */
 
-public class MitoHousehold implements Id, MicroLocation {
+public class MitoHousehold extends MitoDwelling implements Id {
 
     private static final Logger logger = LogManager.getLogger(MitoHousehold.class);
 
@@ -21,8 +21,6 @@ public class MitoHousehold implements Id, MicroLocation {
     private int monthlyIncome_EUR;
     private int economicStatus;
     private final int autos;
-    private MitoZone homeZone;
-    private Coordinate homeLocation;
     private final boolean modelled;
     private final EnumMap<Purpose, List<MitoTrip>> tripsByPurpose = new EnumMap<>(Purpose.class);
     private final EnumMap<Purpose, Double> travelTimeBudgetByPurpose= new EnumMap<>(Purpose.class);
@@ -30,6 +28,7 @@ public class MitoHousehold implements Id, MicroLocation {
     private final Map<Integer, MitoPerson> persons  = new HashMap<>();
 
     public MitoHousehold(int id, int monthlyIncome_EUR, int autos, boolean modelled) {
+        super();
         this.hhId = id;
         this.monthlyIncome_EUR = monthlyIncome_EUR;
         this.autos = autos;
@@ -62,11 +61,11 @@ public class MitoHousehold implements Id, MicroLocation {
     }
 
     public void setHomeZone(MitoZone homeZone) {
-        this.homeZone = homeZone;
+        this.dwellingZone = homeZone;
     }
 
     public MitoZone getHomeZone() {
-        return homeZone;
+        return dwellingZone;
     }
 
     public Map<Integer, MitoPerson> getPersons(){
@@ -118,12 +117,8 @@ public class MitoHousehold implements Id, MicroLocation {
         this.economicStatus = economicStatus;
     }
 
-    public Coordinate getHomeLocation() {
-        return homeLocation;
-    }
-
     public void setHomeLocation(Coordinate homeLocation) {
-        this.homeLocation = homeLocation;
+        this.dwellingLocation = homeLocation;
     }
 
     public int getFemalesForHousehold() {
@@ -166,16 +161,6 @@ public class MitoHousehold implements Id, MicroLocation {
 
     public int getLicenseHoldersForHousehold() {
         return (int) this.getPersons().values().stream().filter(MitoPerson::hasDriversLicense).count();
-    }
-
-    @Override
-    public Coordinate getCoordinate() {
-        return homeLocation;
-    }
-
-    @Override
-    public int getZoneId() {
-        return homeZone.getId();
     }
 
     @Override

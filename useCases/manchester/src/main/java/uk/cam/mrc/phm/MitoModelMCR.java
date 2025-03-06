@@ -86,6 +86,7 @@ public final class MitoModelMCR {
         new SchoolsReader(dataSet).read();
         new HouseholdsReader(dataSet).read();
         new HouseholdsCoordReaderMCR(dataSet).read();
+        new PoiReader(dataSet).read();
         new PersonsReader7days(dataSet).read();
         dataSet.setTravelTimes(new SkimTravelTimes());
         new OmxSkimsReaderMCR(dataSet).read();
