@@ -2,7 +2,7 @@ package uk.cam.mrc.phm.io;
 
 import de.tum.bgu.msm.data.DataSet;
 import de.tum.bgu.msm.data.MitoHousehold;
-import de.tum.bgu.msm.data.MitoDwelling;
+import de.tum.bgu.msm.data.MitoVacantDwelling;
 import de.tum.bgu.msm.data.MitoZone;
 import de.tum.bgu.msm.io.input.AbstractCsvReader;
 import de.tum.bgu.msm.resources.Resources;
@@ -24,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class HouseholdsCoordReaderMCR extends AbstractCsvReader {
 
+    private int posId = -1;
     private int posHHId = -1;
     private int posCoordX = -1;
     private int posCoordY = -1;
@@ -47,6 +48,7 @@ public class HouseholdsCoordReaderMCR extends AbstractCsvReader {
 
     @Override
     protected void processHeader(String[] header) {
+        posId = MitoUtil.findPositionInArray("id", header);
         posHHId = MitoUtil.findPositionInArray("hhID", header);
         posTAZId = MitoUtil.findPositionInArray("zone", header);
         posCoordX = MitoUtil.findPositionInArray("coordX", header);
@@ -76,7 +78,8 @@ public class HouseholdsCoordReaderMCR extends AbstractCsvReader {
             hh.setHomeZone(zone);
             zone.addHousehold(hh);
         } else {
-            zone.addVacantDwelling(new MitoDwelling(zone, homeLocation));
+            int ddId = Integer.parseInt(record[posId]);
+            zone.addVacantDwelling(new MitoVacantDwelling(ddId, zone, homeLocation));
         }
     }
 

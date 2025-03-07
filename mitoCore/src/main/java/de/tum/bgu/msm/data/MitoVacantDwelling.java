@@ -2,19 +2,20 @@ package de.tum.bgu.msm.data;
 
 import org.locationtech.jts.geom.Coordinate;
 
-public class MitoDwelling implements MicroLocation {
+public class MitoVacantDwelling implements MicroLocation, Id {
+
+    private final int ddId;
 
     protected MitoZone dwellingZone;
 
     protected Coordinate dwellingLocation;
 
-    public MitoDwelling(MitoZone zone, Coordinate coordinate) {
+    public MitoVacantDwelling(int ddId, MitoZone zone, Coordinate coordinate) {
+        this.ddId = ddId;
         this.dwellingZone = zone;
         this.dwellingLocation = coordinate;
     }
 
-    public MitoDwelling() {
-    }
 
     @Override
     public int getZoneId() {
@@ -24,5 +25,10 @@ public class MitoDwelling implements MicroLocation {
     @Override
     public Coordinate getCoordinate() {
         return dwellingLocation;
+    }
+
+    @Override
+    public int getId() {
+        return ddId;
     }
 }

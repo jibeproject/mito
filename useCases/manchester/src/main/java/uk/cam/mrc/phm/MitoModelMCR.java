@@ -94,8 +94,6 @@ public final class MitoModelMCR {
     }
 
     private void readAdditionalData() {
-        new PoiWeightsReader(dataSet).read();
-        //new ModeChoiceInputReader(dataSet).read();
         dataSet.setModeChoiceCalibrationData(new ModeChoiceCalibrationDataMCR());
         new CalibrationDataReader(dataSet).read();
         new CalibrationRegionMapReader(dataSet).read();

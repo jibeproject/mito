@@ -13,7 +13,7 @@ import java.util.*;
  *
  */
 
-public class MitoHousehold extends MitoDwelling implements Id {
+public class MitoHousehold implements Id, MicroLocation {
 
     private static final Logger logger = LogManager.getLogger(MitoHousehold.class);
 
@@ -22,13 +22,14 @@ public class MitoHousehold extends MitoDwelling implements Id {
     private int economicStatus;
     private final int autos;
     private final boolean modelled;
+    private Coordinate homeLocation;
+    private MitoZone homeZone;
     private final EnumMap<Purpose, List<MitoTrip>> tripsByPurpose = new EnumMap<>(Purpose.class);
     private final EnumMap<Purpose, Double> travelTimeBudgetByPurpose= new EnumMap<>(Purpose.class);
 
     private final Map<Integer, MitoPerson> persons  = new HashMap<>();
 
     public MitoHousehold(int id, int monthlyIncome_EUR, int autos, boolean modelled) {
-        super();
         this.hhId = id;
         this.monthlyIncome_EUR = monthlyIncome_EUR;
         this.autos = autos;
@@ -61,11 +62,11 @@ public class MitoHousehold extends MitoDwelling implements Id {
     }
 
     public void setHomeZone(MitoZone homeZone) {
-        this.dwellingZone = homeZone;
+        this.homeZone = homeZone;
     }
 
     public MitoZone getHomeZone() {
-        return dwellingZone;
+        return homeZone;
     }
 
     public Map<Integer, MitoPerson> getPersons(){
@@ -118,7 +119,7 @@ public class MitoHousehold extends MitoDwelling implements Id {
     }
 
     public void setHomeLocation(Coordinate homeLocation) {
-        this.dwellingLocation = homeLocation;
+        this.homeLocation = homeLocation;
     }
 
     public int getFemalesForHousehold() {
@@ -179,5 +180,15 @@ public class MitoHousehold extends MitoDwelling implements Id {
 
     public boolean isModelled() {
         return modelled;
+    }
+
+    @Override
+    public Coordinate getCoordinate() {
+        return homeLocation;
+    }
+
+    @Override
+    public int getZoneId() {
+        return homeZone.getId();
     }
 }

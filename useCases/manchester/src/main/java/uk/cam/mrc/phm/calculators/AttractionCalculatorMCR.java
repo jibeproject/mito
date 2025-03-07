@@ -31,9 +31,9 @@ public class AttractionCalculatorMCR implements AttractionCalculator {
 
         // Zone level attractions
         for (MitoZone zone : dataSet.getZones().values()) {
-            float tripAttraction = 0;
+            double tripAttraction = 0;
             for (ExplanatoryVariable variable : ExplanatoryVariable.values()) {
-                float attribute;
+                double attribute;
                 if(HH.equals(variable)) {
                     attribute = zone.getNumberOfHouseholds();
                 }else if(zone.getPoiWeightsByType().get(variable.toString())==null) {
@@ -63,7 +63,7 @@ public class AttractionCalculatorMCR implements AttractionCalculator {
                     if(loc instanceof MitoPoi) {
                         weight = ((MitoPoi) loc).getWeight();
                         code = ((MitoPoi) loc).getCode();
-                    } else if (loc instanceof MitoDwelling) {
+                    } else if (loc instanceof MitoVacantDwelling || loc instanceof MitoHousehold) {
                         weight = zone.getVacancyRate();
                         code = HH;
                     } else {

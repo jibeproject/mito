@@ -122,7 +122,7 @@ public class SummarizeData7daysMCR {
     private static String getLocationType(Location loc) {
         if(loc instanceof MitoHousehold) {
             return "household";
-        } else if (loc instanceof MitoDwelling) {
+        } else if (loc instanceof MitoVacantDwelling) {
             return "vacantDwelling";
         } else if (loc instanceof MitoJob) {
             return "job";

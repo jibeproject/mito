@@ -35,7 +35,7 @@ public class MitoZone implements Id, Location {
     private final Multiset<JobType> employeesByType = HashMultiset.create();
 
     //TODO: Manchester use case
-    private final HashMap<String, Float> poiWeightsByType = new HashMap<>();
+    private final HashMap<String, Double> poiWeightsByType = new HashMap<>();
 
     private MitoZoneCentroid centroid;
     private final List<MicroLocation> microDestinations = new ArrayList<>();
@@ -72,6 +72,7 @@ public class MitoZone implements Id, Location {
 
     public void addPoi(MitoPoi poi) {
         microDestinations.add(poi);
+        poiWeightsByType.merge(poi.getCode().toString(), poi.getWeight(), Double::sum);
     }
 
     public List<MicroLocation> getMicroDestinations() {
@@ -147,7 +148,7 @@ public class MitoZone implements Id, Location {
         this.microDestinations.add(hh);
     }
 
-    public void addVacantDwelling(MitoDwelling dd) {
+    public void addVacantDwelling(MitoVacantDwelling dd) {
         this.microDestinations.add(dd);
     }
 
@@ -240,7 +241,7 @@ public class MitoZone implements Id, Location {
         return zoneId;
     }
 
-    public HashMap<String, Float> getPoiWeightsByType() {
+    public HashMap<String, Double> getPoiWeightsByType() {
         return poiWeightsByType;
     }
 
