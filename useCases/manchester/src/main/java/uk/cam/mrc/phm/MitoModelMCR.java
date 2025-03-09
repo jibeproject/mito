@@ -62,6 +62,7 @@ public final class MitoModelMCR {
         logger.info(" Initializing MITO from SILO");
         Resources.initializeResources(propertiesFile);
         MitoModelMCR model = new MitoModelMCR(dataSet, scenarioName);
+        new PoiReader(dataSet).read();
         new OmxSkimsReaderMCR(dataSet).read();
         model.readAdditionalData();
         return model;
