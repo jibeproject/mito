@@ -1,13 +1,7 @@
-# mito
-Microscopic Transportation Orchestrator
+# MiTO - Microscopic Transportation Orchestrator
+
+This repository contains a JIBE-specific implementation of the Java-based MiTO software for modelling travel demand.  
+
+The main branch has [merged code](https://github.com/msmobility/mito/tree/codeRestructure) developed by Dr Qin Zhang and Dr Corin Staves for the JIBE project's [Manchester]([mito/tree/main/useCases/manchester/src/main/java/uk/cam/mrc/phm](https://github.com/jibeproject/mito/tree/main/useCases/melbourne/src/main/java/uk/cam/mrc/phm)) and [Melbourne](https://github.com/jibeproject/mito/tree/main/useCases/melbourne/src/main/java/uk/cam/mrc/phm) implementations.
 
 Please see [the wiki](https://wiki.tum.de/display/msmmodels/MITO) for documentation.
-
-[![Java CI](https://github.com/msmobility/mito/actions/workflows/ci.yml/badge.svg)](https://github.com/msmobility/mito/actions/workflows/ci.yml)
-[![Cloudsmith Deployment](https://github.com/msmobility/mito/actions/workflows/deployment.yml/badge.svg)](https://github.com/msmobility/mito/actions/workflows/deployment.yml)
-[![Hosted By: Cloudsmith](https://img.shields.io/badge/OSS%20hosting%20by-cloudsmith-blue?logo=cloudsmith&style=for-the-badge)](https://cloudsmith.com)
-
-Package repository hosting is graciously provided by  [Cloudsmith](https://cloudsmith.com).
-Cloudsmith is the only fully hosted, cloud-native, universal package management solution, that
-enables your organization to create, store and share packages in any format, to any place, with total
-confidence.
