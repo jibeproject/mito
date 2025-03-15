@@ -142,7 +142,7 @@ public class SummarizeData7daysMCR {
                 "originZone,originType,originId,originX,originY," +
                 "destinationZone,destinationType,destinationId,destinationX,destinationY," +
                 "t.purpose,t.distance_walk,t.distance_bike,t.distance_auto,time_auto,time_pt,time_walk,time_bike," +
-                "mode,departure_day,departure_time,departure_time_return");
+                "mode,departure_day,departure_time,activity_duration,departure_time_return");
 
         for(MitoTrip trip : tripsToPrint) {
             pwh.print(trip.getPerson().getHousehold().getId());
@@ -244,6 +244,8 @@ public class SummarizeData7daysMCR {
             pwh.print(((MitoTrip7days)trip).getDepartureDay());
             pwh.print(",");
             pwh.print(trip.getDepartureInMinutes());
+            pwh.print(",");
+            pwh.print(trip.getActivityDurationInMinutes());
             int departureOfReturnTrip = trip.getDepartureInMinutesReturnTrip();
             if (departureOfReturnTrip != -1){
                 pwh.print(",");
