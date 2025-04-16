@@ -14,8 +14,8 @@ import java.io.PrintWriter;
 
 public class HourlyVolumeEventAnalysis {
 
-    private static final String MATSIM_NETWORK = "/home/qin/models/manchester/input/mito/trafficAssignment/network_both.xml";
-    private static final String scenarioName = "both";
+    private static final String MATSIM_NETWORK = "/home/qin/models/manchester/input/mito/trafficAssignment/network.xml";
+    private static final String scenarioName = "base_backup";
     private static final String day = "thursday";
     private static final String MATSIM_EVENT_ACTIVE = "/home/qin/models/manchester/scenOutput/" + scenarioName + "/matsim/2021/" + day + "/bikePed/2021.output_events.xml.gz";
     private static final String OUTPUT_PATH_ACTIVE = "/home/qin/models/manchester/scenOutput/"+ scenarioName + "/matsim/2021/hourlyVolume_bikePed_" + day + ".csv";
@@ -49,7 +49,13 @@ public class HourlyVolumeEventAnalysis {
         for (Link link :  network.getLinks().values()) {
             String linkId = link.getId().toString();
             String edgeId = link.getAttributes().getAttribute("edgeID").toString();
-            String osmId = link.getAttributes().getAttribute("osmID").toString();
+            String osmId;
+            if (link.getAttributes().getAttribute("osmID")== null){
+                osmId = "NA";
+            }else {
+                osmId = link.getAttributes().getAttribute("osmID").toString();
+            }
+
             for(int hour = 0; hour <= 24; hour++) {
                 int bikeVolumes = 0;
                 int pedVolumes = 0;
@@ -68,7 +74,7 @@ public class HourlyVolumeEventAnalysis {
         pw.close();
 
         //car truck flow
-        EventsManager eventsManagerCar = new EventsManagerImpl();
+        /*EventsManager eventsManagerCar = new EventsManagerImpl();
         HourlyVolumeEventHandler volumeEventHandlerCar = new HourlyVolumeEventHandler();
         eventsManagerCar.addHandler(volumeEventHandlerCar);
         EventsUtils.readEvents(eventsManagerCar,MATSIM_EVENT_CAR);
@@ -110,7 +116,7 @@ public class HourlyVolumeEventAnalysis {
             }
         }
 
-        pwCar.close();
+        pwCar.close();*/
 
     }
 }
