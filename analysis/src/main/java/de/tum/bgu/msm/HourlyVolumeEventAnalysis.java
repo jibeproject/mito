@@ -24,6 +24,7 @@ public class HourlyVolumeEventAnalysis {
     private static final String MATSIM_VEHICLES_ACTIVE = "/home/qin/models/manchester/scenOutput/" + scenarioName + "/matsim/2021/" + day + "/bikePed/2021.output_vehicles.xml.gz";
     private static final String OUTPUT_PATH_ACTIVE = "/home/qin/models/manchester/scenOutput/"+ scenarioName + "/matsim/2021/hourlyVolume_bikePed_" + day + ".csv";
     private static final String MATSIM_EVENT_CAR = "/home/qin/models/manchester/scenOutput/"+ scenarioName + "/matsim/2021/" + day + "/car/2021.output_events.xml.gz";
+    private static final String MATSIM_VEHICLES_CAR = "/home/qin/models/manchester/scenOutput/"+ scenarioName + "/matsim/2021/" + day + "/car/2021.output_vehicles.xml.gz";
     private static final String OUTPUT_PATH_CAR = "/home/qin/models/manchester/scenOutput/"+ scenarioName + "/matsim/2021/hourlyVolume_carTruck_" + day + ".csv";
     private static final int SCALE_FACTOR_ACTIVE = 1;
     private static final int SCALE_FACTOR_CAR = 10;
@@ -33,11 +34,11 @@ public class HourlyVolumeEventAnalysis {
         Network network = NetworkUtils.createNetwork();
         new MatsimNetworkReader(network).readFile(MATSIM_NETWORK);
 
-        Vehicles vehicles = VehicleUtils.createVehiclesContainer();
-        new MatsimVehicleReader(vehicles).readFile(MATSIM_VEHICLES_ACTIVE);
+        Vehicles activeVehicles = VehicleUtils.createVehiclesContainer();
+        new MatsimVehicleReader(activeVehicles).readFile(MATSIM_VEHICLES_ACTIVE);
 
         EventsManager eventsManager = new EventsManagerImpl();
-        HourlyVolumeEventHandler volumeEventHandler = new HourlyVolumeEventHandler(vehicles);
+        HourlyVolumeEventHandler volumeEventHandler = new HourlyVolumeEventHandler(activeVehicles);
         eventsManager.addHandler(volumeEventHandler);
         EventsUtils.readEvents(eventsManager,MATSIM_EVENT_ACTIVE);
 
@@ -81,8 +82,11 @@ public class HourlyVolumeEventAnalysis {
         pw.close();
 
         //car truck flow
+//        Vehicles motorVehicles = VehicleUtils.createVehiclesContainer();
+//        new MatsimVehicleReader(motorVehicles).readFile(MATSIM_VEHICLES_CAR);
+
         /*EventsManager eventsManagerCar = new EventsManagerImpl();
-        HourlyVolumeEventHandler volumeEventHandlerCar = new HourlyVolumeEventHandler();
+        HourlyVolumeEventHandler volumeEventHandlerCar = new HourlyVolumeEventHandler(motorVehicles);
         eventsManagerCar.addHandler(volumeEventHandlerCar);
         EventsUtils.readEvents(eventsManagerCar,MATSIM_EVENT_CAR);
 
