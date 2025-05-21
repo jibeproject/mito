@@ -504,7 +504,7 @@ public class ModeChoiceCalculatorImpl extends AbstractModeChoiceCalculator {
         double timeTrain = travelTimes.getTravelTime(originZone, destinationZone, peakHour_s, "train");
         double timeTramMetro = travelTimes.getTravelTime(originZone, destinationZone, peakHour_s, "tramMetro");
 
-        int monthlyIncome_EUR = household.getMonthlyIncome_EUR();
+        int monthlyIncome_EUR = household.getMonthlyIncome();
         int purpIdx;
         if (purpose.equals(Purpose.HBR)){
             purpIdx = Purpose.HBO.ordinal();

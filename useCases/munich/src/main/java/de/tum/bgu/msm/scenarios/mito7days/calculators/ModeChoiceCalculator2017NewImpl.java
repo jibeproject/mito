@@ -113,7 +113,7 @@ public class ModeChoiceCalculator2017NewImpl extends AbstractModeChoiceCalculato
         double timeTrain = travelTimes.getTravelTime(originZone, destinationZone, peakHour_s, "train");
         double timeTramMetro = travelTimes.getTravelTime(originZone, destinationZone, peakHour_s, "tramMetro");
 
-        int monthlyIncome_EUR = household.getMonthlyIncome_EUR();
+        int monthlyIncome_EUR = household.getMonthlyIncome();
 
         double gcAutoD;
         double gcAutoP;

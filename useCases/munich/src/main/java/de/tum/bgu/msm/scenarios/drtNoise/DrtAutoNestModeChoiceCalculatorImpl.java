@@ -163,7 +163,7 @@ public class DrtAutoNestModeChoiceCalculatorImpl implements ModeChoiceCalculator
 
     @Override
     public EnumMap<Mode, Double> calculateGeneralizedCosts(Purpose purpose, MitoHousehold household, MitoPerson person, MitoZone originZone, MitoZone destinationZone, TravelTimes travelTimes, double travelDistanceAuto, double travelDistanceNMT, double peakHour_s) {
-        int monthlyIncome_EUR = household.getMonthlyIncome_EUR();
+        int monthlyIncome_EUR = household.getMonthlyIncome();
         int purpIdx;
         if (purpose.equals(Purpose.HBR)){
             purpIdx = Purpose.HBO.ordinal();

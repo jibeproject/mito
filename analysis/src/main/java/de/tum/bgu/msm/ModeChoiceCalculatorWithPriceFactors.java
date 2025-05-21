@@ -31,16 +31,16 @@ public class ModeChoiceCalculatorWithPriceFactors extends ModeChoiceCalculator20
         double gcTramMetro = generalizedCosts.get(Mode.tramOrMetro);
         double gcTaxi = generalizedCosts.get(Mode.taxi);
 
-        int monthlyIncome_EUR = household.getMonthlyIncome_EUR();
+        int monthlyIncome = household.getMonthlyIncome();
 
-        if (monthlyIncome_EUR <= 1500) {
+        if (monthlyIncome <= 1500) {
             gcAutoD += travelDistanceAuto * coef.get(Mode.autoDriver).get("costPerKm") * (carPriceFactor - 1) / coef.get(Mode.autoDriver).get("vot_under_1500_eur_min");
             gcAutoP += travelDistanceAuto * coef.get(Mode.autoPassenger).get("costPerKm") * (carPriceFactor - 1) /coef.get(Mode.autoPassenger).get("vot_under_1500_eur_min");
             gcBus += travelDistanceAuto * coef.get(Mode.bus).get("costPerKm") * (ptPriceFactor - 1) / coef.get(Mode.bus).get("vot_under_1500_eur_min");
             gcTrain += travelDistanceAuto * coef.get(Mode.train).get("costPerKm") * (ptPriceFactor - 1) / coef.get(Mode.train).get("vot_under_1500_eur_min");
             gcTramMetro += travelDistanceAuto * coef.get(Mode.tramOrMetro).get("costPerKm") * (ptPriceFactor - 1) / coef.get(Mode.tramOrMetro).get("vot_under_1500_eur_min");
             gcTaxi += travelDistanceAuto * coef.get(Mode.taxi).get("costPerKm") * (ptPriceFactor - 1) / coef.get(Mode.taxi).get("vot_under_1500_eur_min");
-        } else if (monthlyIncome_EUR <= 5600) {
+        } else if (monthlyIncome <= 5600) {
             gcAutoD += travelDistanceAuto * coef.get(Mode.autoDriver).get("costPerKm") * (carPriceFactor - 1) /coef.get(Mode.autoDriver).get("vot_1500_to_5600_eur_min");
             gcAutoP += travelDistanceAuto * coef.get(Mode.autoPassenger).get("costPerKm") * (carPriceFactor - 1) / coef.get(Mode.autoPassenger).get("vot_1500_to_5600_eur_min");
             gcBus += travelDistanceAuto * coef.get(Mode.bus).get("costPerKm") * (ptPriceFactor - 1) / coef.get(Mode.bus).get("vot_1500_to_5600_eur_min");
