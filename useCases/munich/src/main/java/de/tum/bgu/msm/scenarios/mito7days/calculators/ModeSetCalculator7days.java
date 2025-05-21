@@ -1,7 +1,6 @@
 package de.tum.bgu.msm.scenarios.mito7days.calculators;
 
 import de.tum.bgu.msm.data.*;
-import de.tum.bgu.msm.data.travelTimes.TravelTimes;
 import de.tum.bgu.msm.modules.ModeSetCalculator;
 import de.tum.bgu.msm.util.LogitTools;
 
@@ -58,7 +57,7 @@ public class ModeSetCalculator7days implements ModeSetCalculator {
         predictor += coefficients.get("INTERCEPT");
 
         // Economic status (MOP version)
-        double econStatusMop = hh.getMonthlyIncome_EUR() / householdSizeAdj;
+        double econStatusMop = hh.getMonthlyIncome() / householdSizeAdj;
         if (econStatusMop > 800) {
             predictor += coefficients.get("hh.econStatus_2");
         } else if (econStatusMop > 1600) {

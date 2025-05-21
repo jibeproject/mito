@@ -53,7 +53,7 @@ public class SyntheticPopulationReaderGermany extends AbstractCsvReader {
         super.read(filePath, ",");
         int noIncomeHouseholds = 0;
         for(MitoHousehold household: dataSet.getHouseholds().values()) {
-            if(household.getMonthlyIncome_EUR() == 0) {
+            if(household.getMonthlyIncome() == 0) {
                 noIncomeHouseholds++;
             }
         }

@@ -38,7 +38,7 @@ public class ModeChoiceCalculatorMCR extends AbstractModeChoiceCalculator {
     public EnumMap<Mode, Double> calculateUtilities(Purpose purpose, MitoHousehold household, MitoPerson person, MitoZone originZone, MitoZone destinationZone, TravelTimes travelTimes, double travelDistanceAuto, double travelDistanceNMT, double peakHour_s) {
         int age = person.getAge();
         boolean male = person.getMitoGender().equals(MitoGender.MALE);
-        int hhincome = household.getMonthlyIncome_EUR();
+        int hhincome = household.getMonthlyIncome();
         int hhAutos = household.getAutos();
 
         EnumMap<Mode, Double> generalizedCosts = calculateGeneralizedCosts(purpose, household, person,

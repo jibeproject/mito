@@ -27,7 +27,7 @@ public class ModeChoiceCalculatorMEL extends AbstractModeChoiceCalculator {
 
     private void setNests() {
         List<Tuple<EnumSet<Mode>, Double>> nests = new ArrayList<>();
-        //TODO: currently the manchester mode choice model is MNL, no nests
+        //TODO: currently the melbourne mode choice model is MNL, no nests
         nests = null;
 //        nests.add(new Tuple<>(EnumSet.of(autoDriver,autoPassenger), 0.25));
 //        nests.add(new Tuple<>(EnumSet.of(train, tramOrMetro, bus, taxi), 0.25));
@@ -38,7 +38,7 @@ public class ModeChoiceCalculatorMEL extends AbstractModeChoiceCalculator {
     public EnumMap<Mode, Double> calculateUtilities(Purpose purpose, MitoHousehold household, MitoPerson person, MitoZone originZone, MitoZone destinationZone, TravelTimes travelTimes, double travelDistanceAuto, double travelDistanceNMT, double peakHour_s) {
         int age = person.getAge();
         boolean male = person.getMitoGender().equals(MitoGender.MALE);
-        int hhincome = household.getMonthlyIncome_EUR();
+        int hhincome = household.getMonthlyIncome();
         int hhAutos = household.getAutos();
 
         EnumMap<Mode, Double> generalizedCosts = calculateGeneralizedCosts(purpose, household, person,
