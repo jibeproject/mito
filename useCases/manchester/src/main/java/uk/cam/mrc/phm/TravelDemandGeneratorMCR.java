@@ -20,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.cam.mrc.phm.calculators.*;
 import uk.cam.mrc.phm.io.SummarizeData7daysMCR;
+import uk.cam.mrc.phm.modules.CyclingShareAdjustment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -328,6 +329,14 @@ public final class TravelDemandGeneratorMCR {
                 modeChoiceCalibrationData.close();
             }
         }
+
+
+        // If enabled, increase the overall cycling share by converting the highest propensity trips to bicycle
+        if (Resources.instance.getBoolean(Properties.RUN_CYCLING_SHARE_ADJUSTMENT, false)) {
+            logger.info("Running Module: Cycling Share Adjustment");
+            new CyclingShareAdjustment(dataSet, 0.20).run();
+        }
+
 
         logger.info("Running day of week choice");
         dayOfWeekChoice.run();
