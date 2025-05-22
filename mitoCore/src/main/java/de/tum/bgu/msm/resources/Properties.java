@@ -126,4 +126,7 @@ public class Properties {
     public static final String RUN_CALIBRATION_MC = "run.mc.calibration";
 
     public static final String RUN_MODESET = "run.modeset";
+
+    public static final String RUN_CYCLING_SHARE_ADJUSTMENT  = "run.cycling.share.adjustment";
+
 }
