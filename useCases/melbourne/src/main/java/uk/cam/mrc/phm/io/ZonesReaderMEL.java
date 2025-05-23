@@ -50,9 +50,11 @@ public class ZonesReaderMEL extends AbstractCsvReader {
 
     @Override
     protected void processHeader(String[] header) {
-        String[] cleanHeader = Arrays.stream(header).map(h -> h.replace("\"", "").trim()).toArray(String[]::new);
-        idIndex = MitoUtil.findPositionInArray(ZONE_ID,cleanHeader);
-        areaTypeIndex = MitoUtil.findPositionInArray("urbanType", cleanHeader);
+        header = Arrays.stream(header).map(
+                h -> h.replace("\"", "").trim()
+        ).toArray(String[]::new);
+        idIndex = MitoUtil.findPositionInArray(ZONE_ID,header);
+        areaTypeIndex = MitoUtil.findPositionInArray("urbanType", header);
     }
 
     @Override

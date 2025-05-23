@@ -55,14 +55,13 @@ public class parseMEL {
                 cleaned = cleaned.substring(1, cleaned.length() - 1);
             }
 
-            // Allow numeric values with optional decimals
-            if (!cleaned.matches("\\d+(\\.\\d+)?")) {
+            // Allow numeric values with optional decimals or scientific notation
+            if (!cleaned.matches("\\d+(\\.\\d+)?([eE][+-]?\\d+)?")) {
                 throw new NumberFormatException("Invalid numeric value: " + cleaned);
             }
 
-            double value = Double.parseDouble(cleaned); // Parse as double
-            int parsed = (int) Math.round(value); // Round and cast to int
-            return parsed;
+            double value = Double.parseDouble(cleaned); // Parse as double to handle scientific notation
+            return (int) Math.round(value); // Round and cast to int
         } catch (IllegalArgumentException e) {
             logger.error("Failed to parse input: " + input, e);
             throw e;
