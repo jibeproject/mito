@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 
 /**
  * Created by Nico on 17.07.2017.
@@ -41,12 +42,14 @@ public class JobReaderMEL extends AbstractCsvReader {
 
     @Override
     protected void processHeader(String[] header) {
-        posId = MitoUtil.findPositionInArray("id", header);
-        posZone = MitoUtil.findPositionInArray("zone", header);
-        posWorker = MitoUtil.findPositionInArray("personId", header);
-        posType = MitoUtil.findPositionInArray("type", header);
-        //posJobCoordX = MitoUtil.findPositionInArray("coordX", header);
-        //posJobCoordY = MitoUtil.findPositionInArray("coordY", header);
+        String[] cleanHeader = Arrays.stream(header).map(h -> h.replace("\"", "").trim()).toArray(String[]::new);
+
+        posId = MitoUtil.findPositionInArray("id", cleanHeader);
+        posZone = MitoUtil.findPositionInArray("zone", cleanHeader);
+        posWorker = MitoUtil.findPositionInArray("personId", cleanHeader);
+        posType = MitoUtil.findPositionInArray("type", cleanHeader);
+        //posJobCoordX = MitoUtil.findPositionInArray("coordX", cleanHeader);
+        //posJobCoordY = MitoUtil.findPositionInArray("coordY", cleanHeader);
     }
 
     @Override
