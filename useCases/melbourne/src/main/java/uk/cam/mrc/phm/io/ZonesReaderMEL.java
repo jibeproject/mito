@@ -58,9 +58,9 @@ public class ZonesReaderMEL extends AbstractCsvReader {
     @Override
     protected void processRecord(String[] record) {
         int zoneId = Integer.parseInt(record[idIndex]);
-        int urbanType = Integer.parseInt(record[areaTypeIndex]);
+        String urbanType = record[areaTypeIndex];
         MitoZone zone = new MitoZone(zoneId, null);
-        zone.setAreaTypeR(urbanType == 1? AreaTypes.RType.URBAN : AreaTypes.RType.RURAL);
+        zone.setAreaTypeR("urban".equals(urbanType)? AreaTypes.RType.URBAN : AreaTypes.RType.RURAL);
         dataSet.addZone(zone);
     }
 }
