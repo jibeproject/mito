@@ -10,9 +10,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.geotools.api.feature.simple.SimpleFeature;
 import org.matsim.api.core.v01.network.Node;
+import uk.cam.mrc.phm.util.parseMEL;
 
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,6 +47,9 @@ public class HouseholdsCoordReaderMEL extends AbstractCsvReader {
 
     @Override
     protected void processHeader(String[] header) {
+        header = Arrays.stream(header).map(
+                h -> h.replace("\"", "").trim()
+        ).toArray(String[]::new);
         posHHId = MitoUtil.findPositionInArray("hhID", header);
         posTAZId = MitoUtil.findPositionInArray("zone", header);
         //posCoordX = MitoUtil.findPositionInArray("coordX", header);
@@ -53,7 +58,7 @@ public class HouseholdsCoordReaderMEL extends AbstractCsvReader {
 
     @Override
     protected void processRecord(String[] record) {
-        int hhId = Integer.parseInt(record[posHHId]);
+        int hhId = parseMEL.intParse(record[posHHId]);
 
 
         //vacant dwellings
@@ -63,7 +68,7 @@ public class HouseholdsCoordReaderMEL extends AbstractCsvReader {
                 logger.warn(String.format("Household %d does not exist in mito.", hhId));
                 return;
             }
-            int taz = Integer.parseInt(record[posTAZId]);
+            int taz = parseMEL.zoneParse(record[posTAZId]);
             MitoZone zone = dataSet.getZones().get(taz);
             if(zone == null) {
                 logger.warn(String.format("Household %d is supposed to live in zone %d but this zone does not exist.", hhId, taz));
