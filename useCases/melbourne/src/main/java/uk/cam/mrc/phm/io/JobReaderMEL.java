@@ -9,6 +9,7 @@ import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.cam.mrc.phm.util.zoneParseMEL;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -55,7 +56,7 @@ public class JobReaderMEL extends AbstractCsvReader {
     @Override
     protected void processRecord(String[] record) {
         int id = Integer.parseInt(record[posId]);
-        int zoneId = Integer.parseInt(record[posZone]);
+        int zoneId = zoneParseMEL.zoneParse(record[posZone]);
         int worker = Integer.parseInt(record[posWorker]);
         String type = record[posType];
         if (worker > 0) {
