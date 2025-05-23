@@ -9,7 +9,7 @@ import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import uk.cam.mrc.phm.util.zoneParseMEL;
+import uk.cam.mrc.phm.util.parseMEL;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -43,12 +43,13 @@ public class JobReaderMEL extends AbstractCsvReader {
 
     @Override
     protected void processHeader(String[] header) {
-        String[] cleanHeader = Arrays.stream(header).map(h -> h.replace("\"", "").trim()).toArray(String[]::new);
-
-        posId = MitoUtil.findPositionInArray("id", cleanHeader);
-        posZone = MitoUtil.findPositionInArray("zone", cleanHeader);
-        posWorker = MitoUtil.findPositionInArray("personId", cleanHeader);
-        posType = MitoUtil.findPositionInArray("type", cleanHeader);
+        header = Arrays.stream(header).map(
+                h -> h.replace("\"", "").trim()
+            ).toArray(String[]::new);
+        posId = MitoUtil.findPositionInArray("id", header);
+        posZone = MitoUtil.findPositionInArray("zone", header);
+        posWorker = MitoUtil.findPositionInArray("personId", header);
+        posType = MitoUtil.findPositionInArray("type", header);
         //posJobCoordX = MitoUtil.findPositionInArray("coordX", cleanHeader);
         //posJobCoordY = MitoUtil.findPositionInArray("coordY", cleanHeader);
     }
@@ -56,7 +57,7 @@ public class JobReaderMEL extends AbstractCsvReader {
     @Override
     protected void processRecord(String[] record) {
         int id = Integer.parseInt(record[posId]);
-        int zoneId = zoneParseMEL.zoneParse(record[posZone]);
+        int zoneId = parseMEL.zoneParse(record[posZone]);
         int worker = Integer.parseInt(record[posWorker]);
         String type = record[posType];
         if (worker > 0) {

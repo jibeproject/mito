@@ -82,7 +82,7 @@ public final class MitoModelMEL {
             new BorderDampersReader(dataSet).read();
         }
         new JobReaderMEL(dataSet, config.getJobTypeFactory()).read();
-        new SchoolsReader(dataSet).read();
+        new SchoolsReaderMEL(dataSet).read();
         new HouseholdsReader(dataSet).read();
         new HouseholdsCoordReaderMEL(dataSet).read();
         new PersonsReader7days(dataSet).read();
