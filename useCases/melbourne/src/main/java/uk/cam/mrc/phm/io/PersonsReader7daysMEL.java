@@ -61,7 +61,7 @@ public class PersonsReader7daysMEL extends AbstractCsvReader {
         posOccupation = headerList.indexOf("occupation");
         posWorkplaceId = headerList.indexOf("workplace");
         posSchoolId = headerList.indexOf("schoolId");
-        posLicence = headerList.indexOf("driversLicense");
+        posLicence = headerList.indexOf("driversLicence");
         posIncome = headerList.indexOf("income");
     }
 
@@ -92,7 +92,14 @@ public class PersonsReader7daysMEL extends AbstractCsvReader {
         MitoOccupationStatus mitoOccupationStatus = MitoOccupationStatus.valueOf(occupationCode);
 
         final int workplace = Integer.parseInt(record[posWorkplaceId]);
-        final int school = Integer.parseInt(record[posSchoolId]);
+
+        final String schoolString = record[posSchoolId].replace("\"", "").trim();
+        final int school;
+        if ("NA".equalsIgnoreCase(schoolString)) {
+            school = -1; // Use -1 to indicate missing data
+        } else {
+            school = Integer.parseInt(schoolString);
+        }
 
         final boolean driversLicense = Boolean.parseBoolean(record[posLicence]);
 
