@@ -5,6 +5,7 @@ import de.tum.bgu.msm.data.*;
 import de.tum.bgu.msm.resources.Resources;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.cam.mrc.phm.util.parseMEL;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -91,7 +92,7 @@ public class PersonsReader7daysMEL extends AbstractCsvReader {
         final int occupationCode = Integer.parseInt(record[posOccupation]);
         MitoOccupationStatus mitoOccupationStatus = MitoOccupationStatus.valueOf(occupationCode);
 
-        final int workplace = Integer.parseInt(record[posWorkplaceId]);
+        final int workplace = parseMEL.intParse(record[posWorkplaceId]);
 
         final String schoolString = record[posSchoolId].replace("\"", "").trim();
         final int school;
@@ -105,6 +106,7 @@ public class PersonsReader7daysMEL extends AbstractCsvReader {
 
 
         //mito uses monthly income, while SILO uses annual income
+
         int monthlyIncome = Integer.parseInt(record[posIncome])/12;
         hh.addIncome(monthlyIncome);
 

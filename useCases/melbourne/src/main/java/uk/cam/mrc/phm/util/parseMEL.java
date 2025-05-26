@@ -56,7 +56,7 @@ public class parseMEL {
             }
 
             // Allow numeric values with optional decimals or scientific notation
-            if (!cleaned.matches("\\d+(\\.\\d+)?([eE][+-]?\\d+)?")) {
+            if (!cleaned.matches("-?\\d+(\\.\\d+)?([eE][+-]?\\d+)?")) {
                 throw new NumberFormatException("Invalid numeric value: " + cleaned);
             }
 
