@@ -85,7 +85,7 @@ public final class MitoModelMEL {
         new SchoolsReaderMEL(dataSet).read();
         new HouseholdsReaderMEL(dataSet).read();
         new HouseholdsCoordReaderMEL(dataSet).read();
-        new PersonsReader7days(dataSet).read();
+        new PersonsReader7daysMEL(dataSet).read();
         dataSet.setTravelTimes(new SkimTravelTimes());
         new OmxSkimsReaderMEL(dataSet).read();
         readAdditionalData();
