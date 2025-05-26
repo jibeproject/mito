@@ -68,8 +68,8 @@ public class PersonsReader7daysMEL extends AbstractCsvReader {
 
     @Override
     public void processRecord(String[] record) {
-        final int id = Integer.parseInt(record[posId]);
-        final int hhid = Integer.parseInt(record[posHhId]);
+        final int id = parseMEL.intParse(record[posId]);
+        final int hhid = parseMEL.intParse(record[posHhId]);
 
         if(!dataSet.getHouseholds().containsKey(hhid)) {
             logger.warn("Person " + id + " refers to non-existing household " + hhid + ". Ignoring this person.");
