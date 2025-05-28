@@ -67,7 +67,7 @@ public class OmxSkimsReaderMEL extends AbstractOmxReader implements SkimsReader 
         readTravelTimeSkim("walk_HBE",Properties.ACTIVE_COST_HBE_SKIM,Properties.WALK_COST_SKIM_MATRIX);
         
         // HBA
-        readTravelTimeSkim("walk_HBA",Properties.ACTIVE_COST_HBA_SKIM,Properties.WALK_COST_SKIM_MATRIX);
+        readTravelTimeSkim("bike_HBA",Properties.ACTIVE_COST_HBA_SKIM,Properties.BIKE_COST_SKIM_MATRIX);
         
         // HBD
         readTravelTimeSkim("bike_HBD",Properties.ACTIVE_COST_HBD_SKIM,Properties.BIKE_COST_SKIM_MATRIX);
