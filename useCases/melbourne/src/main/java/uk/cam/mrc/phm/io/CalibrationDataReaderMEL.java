@@ -1,4 +1,5 @@
-package de.tum.bgu.msm.io.input.readers;
+package uk.cam.mrc.phm.io;
+
 import de.tum.bgu.msm.data.DataSet;
 import de.tum.bgu.msm.data.Mode;
 import de.tum.bgu.msm.data.Purpose;
@@ -11,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class CalibrationDataReader extends AbstractCsvReader {
+public class CalibrationDataReaderMEL extends AbstractCsvReader {
 
     private int regionIndex;
     private int purposeIndex;
@@ -20,11 +21,11 @@ public class CalibrationDataReader extends AbstractCsvReader {
     private int kIndex;
 
 
-    public CalibrationDataReader(DataSet dataSet) {
+    public CalibrationDataReaderMEL(DataSet dataSet) {
         super(dataSet);
     }
 
-    private static final Logger logger = LogManager.getLogger(CalibrationDataReader.class);
+    private static final Logger logger = LogManager.getLogger(de.tum.bgu.msm.io.input.readers.CalibrationDataReader.class);
     @Override
     protected void processHeader(String[] header) {
         regionIndex = MitoUtil.findPositionInArray("calibrationRegion", header);
@@ -38,6 +39,18 @@ public class CalibrationDataReader extends AbstractCsvReader {
     protected void processRecord(String[] record) {
         logger.info(Arrays.toString(record));
         String region = record[regionIndex];
+        String purposeString = record[purposeIndex];
+
+        // Skip processing if purpose is 'NA' or 'business'
+        if ("NA".equalsIgnoreCase(purposeString)) {
+            return;
+        }
+        if ("business".equalsIgnoreCase(purposeString)) {
+           return;
+        }
+        if ("unknown".equalsIgnoreCase(purposeString)) {
+            return;
+        }
         Purpose purpose = Purpose.valueOf(record[purposeIndex]);
         Mode mode = Mode.valueOf(record[modeIndex]);
 
@@ -60,3 +73,4 @@ public class CalibrationDataReader extends AbstractCsvReader {
         super.read(Resources.instance.getCalibrationFactorsPath(), ",");
     }
 }
+
