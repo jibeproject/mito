@@ -94,7 +94,7 @@ public final class MitoModelMEL {
     private void readAdditionalData() {
         dataSet.setModeChoiceCalibrationData(new ModeChoiceCalibrationDataMEL());
         new CalibrationDataReaderMEL(dataSet).read();
-        new CalibrationRegionMapReader(dataSet).read();
+        new CalibrationRegionMapReaderMEL(dataSet).read();
         //TODO: bike model for Manchester?
         new BicycleOwnershipReaderAndModel(dataSet).read();
     }
