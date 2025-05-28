@@ -17,7 +17,7 @@ import java.util.Set;
  */
 public abstract class AbstractOmxReader extends AbstractInputReader{
 
-    private final static Logger logger = LogManager.getLogger(AbstractOmxReader.class);
+    protected final static Logger logger = LogManager.getLogger(AbstractOmxReader.class);
 
     protected AbstractOmxReader(DataSet dataSet) {
         super(dataSet);
