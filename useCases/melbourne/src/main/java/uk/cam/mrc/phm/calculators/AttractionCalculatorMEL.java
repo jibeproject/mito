@@ -8,6 +8,7 @@ import de.tum.bgu.msm.modules.tripGeneration.AttractionCalculator;
 import de.tum.bgu.msm.modules.tripGeneration.ExplanatoryVariable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.cam.mrc.phm.io.TripAttractionRatesReaderMEL;
 
 import static de.tum.bgu.msm.modules.tripGeneration.ExplanatoryVariable.HH;
 
@@ -22,7 +23,7 @@ public class AttractionCalculatorMEL implements AttractionCalculator {
     public AttractionCalculatorMEL(DataSet dataSet, Purpose purpose) {
         this.dataSet = dataSet;
         this.purpose = purpose;
-        new TripAttractionRatesReader(dataSet, purpose).read();
+        new TripAttractionRatesReaderMEL(dataSet, purpose).read();
     }
 
     @Override
