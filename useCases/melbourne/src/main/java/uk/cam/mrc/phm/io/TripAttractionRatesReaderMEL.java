@@ -42,14 +42,14 @@ public class TripAttractionRatesReaderMEL extends AbstractCsvReader {
         if (purposeIndex >= 0) {
             indexForPurpose.put(purpose, purposeIndex);
         } else {
-            logger.warn("Purpose {} not found in header, skipping.", purpose.name());
+            logger.warn("{} not found in header;  rates will be set to 0.0 for this purpose.", purpose.name());
         }
     }
 
     @Override
     protected void processRecord(String[] record) {
         if (!indexForPurpose.containsKey(purpose)) {
-            return; // Skip processing if the purpose is not in the header
+            double rate = 0.0;
         }
         ExplanatoryVariable variable = ExplanatoryVariable.valueOf(record[variableIndex]);
         double rate = Double.parseDouble(record[indexForPurpose.get(purpose)]);
