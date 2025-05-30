@@ -35,7 +35,7 @@ public class TripAttractionRatesReaderMEL extends AbstractCsvReader {
         header = Arrays.stream(header).map(
                 h -> h.replace("\"", "").trim()
         ).toArray(String[]::new);
-        logger.info("Processing header: " + Arrays.toString(header));
+        logger.info("Processing purpose: {}", purpose.name());
         variableIndex = parseMEL.findPositionInArray("poi", header);
 
         int purposeIndex = parseMEL.findPositionInArray(purpose.name(), header);
@@ -48,11 +48,12 @@ public class TripAttractionRatesReaderMEL extends AbstractCsvReader {
 
     @Override
     protected void processRecord(String[] record) {
-        if (!indexForPurpose.containsKey(purpose)) {
-            double rate = 0.0;
-        }
         ExplanatoryVariable variable = ExplanatoryVariable.valueOf(record[variableIndex]);
-        double rate = Double.parseDouble(record[indexForPurpose.get(purpose)]);
-        purpose.setTripAttractionForVariable(variable, rate);
+        if (!indexForPurpose.containsKey(purpose)) {
+            purpose.setTripAttractionForVariable(variable, 0.0);
+        } else {
+            double rate = Double.parseDouble(record[indexForPurpose.get(purpose)]);
+            purpose.setTripAttractionForVariable(variable, rate);
+        }
     }
 }
