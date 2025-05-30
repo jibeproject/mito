@@ -67,4 +67,11 @@ public class parseMEL {
             throw e;
         }
     }
+
+    public static int getHoursAsSeconds(int hours) {
+        if (hours < 0) {
+            throw new IllegalArgumentException("Hours cannot be negative: " + hours);
+        }
+        return hours * 3600; // Convert hours to seconds
+    }
 }

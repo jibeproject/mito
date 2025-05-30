@@ -121,6 +121,8 @@ public final class MitoModelMEL {
         MitoUtil.initializeRandomNumber(random);
     }
 
-
+    public Resources getResources() {
+        return Resources.instance;
+    }
 
 }
