@@ -42,12 +42,8 @@ public final class TravelDemandGeneratorMEL {
     private final DataSet dataSet;
 
     private final Module tripGenerationMandatory;
-    private final Module personTripAssignmentMandatory;
-    private final Module travelTimeBudgetMandatory;
     private final Module distributionMandatory;
     private final Module tripGenerationDiscretionary;
-    private final Module personTripAssignmentDiscretionary;
-    private final Module travelTimeBudgetDiscretionary;
     private final Module modeSetChoice;
     private final Module distributionDiscretionary;
     private final Module modeChoice;
@@ -60,12 +56,8 @@ public final class TravelDemandGeneratorMEL {
     private TravelDemandGeneratorMEL(
             DataSet dataSet,
             Module tripGenerationMandatory,
-            Module personTripAssignmentMandatory,
-            Module travelTimeBudgetMandatory,
             Module distributionMandatory,
             Module tripGenerationDiscretionary,
-            Module personTripAssignmentDiscretionary,
-            Module travelTimeBudgetDiscretionary,
             Module modeSetChoice,
             Module distributionDiscretionary,
             Module modeChoice,
@@ -77,12 +69,8 @@ public final class TravelDemandGeneratorMEL {
 
         this.dataSet = dataSet;
         this.tripGenerationMandatory = tripGenerationMandatory;
-        this.personTripAssignmentMandatory = personTripAssignmentMandatory;
-        this.travelTimeBudgetMandatory = travelTimeBudgetMandatory;
         this.distributionMandatory = distributionMandatory;
         this.tripGenerationDiscretionary = tripGenerationDiscretionary;
-        this.personTripAssignmentDiscretionary = personTripAssignmentDiscretionary;
-        this.travelTimeBudgetDiscretionary = travelTimeBudgetDiscretionary;
         this.distributionDiscretionary = distributionDiscretionary;
         this.modeChoice = modeChoice;
         this.dayOfWeekChoice = dayOfWeekChoice;
@@ -104,8 +92,6 @@ public final class TravelDemandGeneratorMEL {
         private Module distributionMandatory;
         private Module tripGenerationDiscretionary;
         private Module modeSetChoice;
-        private Module personTripAssignmentDiscretionary;
-        private Module travelTimeBudgetDiscretionary;
         private Module distributionDiscretionary;
         private Module modeChoice;
         private Module dayOfWeekChoice;
@@ -119,7 +105,7 @@ public final class TravelDemandGeneratorMEL {
             this.dataSet = dataSet;
 
             List<Purpose> purposes = Purpose.getListedPurposes(Resources.instance.getString(Properties.TRIP_PURPOSES));
-            logger.info("Simulating trips for the following purposes: " + purposes.stream().map(Enum::toString).collect(Collectors.joining(",")));
+            logger.info("Simulating trips for the following purposes: {}", purposes.stream().map(Enum::toString).collect(Collectors.joining(",")));
 
             List<Purpose> mandatoryPurposes = new ArrayList<>(purposes);
             mandatoryPurposes.retainAll(Purpose.getMandatoryPurposes());
@@ -166,12 +152,8 @@ public final class TravelDemandGeneratorMEL {
         public TravelDemandGeneratorMEL build() {
             return new TravelDemandGeneratorMEL(dataSet,
                     tripGenerationMandatory,
-                    personTripAssignmentMandatory,
-                    travelTimeBudgetMandatory,
                     distributionMandatory,
                     tripGenerationDiscretionary,
-                    personTripAssignmentDiscretionary,
-                    travelTimeBudgetDiscretionary,
                     modeSetChoice,
                     distributionDiscretionary,
                     modeChoice,
@@ -180,42 +162,6 @@ public final class TravelDemandGeneratorMEL {
                     tripScaling,
                     matsimPopulationGenerator,
                     longDistanceTraffic);
-        }
-
-        public void setTripGeneration(Module tripGeneration) {
-            this.tripGenerationMandatory = tripGeneration;
-        }
-
-        public void setPersonTripAssignment(Module personTripAssignment) {
-            this.personTripAssignmentMandatory = personTripAssignment;
-        }
-
-        public void setTravelTimeBudget(Module travelTimeBudget) {
-            this.travelTimeBudgetMandatory = travelTimeBudget;
-        }
-
-        public void setDistribution(Module distribution) {
-            this.distributionMandatory = distribution;
-        }
-
-        public void setModeChoice(Module modeChoice) {
-            this.modeChoice = modeChoice;
-        }
-
-        public void setTimeOfDayChoice(Module timeOfDayChoice) {
-            this.timeOfDayChoice= timeOfDayChoice;
-        }
-
-        public void setTripScaling(Module tripScaling) {
-            this.tripScaling = tripScaling;
-        }
-
-        public void setMatsimPopulationGenerator(Module matsimPopulationGenerator) {
-            this.matsimPopulationGenerator = matsimPopulationGenerator;
-        }
-
-        public void setLongDistanceTraffic(Module longDistanceTraffic) {
-            this.longDistanceTraffic = longDistanceTraffic;
         }
 
         public DataSet getDataSet() {
@@ -261,28 +207,14 @@ public final class TravelDemandGeneratorMEL {
 
     public void generateTravelDemand(String scenarioName) {
 
-
         logger.info("Running Module: Microscopic Trip Generation");
 
         tripGenerationMandatory.run();
 
-        //new Telework(dataSet, Purpose.getMandatoryPurposes(), 0.5).run();
-
-        //logger.info("Running Module: Person to Trip Assignment");
-        //personTripAssignmentMandatory.run();
-//        logger.info("Running Module: Travel Time Budget Calculation");
-//        travelTimeBudgetMandatory.run();
-        //((TravelTimeBudgetModule) travelTimeBudget).adjustDiscretionaryPurposeBudgets(Purpose.getMandatoryPurposes());
         logger.info("Running Module: Microscopic Trip Distribution");
         distributionMandatory.run();
 
         tripGenerationDiscretionary.run();
-        //logger.info("Running Module: Person to Trip Assignment");
-        //personTripAssignmentDiscretionary.run();
-        logger.info("Running Module: Travel Time Budget Calculation");
-//        travelTimeBudgetDiscretionary.run();
-//        ((TravelTimeBudgetModule) travelTimeBudgetDiscretionary).adjustDiscretionaryPurposeBudgets();
-
 
         if(Resources.instance.getBoolean(Properties.RUN_MODESET,false)) {
             logger.info("Running Module: Mode set choice");
@@ -291,28 +223,6 @@ public final class TravelDemandGeneratorMEL {
 
         logger.info("Running Module: Microscopic Trip Distribution");
         distributionDiscretionary.run();
-
-        // Trip distribution calibration example: todo: specify these in properties file, keep in generator and do similar for mode choice.
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBW, new double[] {5.195,8.976,11.525},false);
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBE, new double[] {2.546,3.395,2.617},false);
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBS, new double[] {2.579,4.19,4.919},false);
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBO, new double[] {3.641,5.633,7.071},false);
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBR, new double[] {3.592,5.793,6.842},false);
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBO, new double[] {1.588,4.179,4.916},false);
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBW, new double[] {1.764,5.172,7.817},false);
-//       ((TripDistribution) distributionDiscretionary).calibrate(Purpose.RRT, new double[] {0.622,1.427,1.427},false);
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBA, new double[] {1.383,3.940,3.850},false);
-
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBW, new double[] {2.875,5.704,7.627},true);
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBE, new double[] {1.328,1.578,1.578},true);
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBS, new double[] {1.408,2.356,2.74},true);
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBO, new double[] {1.341,2.667,3.686},true);
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBR, new double[] {1.288,2.411,3.484},true);
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBO, new double[] {0.602,2.034,2.317},true);
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBW, new double[] {0.775,2.309,4.01},true);
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.RRT, new double[] {1.025},true);
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBA, new double[] {0.707,1.896,2.016},true);
-
 
         logger.info("Running Module: Trip to Mode Assignment (Mode Choice)");
         modeChoice.run();
@@ -348,22 +258,9 @@ public final class TravelDemandGeneratorMEL {
         TripGenerationWriter.writeTripsByPurposeAndZone(dataSet, scenarioName);
         SummarizeDataToVisualize.writeFinalSummary(dataSet, scenarioName);
 
-
-
         if (Resources.instance.getBoolean(Properties.PRINT_MICRO_DATA, true)) {
             SummarizeData7daysMEL.writeOutSyntheticPopulationWithTrips(dataSet);
             SummarizeData7daysMEL.writeAllTrips(dataSet,scenarioName);
-            /*for(Day day : Day.values()){
-                for(Mode mode : Mode.values()){
-                    Collection<MitoTrip> tripsToPrint = dataSet.getTrips().values().stream().filter(tt -> day.equals(((MitoTrip7days)tt).getDepartureDay()) & mode.equals(tt.getTripMode())).collect(Collectors.toList());
-                    if(tripsToPrint.size()>0){
-                        SummarizeData7daysMCR.writeOutTripsByDayByMode(dataSet,scenarioName,day,mode,tripsToPrint);
-                    }else{
-                        logger.info("No trips for mode: " + mode + ",day: " + day);
-                    }
-
-                }
-            }*/
         }
         if (Resources.instance.getBoolean(Properties.CREATE_CHARTS, true)) {
             DistancePlots.writeDistanceDistributions(dataSet, scenarioName);
