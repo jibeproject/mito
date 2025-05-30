@@ -3,7 +3,6 @@ package uk.cam.mrc.phm.calculators;
 import de.tum.bgu.msm.data.DataSet;
 import de.tum.bgu.msm.data.MitoZone;
 import de.tum.bgu.msm.data.Purpose;
-import de.tum.bgu.msm.io.input.readers.TripAttractionRatesReader;
 import de.tum.bgu.msm.modules.tripGeneration.AttractionCalculator;
 import de.tum.bgu.msm.modules.tripGeneration.ExplanatoryVariable;
 import org.apache.logging.log4j.LogManager;
@@ -36,7 +35,6 @@ public class AttractionCalculatorMEL implements AttractionCalculator {
                     if(HH.equals(variable)) {
                         attribute = zone.getNumberOfHouseholds();
                     }else if(zone.getPoiWeightsByType().get(variable.toString())==null) {
-                        //logger.warn("Zone has no explanatory variable " + variable + " defined.");
                         continue;
                     }else{
                         attribute = zone.getPoiWeightsByType().get(variable.toString());
@@ -46,7 +44,7 @@ public class AttractionCalculatorMEL implements AttractionCalculator {
                         throw new RuntimeException("Purpose " + purpose + " does not have an attraction" +
                                 " rate for variable " + variable + " registered.");
                     }
-                    tripAttraction += attribute * rate;
+                    tripAttraction += (float) (attribute * rate);
                 }
                 zone.setTripAttraction(purpose, tripAttraction);
         }

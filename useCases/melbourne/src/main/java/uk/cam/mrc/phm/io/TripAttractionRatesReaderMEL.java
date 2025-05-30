@@ -5,9 +5,9 @@ import de.tum.bgu.msm.data.Purpose;
 import de.tum.bgu.msm.io.input.AbstractCsvReader;
 import de.tum.bgu.msm.modules.tripGeneration.ExplanatoryVariable;
 import de.tum.bgu.msm.resources.Resources;
-import de.tum.bgu.msm.util.MitoUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.cam.mrc.phm.util.parseMEL;
 
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -15,10 +15,10 @@ import java.util.Map;
 
 public class TripAttractionRatesReaderMEL extends AbstractCsvReader {
 
-    private static final Logger logger = LogManager.getLogger(de.tum.bgu.msm.io.input.readers.TripAttractionRatesReader.class);
+    private static final Logger logger = LogManager.getLogger(TripAttractionRatesReaderMEL.class);
     private final Map<Purpose, Integer> indexForPurpose = new EnumMap<>(Purpose.class);
     private int variableIndex;
-    private Purpose purpose;
+    private final Purpose purpose;
 
     public TripAttractionRatesReaderMEL(DataSet dataSet, Purpose purpose) {
         super(dataSet);
@@ -36,14 +36,21 @@ public class TripAttractionRatesReaderMEL extends AbstractCsvReader {
                 h -> h.replace("\"", "").trim()
         ).toArray(String[]::new);
         logger.info("Processing header: " + Arrays.toString(header));
-        variableIndex = MitoUtil.findPositionInArray("poi", header);
+        variableIndex = parseMEL.findPositionInArray("poi", header);
 
-        indexForPurpose.put(purpose, MitoUtil.findPositionInArray(purpose.name(), header));
-
+        int purposeIndex = parseMEL.findPositionInArray(purpose.name(), header);
+        if (purposeIndex >= 0) {
+            indexForPurpose.put(purpose, purposeIndex);
+        } else {
+            logger.warn("Purpose {} not found in header, skipping.", purpose.name());
+        }
     }
 
     @Override
     protected void processRecord(String[] record) {
+        if (!indexForPurpose.containsKey(purpose)) {
+            return; // Skip processing if the purpose is not in the header
+        }
         ExplanatoryVariable variable = ExplanatoryVariable.valueOf(record[variableIndex]);
         double rate = Double.parseDouble(record[indexForPurpose.get(purpose)]);
         purpose.setTripAttractionForVariable(variable, rate);

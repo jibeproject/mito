@@ -23,7 +23,7 @@ public class parseMEL {
 
         if (length == 11) {
             // Extract first digit and last 6 digits
-            String truncated = input.substring(0, 1) + input.substring(5);
+            String truncated = input.charAt(0) + input.substring(5);
             return Integer.parseInt(truncated);
         } else if (length == 7) {
             // Return the 7-digit number as an integer
@@ -73,5 +73,14 @@ public class parseMEL {
             throw new IllegalArgumentException("Hours cannot be negative: " + hours);
         }
         return hours * 3600; // Convert hours to seconds
+    }
+
+    public static int findPositionInArray(String target, String[] array) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].equals(target)) {
+                return i;
+            }
+        }
+        return -1; // Return -1 if the target is not found
     }
 }
