@@ -16,9 +16,7 @@ import org.matsim.api.core.v01.population.Population;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.ControllerConfigGroup;
-import org.matsim.core.config.groups.ReplanningConfigGroup;
 import org.matsim.core.config.groups.ScoringConfigGroup.ActivityParams;
-import org.matsim.core.config.groups.ScoringConfigGroup.ModeParams;
 import org.matsim.core.config.groups.QSimConfigGroup;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
@@ -169,7 +167,7 @@ public class RunMatsimActiveMode {
 
     private static void fillBikePedConfig(Config bikePedConfig) {
         // set input file and basic controler settings
-        bikePedConfig.controller().setLastIteration(1);
+        bikePedConfig.controller().setLastIteration(0);
         bikePedConfig.controller().setWritePlansInterval(Math.max(bikePedConfig.controller().getLastIteration(), 1));
         bikePedConfig.controller().setWriteEventsInterval(Math.max(bikePedConfig.controller().getLastIteration(), 1));
         bikePedConfig.controller().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
@@ -212,14 +210,6 @@ public class RunMatsimActiveMode {
         walkConfigGroup.setAttributes(walkAttributes);
         walkConfigGroup.setWeights(RunMatsimActiveMode::calculateWalkWeights);
 
-        // set scoring parameters
-        bikePedConfig.scoring().addModeParams(
-                createModeParams(TransportMode.bike, 0.0, -0.0004, -6.0, 0.0)
-        );
-        bikePedConfig.scoring().addModeParams(
-                createModeParams(TransportMode.walk, 0.0, -0.0004, -6.0, 0.0)
-        );
-
         ActivityParams homeActivity = new ActivityParams("home").setTypicalDuration(getHoursAsSeconds(12));
         bikePedConfig.scoring().addActivityParams(homeActivity);
 
@@ -241,31 +231,9 @@ public class RunMatsimActiveMode {
         ActivityParams airportActivity = new ActivityParams("airport").setTypicalDuration(getHoursAsSeconds(1));
         bikePedConfig.scoring().addActivityParams(airportActivity);
 
-        //Set strategy
-        bikePedConfig.replanning().setMaxAgentPlanMemorySize(5);
-        bikePedConfig.replanning().addStrategySettings(createStrategySettings("ChangeExpBeta", 0.8));
-        bikePedConfig.replanning().addStrategySettings(createStrategySettings("ReRoute", 0.2));
-
         bikePedConfig.transit().setUsingTransitInMobsim(false);
         bikePedConfig.controller().setRoutingAlgorithmType(ControllerConfigGroup.RoutingAlgorithmType.Dijkstra);
 
-    }
-
-    private static ModeParams createModeParams(String mode, double constant, double marginalUtilityOfDistance,
-                                               double marginalUtilityOfTraveling, double monetaryDistanceRate) {
-        ModeParams modeParams = new ModeParams(mode);
-        modeParams.setConstant(constant);
-        modeParams.setMarginalUtilityOfDistance(marginalUtilityOfDistance);
-        modeParams.setMarginalUtilityOfTraveling(marginalUtilityOfTraveling);
-        modeParams.setMonetaryDistanceRate(monetaryDistanceRate);
-        return modeParams;
-    }
-
-    private static ReplanningConfigGroup.StrategySettings createStrategySettings(String strategyName, double weight) {
-        ReplanningConfigGroup.StrategySettings strategySettings = new ReplanningConfigGroup.StrategySettings();
-        strategySettings.setStrategyName(strategyName);
-        strategySettings.setWeight(weight);
-        return strategySettings;
     }
 
     public static double[] calculateActiveModeWeights(String mode, Person person) {
