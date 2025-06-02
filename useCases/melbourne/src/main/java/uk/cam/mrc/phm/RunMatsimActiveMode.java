@@ -253,7 +253,7 @@ public class RunMatsimActiveMode {
             speed += extractCoefficient(purpose, mode, "speed");
 
             // Interaction terms
-            if (gender.equals(MitoGender.FEMALE)) {
+            if (age >= 16 && gender.equals(MitoGender.FEMALE)) {
                 grad += extractCoefficient(purpose, mode, "grad_f");
                 stressLink += extractCoefficient(purpose, mode, "stressLink_f");
                 vgvi += extractCoefficient(purpose, mode, "vgvi_f");
