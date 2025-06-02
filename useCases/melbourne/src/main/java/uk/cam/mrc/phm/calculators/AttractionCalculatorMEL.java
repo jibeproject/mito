@@ -41,7 +41,7 @@ public class AttractionCalculatorMEL implements AttractionCalculator {
                         attribute = zone.getPoiWeightsByType().get(variable.toString());
                     }
                     Double rate = purpose.getTripAttractionForVariable(variable);
-                    if(rate == null || rate == NaN) {
+                    if(rate == null || Double.isNaN(rate)) {
                         throw new RuntimeException("Purpose " + purpose + " does not have an attraction" +
                                 " rate for variable " + variable + " registered.");
                     }
