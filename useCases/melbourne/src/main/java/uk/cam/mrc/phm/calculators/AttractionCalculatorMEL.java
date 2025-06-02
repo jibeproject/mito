@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import uk.cam.mrc.phm.io.TripAttractionRatesReaderMEL;
 
 import static de.tum.bgu.msm.modules.tripGeneration.ExplanatoryVariable.HH;
+import static java.lang.Double.NaN;
 
 public class AttractionCalculatorMEL implements AttractionCalculator {
 
@@ -40,7 +41,7 @@ public class AttractionCalculatorMEL implements AttractionCalculator {
                         attribute = zone.getPoiWeightsByType().get(variable.toString());
                     }
                     Double rate = purpose.getTripAttractionForVariable(variable);
-                    if(rate == null) {
+                    if(rate == null || rate == NaN) {
                         throw new RuntimeException("Purpose " + purpose + " does not have an attraction" +
                                 " rate for variable " + variable + " registered.");
                     }
