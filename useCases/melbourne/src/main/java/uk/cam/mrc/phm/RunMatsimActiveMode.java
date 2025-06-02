@@ -267,12 +267,12 @@ public class RunMatsimActiveMode {
                 speed += extractCoefficient(purpose, mode, "speed_c");
             }
 
-            if (age >= 65) {
-                grad += extractCoefficient(purpose, mode, "grad_e");
-                stressLink += extractCoefficient(purpose, mode, "stressLink_e");
-                vgvi += extractCoefficient(purpose, mode, "vgvi_e");
-                speed += extractCoefficient(purpose, mode, "speed_e");
-            }
+//            if (age >= 65) {
+//                grad += extractCoefficient(purpose, mode, "grad_e");
+//                stressLink += extractCoefficient(purpose, mode, "stressLink_e");
+//                vgvi += extractCoefficient(purpose, mode, "vgvi_e");
+//                speed += extractCoefficient(purpose, mode, "speed_e");
+//            }
         }
 
         // Return aggregated coefficients
