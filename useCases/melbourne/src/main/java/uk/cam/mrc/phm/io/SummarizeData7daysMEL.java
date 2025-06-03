@@ -4,7 +4,6 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.google.common.math.Stats;
 import de.tum.bgu.msm.data.*;
-import de.tum.bgu.msm.io.output.SummarizeData;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
@@ -30,13 +29,14 @@ import java.util.*;
  * Created on 11/07/2017.
  */
 public class SummarizeData7daysMEL {
-    private static final Logger LOGGER = LogManager.getLogger(SummarizeData.class);
+    private static final Logger LOGGER = LogManager.getLogger(SummarizeData7daysMEL.class);
 
     public static void writeOutSyntheticPopulationWithTrips(DataSet dataSet) {
 
         LOGGER.info("  Writing household file");
         Path filehh = Resources.instance.getOutputHouseholdPath();
         PrintWriter pwh = MitoUtil.openFileForSequentialWriting(filehh.toAbsolutePath().toString(), false);
+        assert pwh != null;
         pwh.println("hh.id,hh.zone,hh.locX,hh.locY,hh.isModelled,hh.size,hh.children,hh.econStatus,hh.cars,hh.autosPerAdult,hh.urban");
         for (MitoHousehold hh : dataSet.getHouseholds().values()) {
             final MitoZone homeZone = hh.getHomeZone();
@@ -71,6 +71,7 @@ public class SummarizeData7daysMEL {
         LOGGER.info("  Writing person file");
         Path filepp = Resources.instance.getOutputPersonsPath();
         PrintWriter pwp = MitoUtil.openFileForSequentialWriting(filepp.toAbsolutePath().toString(), false);
+        assert pwp != null;
         pwp.println("p.ID,hh.id,p.age,p.female,p.occupationStatus,p.driversLicense,p.ownBicycle,p.modeSet," +
                 "p.trips,p.trips_HBW,p.trips_HBE,p.trips_HBS,p.trips_HBR,p.trips_HBO,p.trips_RRT,p.trips_NHBW,p.trips_NHBO,p.trips_AIRPORT");
         for(MitoHousehold hh: dataSet.getHouseholds().values()) {
@@ -122,7 +123,7 @@ public class SummarizeData7daysMEL {
     public static void writeTrips(DataSet dataSet, PrintWriter pwh, Collection<MitoTrip> tripsToPrint) {
         pwh.println("hh.id,p.ID,t.id,origin,originX,originY,destination,destinationX,destinationY," +
                 "t.purpose,t.distance_walk,t.distance_bike,t.distance_auto,time_auto,time_pt,time_walk,time_bike," +
-                "mode,departure_day,departure_time,departure_time_return");
+                "mode,departure_day,departure_time,activity_duration,departure_time_return");
 
         for(MitoTrip trip : tripsToPrint) {
             pwh.print(trip.getPerson().getHousehold().getId());
@@ -221,6 +222,8 @@ public class SummarizeData7daysMEL {
             pwh.print(((MitoTrip7days)trip).getDepartureDay());
             pwh.print(",");
             pwh.print(trip.getDepartureInMinutes());
+            pwh.print(",");
+            pwh.print(trip.getActivityDurationInMinutes());
             int departureOfReturnTrip = trip.getDepartureInMinutesReturnTrip();
             if (departureOfReturnTrip != -1){
                 pwh.print(",");
@@ -298,12 +301,14 @@ public class SummarizeData7daysMEL {
             averageDistancesByZone.put(Double.valueOf(entry.getKey()), Stats.meanOf(entry.getValue()));
         }
         PrintWriter pw1 = MitoUtil.openFileForSequentialWriting(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + dataSet.getYear() + "/distanceDistribution/tripsByZone"+purpose+".csv", false);
+        assert pw1 != null;
         pw1.println("id,number_trips");
         for(MitoZone zone: dataSet.getZones().values()) {
             pw1.println(zone.getId()+","+tripsByZone.count(zone));
         }
         pw1.close();
         PrintWriter pw = MitoUtil.openFileForSequentialWriting(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + dataSet.getYear() +  "/distanceDistribution/averageZoneDistanceTable"+purpose+".csv", false);
+        assert pw != null;
         pw.println("id,avTripDistance");
         for(Map.Entry<Double, Double> entry: averageDistancesByZone.entrySet()) {
             pw.println(entry.getKey().intValue()+","+entry.getValue());
