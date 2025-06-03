@@ -37,11 +37,11 @@ public class CalibrationDataReaderMEL extends AbstractCsvReader {
 
     @Override
     protected void processRecord(String[] record) {
-        logger.info(Arrays.toString(record));
+        //  logger.info(Arrays.toString(record));
         String region = record[regionIndex];
         String purposeString = record[purposeIndex];
 
-        // Skip processing if purpose is 'NA' or 'business'
+        // Skip processing if purpose is 'NA', 'business' or unkown
         if ("NA".equalsIgnoreCase(purposeString)) {
             return;
         }
