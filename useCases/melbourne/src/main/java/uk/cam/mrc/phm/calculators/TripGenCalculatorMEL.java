@@ -2,12 +2,9 @@ package uk.cam.mrc.phm.calculators;
 
 import de.tum.bgu.msm.data.*;
 import de.tum.bgu.msm.modules.tripGeneration.TripGenPredictor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class TripGenCalculatorMEL implements TripGenPredictor {
 
@@ -16,7 +13,6 @@ public class TripGenCalculatorMEL implements TripGenPredictor {
     public TripGenCalculatorMEL(DataSet dataSet) {
         this.dataSet = dataSet;
     }
-    private static final Logger logger = LogManager.getLogger(TripGenCalculatorMEL.class);
 
     @Override
     public double getPredictor(MitoHousehold hh,MitoPerson pp, Map<String, Double> coefficients) {
@@ -124,7 +120,7 @@ public class TripGenCalculatorMEL implements TripGenPredictor {
         }
 
         // Work trips & mean distance
-        List<MitoTrip> workTrips = pp.getTrips().stream().filter(tt -> Purpose.HBW.equals(tt.getTripPurpose())).collect(Collectors.toList());
+        List<MitoTrip> workTrips = pp.getTrips().stream().filter(tt -> Purpose.HBW.equals(tt.getTripPurpose())).toList();
         int workTripCount = workTrips.size();
         if(workTripCount > 0) {
             if (workTripCount == 1) {
@@ -142,7 +138,7 @@ public class TripGenCalculatorMEL implements TripGenPredictor {
             double meanWorkKm = workTrips.stream()
                     .mapToDouble(t -> {
                 if (t.getTripDestination() == null) {
-                    throw new RuntimeException("Trip destination is null for trip: " + t.toString() + ", person: " +; pp.getId());
+                    throw new RuntimeException("Trip destination is null for trip: " + t + ", person: " + pp.getId());
                 }
                 return dataSet.getTravelDistancesNMT().getTravelDistance(homeZoneId, t.getTripDestination().getZoneId());
             })
@@ -152,7 +148,7 @@ public class TripGenCalculatorMEL implements TripGenPredictor {
         }
 
         // Education trips & mean distance
-        List<MitoTrip> eduTrips = pp.getTrips().stream().filter(tt -> Purpose.HBE.equals(tt.getTripPurpose())).collect(Collectors.toList());
+        List<MitoTrip> eduTrips = pp.getTrips().stream().filter(tt -> Purpose.HBE.equals(tt.getTripPurpose())).toList();
         int eduTripCount = eduTrips.size();
         if(eduTripCount > 0) {
             if (eduTripCount == 1) {
