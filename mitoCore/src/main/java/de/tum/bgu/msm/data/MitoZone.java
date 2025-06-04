@@ -88,7 +88,7 @@ public class MitoZone implements Id, Location {
             return centroid;
         } else {
             double[] destinationWeights = microDestinationWeightsByPurpose.get(purpose);
-            if(MitoUtil.getSum(destinationWeights) > 0) {
+            if(destinationWeights!=null && MitoUtil.getSum(destinationWeights) > 0) {
                 int idx = MitoUtil.select(destinationWeights,random);
                 return microDestinations.get(idx);
             } else {
