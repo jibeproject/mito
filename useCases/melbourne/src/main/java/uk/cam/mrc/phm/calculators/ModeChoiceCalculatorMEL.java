@@ -142,10 +142,10 @@ public class ModeChoiceCalculatorMEL extends AbstractModeChoiceCalculator {
         switch(purpose) {
             case HBW:
                 walkSkimName = "walk_HBW";
-                if (person.getMitoGender().equals(MitoGender.MALE)) {
-                    bikeSkimName = "bike_HBW";
-                } else {
+                if (person.getMitoGender().equals(MitoGender.FEMALE)) {
                     bikeSkimName = "bike_HBW_female";
+                } else {
+                    bikeSkimName = "bike_HBW";
                 }
                 break;
             case HBE:
@@ -153,28 +153,36 @@ public class ModeChoiceCalculatorMEL extends AbstractModeChoiceCalculator {
                 bikeSkimName = "bike_HBE";
                 break;
             case HBS:
+                walkSkimName = "walk_HBS";
+                bikeSkimName = "bike_HBS";
+                break;
             case HBR:
-            case HBO:
-                walkSkimName = "walk_HBD";
-                bikeSkimName = "bike_HBD";
-                if(person.getAge() < 15) {
-                    walkSkimName = "walk_HBD_child";
-                    bikeSkimName = "bike_HBD_child";
-                } else if (person.getAge() >= 65) {
-                    walkSkimName = "walk_HBD_elderly";
+                if (person.getAge()<16) {
+                    walkSkimName = "walk_HBR_child";
+                    bikeSkimName = "bike_HBR_child";
+                } else if (person.getMitoGender().equals(MitoGender.FEMALE)) {
+                    walkSkimName = "walk_HBR";
+                    bikeSkimName = "bike_HBR_female";
+
+                } else {
+                    walkSkimName = "walk_HBR";
+                    bikeSkimName = "bike_HBR";
                 }
                 break;
+            case HBO:
+                walkSkimName = "walk_HBO";
+                bikeSkimName = "bike_HBO";
+                break;
             case HBA:
-                walkSkimName = "walk_HBA";
-                bikeSkimName = "bike";
+                bikeSkimName = "bike_HBA";
                 break;
             case NHBO:
                 walkSkimName = "walk_NHBO";
-                bikeSkimName = "bike";
+                bikeSkimName = "bike_NHBO";
                 break;
             case NHBW:
-                walkSkimName = "walk";
-                bikeSkimName = "bike";
+                walkSkimName = "walk_NHBW";
+                bikeSkimName = "bike_NHBW";
                 break;
             default:
                 LOGGER.error("Unknown purpose " + purpose);
