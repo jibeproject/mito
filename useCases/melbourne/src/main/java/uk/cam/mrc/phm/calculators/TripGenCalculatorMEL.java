@@ -2,6 +2,8 @@ package uk.cam.mrc.phm.calculators;
 
 import de.tum.bgu.msm.data.*;
 import de.tum.bgu.msm.modules.tripGeneration.TripGenPredictor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +16,7 @@ public class TripGenCalculatorMEL implements TripGenPredictor {
     public TripGenCalculatorMEL(DataSet dataSet) {
         this.dataSet = dataSet;
     }
-
+    private static final Logger logger = LogManager.getLogger(TripGenCalculatorMEL.class);
 
     @Override
     public double getPredictor(MitoHousehold hh,MitoPerson pp, Map<String, Double> coefficients) {
@@ -137,9 +139,15 @@ public class TripGenCalculatorMEL implements TripGenPredictor {
                 predictor += coefficients.get("p.workTrips_5");
             }
             int homeZoneId = pp.getHousehold().getZoneId();
-            double meanWorkKm = workTrips.stream().
-                    mapToDouble(t -> dataSet.getTravelDistancesNMT().
-                            getTravelDistance(homeZoneId, t.getTripDestination().getZoneId())).average().getAsDouble();
+            double meanWorkKm = workTrips.stream()
+                    .mapToDouble(t -> {
+                if (t.getTripDestination() == null) {
+                    throw new RuntimeException("Trip destination is null for trip: " + t.toString() + ", person: " +; pp.getId());
+                }
+                return dataSet.getTravelDistancesNMT().getTravelDistance(homeZoneId, t.getTripDestination().getZoneId());
+            })
+                    .average()
+                    .orElse(0.0);
             predictor += Math.log(meanWorkKm) * coefficients.get("p.log_km_mean_HBW");
         }
 
