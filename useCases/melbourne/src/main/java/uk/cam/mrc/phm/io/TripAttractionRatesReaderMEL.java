@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.cam.mrc.phm.util.parseMEL;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
@@ -27,7 +28,9 @@ public class TripAttractionRatesReaderMEL extends AbstractCsvReader {
 
     @Override
     public void read() {
-        super.read(Resources.instance.getTripAttractionRatesFilePath(), ",");
+        Path filePath = Resources.instance.getTripAttractionRatesFilePath();
+        logger.info("Reading trip attraction rates from ascii file ({})", filePath);
+        super.read(filePath, ",");
     }
 
     @Override
@@ -51,9 +54,11 @@ public class TripAttractionRatesReaderMEL extends AbstractCsvReader {
         ExplanatoryVariable variable = ExplanatoryVariable.valueOf(record[variableIndex]);
         if (!indexForPurpose.containsKey(purpose)) {
             purpose.setTripAttractionForVariable(variable, 0.0);
+            logger.warn("Purpose {} not found in header; setting trip attraction rate for variable {} to 0.0", purpose.name(), variable);
         } else {
             double rate = Double.parseDouble(record[indexForPurpose.get(purpose)]);
             purpose.setTripAttractionForVariable(variable, rate);
+//            logger.warn("Set trip attraction rate for purpose {} and variable {} to {}", purpose.name(), variable, rate);
         }
     }
 }

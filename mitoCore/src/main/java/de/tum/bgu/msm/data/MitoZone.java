@@ -174,6 +174,9 @@ public class MitoZone implements Id, Location {
 
     public void setTripAttraction(Purpose purpose, double tripAttractionRate) {
         this.tripAttraction.put(purpose, tripAttractionRate);
+        if (Double.isNaN(tripAttractionRate)) {
+            throw new RuntimeException("Invalid trip attraction rate " + tripAttractionRate + " for zone " + zoneId + " and purpose " + purpose);
+        }
     }
 
     public double getTripAttraction(Purpose purpose) {
@@ -181,6 +184,9 @@ public class MitoZone implements Id, Location {
         if (rate == null) {
             throw new RuntimeException("No trip attraction rate set for zone " + zoneId + ". Please make sure to only call " +
                     "this method after trip generation module!");
+        }
+        if (Double.isNaN(rate)) {
+            throw new RuntimeException("Invalid trip attraction rate " + rate + " for zone " + zoneId + " and purpose " + purpose);
         }
         return rate;
     }

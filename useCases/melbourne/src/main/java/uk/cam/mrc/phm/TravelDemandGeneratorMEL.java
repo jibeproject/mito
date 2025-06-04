@@ -112,16 +112,44 @@ public final class TravelDemandGeneratorMEL {
             discretionaryPurposes.removeAll(mandatoryPurposes);
 
             //from here
-            tripGenerationMandatory = new TripGeneration(dataSet, mandatoryPurposes, new MitoTripFactory7days());
-            mandatoryPurposes.forEach(purpose -> ((TripGeneration) tripGenerationMandatory).registerTripGenerator(purpose, new MitoTripFactory7days(), TripGeneratorType.PersonBasedHurdlePolr,new TripGenCalculatorMEL(dataSet),
-                    new AttractionCalculatorMEL(dataSet,purpose)));
+            tripGenerationMandatory = new TripGeneration(
+                    dataSet,
+                    mandatoryPurposes,
+                    new MitoTripFactory7days()
+            );
+            mandatoryPurposes.forEach(
+        purpose -> (
+                    (TripGeneration) tripGenerationMandatory
+                ).registerTripGenerator(
+                    purpose, new
+                    MitoTripFactory7days(),
+                    TripGeneratorType.PersonBasedHurdlePolr,
+                    new TripGenCalculatorMEL(dataSet),
+                    new AttractionCalculatorMEL(dataSet,purpose)
+                )
+            );
 
             distributionMandatory = new TripDistribution(dataSet, mandatoryPurposes);
-            mandatoryPurposes.forEach(purpose -> ((TripDistribution) distributionMandatory).registerDestinationUtilityCalculator(purpose, new DestinationUtilityCalculatorMEL(purpose)));
+            mandatoryPurposes.forEach(purpose -> (
+                    (TripDistribution) distributionMandatory
+            ).registerDestinationUtilityCalculator(
+                    purpose,
+                    new DestinationUtilityCalculatorMEL(purpose)
+                )
+            );
 
             tripGenerationDiscretionary = new TripGeneration(dataSet, discretionaryPurposes, new MitoTripFactory7days());
-            discretionaryPurposes.forEach(purpose -> ((TripGeneration) tripGenerationDiscretionary).registerTripGenerator(purpose, new MitoTripFactory7days(),TripGeneratorType.PersonBasedHurdleNegBin,new TripGenCalculatorMEL(dataSet),
-                    new AttractionCalculatorMEL(dataSet,purpose)));
+            discretionaryPurposes.forEach(
+        purpose -> (
+                        (TripGeneration) tripGenerationDiscretionary
+                ).registerTripGenerator(
+                        purpose,
+                        new MitoTripFactory7days(),
+                        TripGeneratorType.PersonBasedHurdleNegBin,
+                        new TripGenCalculatorMEL(dataSet),
+                        new AttractionCalculatorMEL(dataSet,purpose)
+                )
+            );
 
             if(Resources.instance.getBoolean(Properties.RUN_MODESET,false)) {
                 modeSetChoice = new ModeSetChoice(dataSet, purposes, new ModeSetCalculatorMEL(dataSet));
