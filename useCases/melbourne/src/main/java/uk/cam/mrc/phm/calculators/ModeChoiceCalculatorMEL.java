@@ -158,15 +158,15 @@ public class ModeChoiceCalculatorMEL extends AbstractModeChoiceCalculator {
                 break;
             case HBR:
                 if (person.getAge()<16) {
-                    walkSkimName = "walk_HBR_child";
-                    bikeSkimName = "bike_HBR_child";
+                    walkSkimName = "walk_child";
+                    bikeSkimName = "bike_child";
                 } else if (person.getMitoGender().equals(MitoGender.FEMALE)) {
-                    walkSkimName = "walk_HBR";
-                    bikeSkimName = "bike_HBR_female";
+                    walkSkimName = "walk";
+                    bikeSkimName = "bike_female";
 
                 } else {
-                    walkSkimName = "walk_HBR";
-                    bikeSkimName = "bike_HBR";
+                    walkSkimName = "walk";
+                    bikeSkimName = "bike";
                 }
                 break;
             case HBO:

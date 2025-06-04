@@ -55,7 +55,10 @@ public class OmxSkimsReaderMEL extends AbstractOmxReader implements SkimsReader 
         readTravelTimeSkim("carCongested",Properties.AUTO_PEAK_SKIM,Properties.AUTO_PEAK_CONGESTED_SKIM_MATRIX);
         readTravelTimeSkim("pt",Properties.PT_PEAK_SKIM,Properties.PT_PEAK_SKIM_MATRIX);
         readTravelTimeSkim("bike",Properties.ACTIVE_TIME_SKIM,Properties.BIKE_COST_SKIM_MATRIX);
+        readTravelTimeSkim("bike_child",Properties.ACTIVE_TIME_SKIM,Properties.BIKE_COST_CHILD_SKIM_MATRIX);
+        readTravelTimeSkim("bike_female",Properties.ACTIVE_TIME_SKIM,Properties.BIKE_COST_FEMALE_SKIM_MATRIX);
         readTravelTimeSkim("walk",Properties.ACTIVE_TIME_SKIM,Properties.WALK_COST_SKIM_MATRIX);
+        readTravelTimeSkim("walk_child",Properties.ACTIVE_TIME_SKIM,Properties.WALK_COST_CHILD_SKIM_MATRIX);
 
         // HBW
         readTravelTimeSkim("bike_HBW",Properties.ACTIVE_COST_HBW_SKIM,Properties.BIKE_COST_SKIM_MATRIX);
@@ -65,18 +68,16 @@ public class OmxSkimsReaderMEL extends AbstractOmxReader implements SkimsReader 
         // HBE
         readTravelTimeSkim("bike_HBE",Properties.ACTIVE_COST_HBE_SKIM,Properties.BIKE_COST_SKIM_MATRIX);
         readTravelTimeSkim("walk_HBE",Properties.ACTIVE_COST_HBE_SKIM,Properties.WALK_COST_SKIM_MATRIX);
-        
+
         // HBA
         readTravelTimeSkim("bike_HBA",Properties.ACTIVE_COST_HBA_SKIM,Properties.BIKE_COST_SKIM_MATRIX);
         
         // HBD
         readTravelTimeSkim("bike_HBD",Properties.ACTIVE_COST_HBD_SKIM,Properties.BIKE_COST_SKIM_MATRIX);
-//        readTravelTimeSkim("bike_HBD_child",Properties.ACTIVE_COST_HBD_SKIM,Properties.BIKE_COST_CHILD_SKIM_MATRIX);
         readTravelTimeSkim("walk_HBD",Properties.ACTIVE_COST_HBD_SKIM,Properties.WALK_COST_SKIM_MATRIX);
-//        readTravelTimeSkim("walk_HBD_child",Properties.ACTIVE_COST_HBD_SKIM,Properties.WALK_COST_CHILD_SKIM_MATRIX);
-//        readTravelTimeSkim("walk_HBD_elderly",Properties.ACTIVE_COST_HBD_SKIM,Properties.WALK_COST_ELDERLY_SKIM_MATRIX);
 
         // NHBO
+        readTravelTimeSkim("bike_NHBO",Properties.ACTIVE_COST_NHBO_SKIM,Properties.BIKE_COST_SKIM_MATRIX);
         readTravelTimeSkim("walk_NHBO",Properties.ACTIVE_COST_NHBO_SKIM,Properties.WALK_COST_SKIM_MATRIX);
     }
 
