@@ -55,27 +55,27 @@ public class AttractionCalculatorMEL implements AttractionCalculator {
                     }
                 }
                 zone.setTripAttraction(purpose, tripAttraction);
-//            // Weight for specific buildings  --- USED FOR MANCHESTER, PERHAPS NOT FOR MELBOURNE
-//            List<MicroLocation> microDestinations = zone.getMicroDestinations();
-//            if(microDestinations.size() > 0) {
-//                double[] microDestinationWeights = new double[microDestinations.size()];
-//                for(int i = 0 ; i < microDestinations.size() ; i++) {
-//                    MicroLocation loc = microDestinations.get(i);
-//                    double weight;
-//                    ExplanatoryVariable code;
-//                    if(loc instanceof MitoPoi) {
-//                        weight = ((MitoPoi) loc).getWeight();
-//                        code = ((MitoPoi) loc).getCode();
-//                    } else if (loc instanceof MitoVacantDwelling || loc instanceof MitoHousehold) {
-//                        weight = zone.getVacancyRate();
-//                        code = HH;
-//                    } else {
-//                        throw new RuntimeException("Unrecognised MicroLocation class " + loc.getClass().getName() + " for trip distribution");
-//                    }
-//                    microDestinationWeights[i] = weight * purpose.getTripAttractionForVariable(code);
-//                }
-//                zone.setMicroDestinationWeightsByPurpose(purpose, microDestinationWeights);
-//            }
+            // Weight for specific buildings  --- USED FOR MANCHESTER, PERHAPS NOT FOR MELBOURNE
+            List<MicroLocation> microDestinations = zone.getMicroDestinations();
+            if(microDestinations.size() > 0) {
+                double[] microDestinationWeights = new double[microDestinations.size()];
+                for(int i = 0 ; i < microDestinations.size() ; i++) {
+                    MicroLocation loc = microDestinations.get(i);
+                    double weight;
+                    ExplanatoryVariable code;
+                    if(loc instanceof MitoPoi) {
+                        weight = ((MitoPoi) loc).getWeight();
+                        code = ((MitoPoi) loc).getCode();
+                    } else if (loc instanceof MitoVacantDwelling || loc instanceof MitoHousehold) {
+                        weight = zone.getVacancyRate();
+                        code = HH;
+                    } else {
+                        throw new RuntimeException("Unrecognised MicroLocation class " + loc.getClass().getName() + " for trip distribution");
+                    }
+                    microDestinationWeights[i] = weight * purpose.getTripAttractionForVariable(code);
+                }
+                zone.setMicroDestinationWeightsByPurpose(purpose, microDestinationWeights);
+            }
 
         }
     }
