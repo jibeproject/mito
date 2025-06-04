@@ -9,6 +9,7 @@ import de.tum.bgu.msm.util.MitoUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -25,7 +26,7 @@ public class CalibrationDataReaderMEL extends AbstractCsvReader {
         super(dataSet);
     }
 
-    private static final Logger logger = LogManager.getLogger(de.tum.bgu.msm.io.input.readers.CalibrationDataReader.class);
+    private static final Logger logger = LogManager.getLogger(CalibrationDataReaderMEL.class);
     @Override
     protected void processHeader(String[] header) {
         regionIndex = MitoUtil.findPositionInArray("calibrationRegion", header);
@@ -37,11 +38,11 @@ public class CalibrationDataReaderMEL extends AbstractCsvReader {
 
     @Override
     protected void processRecord(String[] record) {
-        logger.info(Arrays.toString(record));
+        //  logger.info(Arrays.toString(record));
         String region = record[regionIndex];
         String purposeString = record[purposeIndex];
 
-        // Skip processing if purpose is 'NA' or 'business'
+        // Skip processing if purpose is 'NA', 'business' or unkown
         if ("NA".equalsIgnoreCase(purposeString)) {
             return;
         }
@@ -69,8 +70,11 @@ public class CalibrationDataReaderMEL extends AbstractCsvReader {
     }
 
     @Override
+
     public void read() {
-        super.read(Resources.instance.getCalibrationFactorsPath(), ",");
+        Path filePath = Resources.instance.getCalibrationFactorsPath();
+        logger.info("Reading calibration data from file: {}", filePath);
+        super.read(filePath, ",");
     }
 }
 

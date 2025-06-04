@@ -14,7 +14,7 @@ import java.util.List;
 
 public class PersonsReader7daysMEL extends AbstractCsvReader {
 
-    private static final Logger logger = LogManager.getLogger(de.tum.bgu.msm.io.PersonsReader7days.class);
+    private static final Logger logger = LogManager.getLogger(PersonsReader7daysMEL.class);
 
     private int posId = -1;
     private int posHhId = -1;
@@ -34,8 +34,8 @@ public class PersonsReader7daysMEL extends AbstractCsvReader {
 
     @Override
     public void read() {
-        logger.info("  Reading person micro data from ascii file");
         Path filePath = Resources.instance.getPersonsFilePath();
+        logger.info("  Reading person micro data from ascii file ({})", filePath);
         super.read(filePath, ",");
         int noIncomeHouseholds = 0;
         for(MitoHousehold household: dataSet.getHouseholds().values()) {

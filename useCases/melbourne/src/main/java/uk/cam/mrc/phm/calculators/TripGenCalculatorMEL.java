@@ -5,7 +5,6 @@ import de.tum.bgu.msm.modules.tripGeneration.TripGenPredictor;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class TripGenCalculatorMEL implements TripGenPredictor {
 
@@ -14,7 +13,6 @@ public class TripGenCalculatorMEL implements TripGenPredictor {
     public TripGenCalculatorMEL(DataSet dataSet) {
         this.dataSet = dataSet;
     }
-
 
     @Override
     public double getPredictor(MitoHousehold hh,MitoPerson pp, Map<String, Double> coefficients) {
@@ -122,7 +120,7 @@ public class TripGenCalculatorMEL implements TripGenPredictor {
         }
 
         // Work trips & mean distance
-        List<MitoTrip> workTrips = pp.getTrips().stream().filter(tt -> Purpose.HBW.equals(tt.getTripPurpose())).collect(Collectors.toList());
+        List<MitoTrip> workTrips = pp.getTrips().stream().filter(tt -> Purpose.HBW.equals(tt.getTripPurpose())).toList();
         int workTripCount = workTrips.size();
         if(workTripCount > 0) {
             if (workTripCount == 1) {
@@ -137,14 +135,20 @@ public class TripGenCalculatorMEL implements TripGenPredictor {
                 predictor += coefficients.get("p.workTrips_5");
             }
             int homeZoneId = pp.getHousehold().getZoneId();
-            double meanWorkKm = workTrips.stream().
-                    mapToDouble(t -> dataSet.getTravelDistancesNMT().
-                            getTravelDistance(homeZoneId, t.getTripDestination().getZoneId())).average().getAsDouble();
+            double meanWorkKm = workTrips.stream()
+                    .mapToDouble(t -> {
+                if (t.getTripDestination() == null) {
+                    throw new RuntimeException("Trip destination is null for trip: " + t + ", person: " + pp.getId());
+                }
+                return dataSet.getTravelDistancesNMT().getTravelDistance(homeZoneId, t.getTripDestination().getZoneId());
+            })
+                    .average()
+                    .orElse(0.0);
             predictor += Math.log(meanWorkKm) * coefficients.get("p.log_km_mean_HBW");
         }
 
         // Education trips & mean distance
-        List<MitoTrip> eduTrips = pp.getTrips().stream().filter(tt -> Purpose.HBE.equals(tt.getTripPurpose())).collect(Collectors.toList());
+        List<MitoTrip> eduTrips = pp.getTrips().stream().filter(tt -> Purpose.HBE.equals(tt.getTripPurpose())).toList();
         int eduTripCount = eduTrips.size();
         if(eduTripCount > 0) {
             if (eduTripCount == 1) {

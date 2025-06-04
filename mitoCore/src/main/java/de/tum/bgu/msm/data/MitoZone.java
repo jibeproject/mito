@@ -88,7 +88,7 @@ public class MitoZone implements Id, Location {
             return centroid;
         } else {
             double[] destinationWeights = microDestinationWeightsByPurpose.get(purpose);
-            if(MitoUtil.getSum(destinationWeights) > 0) {
+            if(destinationWeights!=null && MitoUtil.getSum(destinationWeights) > 0) {
                 int idx = MitoUtil.select(destinationWeights,random);
                 return microDestinations.get(idx);
             } else {
@@ -174,13 +174,19 @@ public class MitoZone implements Id, Location {
 
     public void setTripAttraction(Purpose purpose, double tripAttractionRate) {
         this.tripAttraction.put(purpose, tripAttractionRate);
+        if (Double.isNaN(tripAttractionRate)) {
+            throw new RuntimeException("Invalid trip attraction rate " + tripAttractionRate + " for zone " + zoneId + " and purpose " + purpose);
+        }
     }
 
     public double getTripAttraction(Purpose purpose) {
         Double rate = this.tripAttraction.get(purpose);
-        if (rate == null || Double.isNaN(rate)) {
+        if (rate == null) {
             throw new RuntimeException("No trip attraction rate set for zone " + zoneId + ". Please make sure to only call " +
                     "this method after trip generation module!");
+        }
+        if (Double.isNaN(rate)) {
+            throw new RuntimeException("Invalid trip attraction rate " + rate + " for zone " + zoneId + " and purpose " + purpose);
         }
         return rate;
     }

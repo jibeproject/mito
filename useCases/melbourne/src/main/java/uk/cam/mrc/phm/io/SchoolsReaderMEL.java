@@ -55,8 +55,8 @@ public class SchoolsReaderMEL extends AbstractCsvReader {
 
     @Override
     public void read() {
-        logger.info("Reading school micro data from ascii file");
         Path filePath = Resources.instance.getSchoolsFilePath();
+        logger.info("Reading school micro data from ascii file ({})", filePath);
         super.read(filePath, ",");
     }
 }

@@ -36,8 +36,8 @@ public class JobReaderMEL extends AbstractCsvReader {
 
     @Override
     public void read() {
-        logger.info("Reading job micro data from ascii file");
         Path filePath = Resources.instance.getJobsFilePath();
+        logger.info("Reading job micro data from ascii file ({})", filePath);
         super.read(filePath, ",");
     }
 

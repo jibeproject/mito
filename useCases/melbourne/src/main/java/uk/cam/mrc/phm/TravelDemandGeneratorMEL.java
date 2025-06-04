@@ -11,7 +11,6 @@ import de.tum.bgu.msm.modules.modeChoice.ModeChoice;
 import de.tum.bgu.msm.modules.modeChoice.ModeChoiceCalibrationData;
 import de.tum.bgu.msm.modules.plansConverter.externalFlows.LongDistanceTraffic;
 import de.tum.bgu.msm.modules.scaling.TripScaling;
-import de.tum.bgu.msm.modules.timeOfDay.TimeOfDayChoice;
 import de.tum.bgu.msm.modules.tripDistribution.TripDistribution;
 import de.tum.bgu.msm.modules.tripGeneration.TripGeneration;
 import de.tum.bgu.msm.modules.tripGeneration.TripGeneratorType;
@@ -113,18 +112,48 @@ public final class TravelDemandGeneratorMEL {
             discretionaryPurposes.removeAll(mandatoryPurposes);
 
             //from here
-            tripGenerationMandatory = new TripGeneration(dataSet, mandatoryPurposes, new MitoTripFactory7days());
-            mandatoryPurposes.forEach(purpose -> ((TripGeneration) tripGenerationMandatory).registerTripGenerator(purpose, new MitoTripFactory7days(), TripGeneratorType.PersonBasedHurdlePolr,new TripGenCalculatorMEL(dataSet),
-                    new AttractionCalculatorMEL(dataSet,purpose)));
+            tripGenerationMandatory = new TripGeneration(
+                    dataSet,
+                    mandatoryPurposes,
+                    new MitoTripFactory7days()
+            );
+            mandatoryPurposes.forEach(
+        purpose -> (
+                    (TripGeneration) tripGenerationMandatory
+                ).registerTripGenerator(
+                    purpose, new
+                    MitoTripFactory7days(),
+                    TripGeneratorType.PersonBasedHurdlePolr,
+                    new TripGenCalculatorMEL(dataSet),
+                    new AttractionCalculatorMEL(dataSet,purpose)
+                )
+            );
 
             distributionMandatory = new TripDistribution(dataSet, mandatoryPurposes);
-            mandatoryPurposes.forEach(purpose -> ((TripDistribution) distributionMandatory).registerDestinationUtilityCalculator(purpose, new DestinationUtilityCalculatorMEL(purpose)));
+            mandatoryPurposes.forEach(purpose -> (
+                    (TripDistribution) distributionMandatory
+            ).registerDestinationUtilityCalculator(
+                    purpose,
+                    new DestinationUtilityCalculatorMEL(purpose)
+                )
+            );
 
             tripGenerationDiscretionary = new TripGeneration(dataSet, discretionaryPurposes, new MitoTripFactory7days());
-            discretionaryPurposes.forEach(purpose -> ((TripGeneration) tripGenerationDiscretionary).registerTripGenerator(purpose, new MitoTripFactory7days(),TripGeneratorType.PersonBasedHurdleNegBin,new TripGenCalculatorMEL(dataSet),
-                    new AttractionCalculatorMEL(dataSet,purpose)));
+            discretionaryPurposes.forEach(
+        purpose -> (
+                        (TripGeneration) tripGenerationDiscretionary
+                ).registerTripGenerator(
+                        purpose,
+                        new MitoTripFactory7days(),
+                        TripGeneratorType.PersonBasedHurdleNegBin,
+                        new TripGenCalculatorMEL(dataSet),
+                        new AttractionCalculatorMEL(dataSet,purpose)
+                )
+            );
 
-            modeSetChoice = new ModeSetChoice(dataSet, purposes, new ModeSetCalculatorMEL(dataSet));
+            if(Resources.instance.getBoolean(Properties.RUN_MODESET,false)) {
+                modeSetChoice = new ModeSetChoice(dataSet, purposes, new ModeSetCalculatorMEL(dataSet));
+            }
 
             distributionDiscretionary = new TripDistribution(dataSet, discretionaryPurposes);
             // Register ALL purposes here, because we need the mandatory purpose matrices for NHBW / NHBO
@@ -139,7 +168,7 @@ public final class TravelDemandGeneratorMEL {
 
             dayOfWeekChoice = new DayOfWeekChoice(dataSet, purposes);
 
-            timeOfDayChoice = new TimeOfDayChoice(dataSet, purposes);
+            timeOfDayChoice = new TimeOfDayChoiceMEL(dataSet, purposes);
             //until here it must be divided into two blocks - mandatory and discretionary
 
             tripScaling = new TripScaling(dataSet, purposes);

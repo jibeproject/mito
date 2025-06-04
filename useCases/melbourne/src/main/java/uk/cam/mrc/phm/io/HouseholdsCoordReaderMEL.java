@@ -40,8 +40,9 @@ public class HouseholdsCoordReaderMEL extends AbstractCsvReader {
 
     @Override
     public void read() {
-        logger.info("Reading household microlocation coordinate from dwelling file");
+
         Path filePath = Resources.instance.getDwellingsFilePath();
+        logger.info("Reading household microlocation coordinate from dwelling file ({})", filePath);
         super.read(filePath, ",");
     }
 

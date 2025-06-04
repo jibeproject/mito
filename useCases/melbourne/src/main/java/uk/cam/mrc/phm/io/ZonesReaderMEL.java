@@ -13,6 +13,7 @@ import org.geotools.api.feature.simple.SimpleFeature;
 import org.locationtech.jts.geom.Geometry;
 import org.matsim.core.utils.gis.ShapeFileReader;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 
 
@@ -32,7 +33,9 @@ public class ZonesReaderMEL extends AbstractCsvReader {
 
     @Override
     public void read() {
-        super.read(Resources.instance.getZonesInputFile().toAbsolutePath(), ",");
+        Path filePath = Resources.instance.getZonesInputFile();
+        logger.info("Reading zones data from ascii file ({})", filePath);
+        super.read(filePath, ",");
         mapFeaturesToZones(dataSet);
     }
 

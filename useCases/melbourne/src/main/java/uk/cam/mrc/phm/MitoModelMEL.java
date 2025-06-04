@@ -3,7 +3,6 @@ package uk.cam.mrc.phm;
 import de.tum.bgu.msm.data.DataSet;
 import de.tum.bgu.msm.data.DataSetImpl;
 import de.tum.bgu.msm.data.travelTimes.SkimTravelTimes;
-import de.tum.bgu.msm.io.PersonsReader7days;
 import de.tum.bgu.msm.io.input.readers.*;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.resources.Resources;
@@ -92,6 +91,7 @@ public final class MitoModelMEL {
     }
 
     private void readAdditionalData() {
+        new PoiWeightsReader(dataSet).read();
         dataSet.setModeChoiceCalibrationData(new ModeChoiceCalibrationDataMEL());
         new CalibrationDataReaderMEL(dataSet).read();
         new CalibrationRegionMapReaderMEL(dataSet).read();
@@ -101,12 +101,12 @@ public final class MitoModelMEL {
 
     private void printOutline(long startTime) {
         String trips = MitoUtil.customFormat("  " + "###,###", dataSet.getTrips().size());
-        logger.info("A total of " + trips.trim() + " microscopic trips were generated");
+        logger.info("A total of {} microscopic trips were generated", trips.trim());
         logger.info("Completed the Microsimulation Transport Orchestrator (MITO)");
         float endTime = MitoUtil.rounder(((System.currentTimeMillis() - startTime) / 60000.f), 1);
         int hours = (int) (endTime / 60);
         int min = (int) (endTime - 60 * hours);
-        logger.info("Runtime: " + hours + " hours and " + min + " minutes.");
+        logger.info("Runtime: {} hours and {} minutes.", hours, min);
     }
 
     public DataSet getData() {
