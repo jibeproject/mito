@@ -36,8 +36,8 @@ public class CyclingShareAdjustment extends Module {
         String csvPath = Resources.instance.getString("cycling.coefficients.file");
         try {
             this.coefficients = readCyclingCoefficients(csvPath);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to read cycling coefficients from CSV: " + csvPath, e);
+        } catch (IOException error) {
+            throw new RuntimeException("Failed to read cycling coefficients from CSV: " + csvPath, error);
             }
         }
 
@@ -52,7 +52,9 @@ public class CyclingShareAdjustment extends Module {
         for (MitoTrip trip : allTrips) {
             int origin = trip.getTripOrigin().getZoneId();
             int destination = trip.getTripDestination().getZoneId();
-            double logDist = Math.log(Math.max(dataSet.getTravelDistancesNMT().getTravelDistance(origin, destination), 0.1));
+
+            double travelDistance = dataSet.getTravelDistancesNMT().getTravelDistance(origin, destination) * 1000.;
+            double logDist = Math.log(Math.max(travelDistance, 0.1));
 
             double utility = getCoefficient("asc") + getCoefficient("logd") * logDist + getCoefficient("logd2")* logDist * logDist;
 
@@ -105,9 +107,9 @@ public class CyclingShareAdjustment extends Module {
         long existingBikeCount = allTrips.stream().filter(trip -> trip.getTripMode() == Mode.bicycle).count();
         int totalTrips = allTrips.size();
         int desiredTotalBikes = (int) Math.round(totalTrips * targetShare);
-        int toFlip = Math.max(0, desiredTotalBikes - (int) existingBikeCount);
+        int toBike = Math.max(0, desiredTotalBikes - (int) existingBikeCount);
 
-        if (toFlip <= 0) {
+        if (toBike <= 0) {
             return 0;
         }
 
@@ -127,7 +129,7 @@ public class CyclingShareAdjustment extends Module {
             double key = Math.pow(uniform, 1.0 / weight);
 
             Map.Entry<MitoTrip, Double> entry = new AbstractMap.SimpleEntry<>(candidate, key);
-            if (minHeap.size() < toFlip) {
+            if (minHeap.size() < toBike) {
                 minHeap.offer(entry);
             } else if (key > minHeap.peek().getValue()) {
                 minHeap.poll();
