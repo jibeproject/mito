@@ -10,6 +10,7 @@ import de.tum.bgu.msm.util.MitoUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.geotools.api.feature.simple.SimpleFeature;
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.matsim.core.utils.gis.ShapeFileReader;
 
@@ -45,6 +46,7 @@ public class ZonesReaderMEL extends AbstractCsvReader {
             MitoZone zone = dataSet.getZones().get(zoneId);
             if (zone != null){
                 zone.setGeometry((Geometry) feature.getDefaultGeometry());
+                zone.setCentroid((Coordinate) zone.getGeometry().getCentroid().getCoordinate());
             }else{
                 logger.warn("zoneId " + zoneId + " doesn't exist in mito zone system");
             }
