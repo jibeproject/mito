@@ -53,8 +53,8 @@ public class TripAttractionRatesReaderMEL extends AbstractCsvReader {
     protected void processRecord(String[] record) {
         ExplanatoryVariable variable = ExplanatoryVariable.valueOf(record[variableIndex]);
         if (!indexForPurpose.containsKey(purpose)) {
-            purpose.setTripAttractionForVariable(variable, 0.0);
-            logger.warn("Purpose {} not found in header; setting trip attraction rate for variable {} to 0.0", purpose.name(), variable);
+            purpose.setTripAttractionForVariable(variable, 1.0);
+            logger.warn("Purpose {} not found in header; setting trip attraction rate for variable {} to 1.0 (constant)", purpose.name(), variable);
         } else {
             double rate = Double.parseDouble(record[indexForPurpose.get(purpose)]);
             purpose.setTripAttractionForVariable(variable, rate);
