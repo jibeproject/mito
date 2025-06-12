@@ -162,7 +162,16 @@ public final class TravelDemandGeneratorMEL {
             ((TripDistribution) distributionDiscretionary).registerDestinationUtilityCalculator(RRT, new DestinationUtilityCalculatorRrtMEL(RRT));
 
             modeChoice = new ModeChoice(dataSet, purposes);
-            purposes.forEach(purpose -> ((ModeChoice) modeChoice).registerModeChoiceCalculator(purpose, new CalibratingModeChoiceCalculatorImpl(new ModeChoiceCalculatorMEL(purpose, dataSet), dataSet.getModeChoiceCalibrationData())));
+            ModeChoiceCalibrationData calibrationData = dataSet.getModeChoiceCalibrationData();
+            purposes.forEach(purpose -> (
+                    (ModeChoice) modeChoice).registerModeChoiceCalculator(
+                            purpose,
+                            new CalibratingModeChoiceCalculatorImpl(
+                                    new ModeChoiceCalculatorMEL(purpose, dataSet),
+                                    calibrationData
+                            )
+                    )
+            );
             //Override the calculator for RRT
             ((ModeChoice) modeChoice).registerModeChoiceCalculator(RRT, new CalibratingModeChoiceCalculatorImpl(new ModeChoiceCalculatorRrtMEL(dataSet), dataSet.getModeChoiceCalibrationData()));
 
