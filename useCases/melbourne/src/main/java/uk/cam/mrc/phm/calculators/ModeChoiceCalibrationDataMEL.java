@@ -34,8 +34,25 @@ public class ModeChoiceCalibrationDataMEL implements ModeChoiceCalibrationData {
     public double[] getCalibrationFactorsAsArray(Purpose tripPurpose, Location tripOrigin) {
 
         double[] factors = new double[Mode.values().length];
+        int zoneId = tripOrigin.getZoneId();
+        String region = zoneToRegionMap.get(zoneId);
+        if (region == null) {
+            logger.warn("No region found for zoneId {}. This will give rise to a NullPointerException.", zoneId);
+        }
+        Map<Purpose, Map<Mode, Double>> zoneCalibrationFactors = calibrationFactors.get(region);
+        if (zoneCalibrationFactors == null) {
+            logger.warn("No calibration factors found for region {}. This will give rise to a NullPointerException.", region);
+        }
+        Map<Mode, Double> zoneTripPurpose = zoneCalibrationFactors.get(tripPurpose);
+        if (zoneTripPurpose == null) {
+            logger.warn("No calibration factors found for trip purpose {} in region {}. This will give rise to a NullPointerException.", tripPurpose, region);
+        }
         for (Mode mode : Mode.values()) {
-            factors[mode.getId()] = calibrationFactors.get(zoneToRegionMap.get(tripOrigin.getZoneId())).get(tripPurpose).getOrDefault(mode, 0.);
+            if (zoneTripPurpose == null || !zoneTripPurpose.containsKey(mode)) {
+                logger.warn("No calibration factor found for mode {} in trip purpose {} in region {}. This will give rise to a NullPointerException.", mode, tripPurpose, region);
+                throw new IllegalArgumentException("Unable to get mode from zone trip purpose " + zoneTripPurpose + ". No calibration factor found for mode " + mode);
+            }
+            factors[mode.getId()] = zoneTripPurpose.getOrDefault(mode, 0.);
         }
         return factors;
     }
