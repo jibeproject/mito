@@ -55,7 +55,7 @@ public class ModeSetCalculatorMEL implements ModeSetCalculator {
 
         // Number of children under 15 in household
 
-        predictor += householdChildrenUnder15 * coefficients.get("hh.childrenUnder15");
+//        predictor += householdChildrenUnder15 * coefficients.get("hh.childrenUnder15");
 
 
         // Autos

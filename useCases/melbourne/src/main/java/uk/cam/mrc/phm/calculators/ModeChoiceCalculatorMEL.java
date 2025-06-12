@@ -153,8 +153,8 @@ public class ModeChoiceCalculatorMEL extends AbstractModeChoiceCalculator {
                 bikeSkimName = "bike_HBE";
                 break;
             case HBS:
-                walkSkimName = "walk_HBS";
-                bikeSkimName = "bike_HBS";
+                walkSkimName = "walk_HBD";
+                bikeSkimName = "bike_HBD";
                 break;
             case HBR:
                 if (person.getAge()<16) {
@@ -170,8 +170,8 @@ public class ModeChoiceCalculatorMEL extends AbstractModeChoiceCalculator {
                 }
                 break;
             case HBO:
-                walkSkimName = "walk_HBO";
-                bikeSkimName = "bike_HBO";
+                walkSkimName = "walk_HBD";
+                bikeSkimName = "bike_HBD";
                 break;
             case HBA:
                 bikeSkimName = "bike_HBA";
