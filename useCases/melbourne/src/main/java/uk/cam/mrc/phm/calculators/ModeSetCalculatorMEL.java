@@ -74,25 +74,20 @@ public class ModeSetCalculatorMEL implements ModeSetCalculator {
 
         // Age
         int age = pp.getAge();
-        if (age >= 5 & age <= 14) {
-            predictor += coefficients.get("p.age_group_5_14");
-        }
-        else if (age >= 15 & age <= 24) {
-            predictor += coefficients.get("p.age_group_15_24");
-        }
-        else if (age >= 25 & age <= 34) {
-            predictor += coefficients.get("p.age_group_25_34");
-        }
-        else if (age >= 35 & age <= 44) {
-            predictor += coefficients.get("p.age_group_35_44");
-        }
-        else if (age >= 45 &age <= 64) {
+        if (age < 16) {
+            predictor += coefficients.get("p.age_under16");
+        } else if (age < 25) {
+            predictor += coefficients.get("p.age_16_24");
+        } else if (age < 40) {
             predictor += 0.;
-        }else if (age >= 65 & age <= 74) {
-            predictor += coefficients.get("p.age_group_65_74");
-        }
-        else if (age >= 75){
-            predictor += coefficients.get("p.age_group_75");
+        } else if (age < 45) {
+            predictor += coefficients.get("p.age_40_44");
+        } else if (age < 55) {
+            predictor += coefficients.get("p.age_45_54");
+        } else if (age < 65) {
+            predictor += coefficients.get("p.age_55_64");
+        } else if (age >= 65) {
+            predictor += coefficients.get("p.age_65up");
         }
 
         // Female

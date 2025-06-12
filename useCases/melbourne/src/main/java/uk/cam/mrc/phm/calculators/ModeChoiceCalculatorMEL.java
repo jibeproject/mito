@@ -63,15 +63,15 @@ public class ModeChoiceCalculatorMEL extends AbstractModeChoiceCalculator {
             double utility = modeCoef.get("asc");
 
             // Age
-            if(age < 15){
+            if(age < 16){
                 utility += modeCoef.get("age_under16");
-            } else if (age < 25) {
+            } else if (age < 24) {
                 utility += modeCoef.get("age_16_24");
             } else if (age < 40) {
                 utility += 0;
             } else if (age < 55) {
                 utility += modeCoef.get("age_45_54");
-            } else if (age < 70) {
+            } else if (age < 65) {
                 utility += modeCoef.get("age_55_64");
             } else {
                 utility += modeCoef.get("age_65up");
@@ -82,24 +82,24 @@ public class ModeChoiceCalculatorMEL extends AbstractModeChoiceCalculator {
                 utility += modeCoef.get("female");
             }
 
-            // occupation
-            if (MitoOccupationStatus.WORKER.equals(person.getMitoOccupationStatus())){
-                utility += modeCoef.get("occupation_worker");
-            }
+//            // occupation
+//            if (MitoOccupationStatus.WORKER.equals(person.getMitoOccupationStatus())){
+//                utility += modeCoef.get("occupation_worker");
+//            }
 
-            // Household income
-            if (hhincome < 1500) {
-                utility += modeCoef.get("income_low");
-            } else if (hhincome > 5000) {
-                utility += modeCoef.get("income_high");
-            }
+//            // Household income
+//            if (hhincome < 1500) {
+//                utility += modeCoef.get("income_low");
+//            } else if (hhincome > 5000) {
+//                utility += modeCoef.get("income_high");
+//            }
 
-            // purpose
-            if (purpose.equals(Purpose.HBR)) {
-                utility += modeCoef.get("recreation_trip");
-            } else if (purpose.equals(Purpose.HBO)) {
-                utility += modeCoef.get("other_trip");
-            }
+//            // purpose
+//            if (purpose.equals(Purpose.HBR)) {
+//                utility += modeCoef.get("recreation_trip");
+//            } else if (purpose.equals(Purpose.HBO)) {
+//                utility += modeCoef.get("other_trip");
+//            }
 
             // Household cars
             if (hhAutos == 0) {
