@@ -9,6 +9,7 @@ import de.tum.bgu.msm.util.MitoUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.geotools.api.feature.simple.SimpleFeature;
+import org.locationtech.jts.geom.Coordinate;
 import org.matsim.api.core.v01.network.Node;
 import uk.cam.mrc.phm.util.parseMEL;
 
@@ -50,8 +51,8 @@ public class HouseholdsCoordReaderMEL extends AbstractCsvReader {
         header = parseMEL.stringParse(header);
         posHHId = MitoUtil.findPositionInArray("hhID", header);
         posTAZId = MitoUtil.findPositionInArray("zone", header);
-        //posCoordX = MitoUtil.findPositionInArray("coordX", header);
-        //posCoordY = MitoUtil.findPositionInArray("coordY", header);
+        posCoordX = MitoUtil.findPositionInArray("coordX", header);
+        posCoordY = MitoUtil.findPositionInArray("coordY", header);
     }
 
     @Override
@@ -63,21 +64,24 @@ public class HouseholdsCoordReaderMEL extends AbstractCsvReader {
         if (hhId > 0) {
             MitoHousehold hh = dataSet.getHouseholds().get(hhId);
             if (hh == null) {
-                logger.warn(String.format("Household %d does not exist in mito.", hhId));
+                logger.warn("Household {} does not exist in mito.", hhId);
                 return;
             }
             int taz = parseMEL.zoneParse(record[posTAZId]);
             MitoZone zone = dataSet.getZones().get(taz);
             if(zone == null) {
-                logger.warn(String.format("Household %d is supposed to live in zone %d but this zone does not exist.", hhId, taz));
+                logger.warn("Household {} is supposed to live in zone {} but this zone does not exist.", hhId, taz);
             }
 
 
-            /*Coordinate homeLocation = new Coordinate(
-            		Double.parseDouble(record[posCoordX]), Double.parseDouble(record[posCoordY]));
-            */
-            hh.setHomeLocation(zone.getRandomCoord(MitoUtil.getRandomObject()));
+            Coordinate homeLocation = new Coordinate(
+            		Double.parseDouble(record[posCoordX]), Double.parseDouble(record[posCoordY])
+            );
+
+            // hh.setHomeLocation(zone.getRandomCoord(MitoUtil.getRandomObject()));
+            hh.setHomeLocation(homeLocation);
             hh.setHomeZone(zone);
+            assert zone != null;
             zone.addHousehold(hh);
         }
     }

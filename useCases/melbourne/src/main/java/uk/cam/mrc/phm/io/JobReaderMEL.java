@@ -9,6 +9,7 @@ import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.locationtech.jts.geom.Coordinate;
 import uk.cam.mrc.phm.util.parseMEL;
 
 import java.nio.file.Path;
@@ -47,8 +48,8 @@ public class JobReaderMEL extends AbstractCsvReader {
         posZone = MitoUtil.findPositionInArray("zone", header);
         posWorker = MitoUtil.findPositionInArray("personId", header);
         posType = MitoUtil.findPositionInArray("type", header);
-        //posJobCoordX = MitoUtil.findPositionInArray("coordX", cleanHeader);
-        //posJobCoordY = MitoUtil.findPositionInArray("coordY", cleanHeader);
+        posJobCoordX = MitoUtil.findPositionInArray("coordX", header);
+        posJobCoordY = MitoUtil.findPositionInArray("coordY", header);
     }
 
     @Override
@@ -70,10 +71,11 @@ public class JobReaderMEL extends AbstractCsvReader {
                 //logger.error("Job Type " + type + " used in job microdata but is not defined");
             }
 
-            /*Coordinate coordinate = (new Coordinate(Double.parseDouble(record[posJobCoordX]),
+            Coordinate job_location = (new Coordinate(Double.parseDouble(record[posJobCoordX]),
             		Double.parseDouble(record[posJobCoordY])));
-*/
-            MitoJob job = new MitoJob(zone, zone.getRandomCoord(MitoUtil.getRandomObject()), id);
+
+            // MitoJob job = new MitoJob(zone, zone.getRandomCoord(MitoUtil.getRandomObject()), id);
+            MitoJob job = new MitoJob(zone, job_location, id);
             dataSet.addJob(job);
         }
     }

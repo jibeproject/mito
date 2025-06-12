@@ -64,17 +64,17 @@ public class ModeChoiceCalculatorMEL extends AbstractModeChoiceCalculator {
 
             // Age
             if(age < 15){
-                utility += modeCoef.get("age_5_14");
+                utility += modeCoef.get("age_under16");
             } else if (age < 25) {
-                utility += modeCoef.get("age_15_24");
+                utility += modeCoef.get("age_16_24");
             } else if (age < 40) {
                 utility += 0;
             } else if (age < 55) {
-                utility += modeCoef.get("age_40_54");
+                utility += modeCoef.get("age_45_54");
             } else if (age < 70) {
-                utility += modeCoef.get("age_55_69");
+                utility += modeCoef.get("age_55_64");
             } else {
-                utility += modeCoef.get("age_70");
+                utility += modeCoef.get("age_65up");
             }
 
             // gender
@@ -175,6 +175,7 @@ public class ModeChoiceCalculatorMEL extends AbstractModeChoiceCalculator {
                 break;
             case HBA:
                 bikeSkimName = "bike_HBA";
+                walkSkimName = "walk";
                 break;
             case NHBO:
                 walkSkimName = "walk_NHBO";
@@ -189,6 +190,10 @@ public class ModeChoiceCalculatorMEL extends AbstractModeChoiceCalculator {
         }
 
         // Get walk and bike cost from skims
+        assert walkSkimName != null;
+        assert bikeSkimName != null;
+
+
         double gcWalk = travelTimes.getTravelTime(originZone, destinationZone, peakHour_s, walkSkimName);
         double gcBicycle = travelTimes.getTravelTime(originZone, destinationZone, peakHour_s, bikeSkimName);
 
