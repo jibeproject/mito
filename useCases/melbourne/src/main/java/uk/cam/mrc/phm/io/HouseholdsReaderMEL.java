@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 import uk.cam.mrc.phm.util.parseMEL;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 
 /**
  * Created by Nico on 17.07.2017.
@@ -37,9 +36,7 @@ public class HouseholdsReaderMEL extends AbstractCsvReader {
 
     @Override
     protected void processHeader(String[] header) {
-        header = Arrays.stream(header).map(
-                h -> h.replace("\"", "").trim()
-        ).toArray(String[]::new);
+        header = parseMEL.stringParse(header);
         posId = MitoUtil.findPositionInArray("id", header);
         posTaz = MitoUtil.findPositionInArray("zone", header);
         posAutos = MitoUtil.findPositionInArray("autos", header);

@@ -68,6 +68,28 @@ public class parseMEL {
         }
     }
 
+    public static String stringParse(String input) {
+        if (input == null) {
+            throw new IllegalArgumentException("Input cannot be null");
+        }
+        input = input.trim();
+        if (input.startsWith("\"") && input.endsWith("\"")) {
+            input = input.substring(1, input.length() - 1);
+        }
+        return input; // Return the cleaned string
+    }
+
+    public static String[] stringParse(String[] input) {
+        if (input == null) {
+            throw new IllegalArgumentException("Input array cannot be null");
+        }
+        String[] parsedArray = new String[input.length];
+        for (int i = 0; i < input.length; i++) {
+            parsedArray[i] = stringParse(input[i]);
+        }
+        return parsedArray; // Return the cleaned string array
+    }
+
     public static int getHoursAsSeconds(int hours) {
         if (hours < 0) {
             throw new IllegalArgumentException("Hours cannot be negative: " + hours);
