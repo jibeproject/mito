@@ -96,13 +96,13 @@ public class ModeSetCalculatorMEL implements ModeSetCalculator {
         }
 
 
-        // Mito occupation Status
-        MitoOccupationStatus occupationStatus = pp.getMitoOccupationStatus();
-        if (occupationStatus.equals(MitoOccupationStatus.STUDENT)) {
-            predictor += coefficients.get("p.occupation_student");
-        } else if (occupationStatus.equals(MitoOccupationStatus.WORKER)) {
-            predictor += coefficients.get("p.occupation_worker");
-        }
+//        // Mito occupation Status
+//        MitoOccupationStatus occupationStatus = pp.getMitoOccupationStatus();
+//        if (occupationStatus.equals(MitoOccupationStatus.STUDENT)) {
+//            predictor += coefficients.get("p.occupation_student");
+//        } else if (occupationStatus.equals(MitoOccupationStatus.WORKER)) {
+//            predictor += coefficients.get("p.occupation_worker");
+//        }
 
 
         return predictor;
