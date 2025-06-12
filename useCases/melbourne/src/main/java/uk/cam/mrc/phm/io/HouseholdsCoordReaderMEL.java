@@ -14,7 +14,6 @@ import uk.cam.mrc.phm.util.parseMEL;
 
 
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,9 +47,7 @@ public class HouseholdsCoordReaderMEL extends AbstractCsvReader {
 
     @Override
     protected void processHeader(String[] header) {
-        header = Arrays.stream(header).map(
-                h -> h.replace("\"", "").trim()
-        ).toArray(String[]::new);
+        header = parseMEL.stringParse(header);
         posHHId = MitoUtil.findPositionInArray("hhID", header);
         posTAZId = MitoUtil.findPositionInArray("zone", header);
         //posCoordX = MitoUtil.findPositionInArray("coordX", header);

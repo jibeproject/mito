@@ -13,6 +13,7 @@ import org.geotools.api.feature.simple.SimpleFeature;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.matsim.core.utils.gis.ShapeFileReader;
+import uk.cam.mrc.phm.util.parseMEL;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -65,7 +66,7 @@ public class ZonesReaderMEL extends AbstractCsvReader {
     @Override
     protected void processRecord(String[] record) {
         int zoneId = Integer.parseInt(record[idIndex]);
-        String urbanType = record[areaTypeIndex];
+        String urbanType = parseMEL.stringParse(record[areaTypeIndex]);
         MitoZone zone = new MitoZone(zoneId, null);
         zone.setAreaTypeR("urban".equals(urbanType)? AreaTypes.RType.URBAN : AreaTypes.RType.RURAL);
         dataSet.addZone(zone);

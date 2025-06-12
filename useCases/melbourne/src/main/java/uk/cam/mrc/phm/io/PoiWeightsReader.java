@@ -10,7 +10,6 @@ import uk.cam.mrc.phm.util.parseMEL;
 
 
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -36,9 +35,7 @@ public class PoiWeightsReader extends AbstractCsvReader {
 
     @Override
     protected void processHeader(String[] header) {
-        header = Arrays.stream(header).map(
-                h -> h.replace("\"", "").trim()
-        ).toArray(String[]::new);
+        header = parseMEL.stringParse(header);
         idIndex = MitoUtil.findPositionInArray("SA1_MAIN16", header);
         poiIndex.put("EYA",MitoUtil.findPositionInArray("EYA", header));
         poiIndex.put("EDU",MitoUtil.findPositionInArray("EDU", header));

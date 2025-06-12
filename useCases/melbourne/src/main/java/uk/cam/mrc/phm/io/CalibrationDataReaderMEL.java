@@ -8,9 +8,9 @@ import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.cam.mrc.phm.util.parseMEL;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class CalibrationDataReaderMEL extends AbstractCsvReader {
@@ -29,6 +29,7 @@ public class CalibrationDataReaderMEL extends AbstractCsvReader {
     private static final Logger logger = LogManager.getLogger(CalibrationDataReaderMEL.class);
     @Override
     protected void processHeader(String[] header) {
+        header = parseMEL.stringParse(header);
         regionIndex = MitoUtil.findPositionInArray("calibrationRegion", header);
         purposeIndex = MitoUtil.findPositionInArray("purpose", header);
         modeIndex = MitoUtil.findPositionInArray("mode", header);
@@ -39,8 +40,8 @@ public class CalibrationDataReaderMEL extends AbstractCsvReader {
     @Override
     protected void processRecord(String[] record) {
         //  logger.info(Arrays.toString(record));
-        String region = record[regionIndex];
-        String purposeString = record[purposeIndex];
+        String region = parseMEL.stringParse(record[regionIndex]);
+        String purposeString = parseMEL.stringParse(record[purposeIndex]);
 
         // Skip processing if purpose is 'NA', 'business' or unkown
         if ("NA".equalsIgnoreCase(purposeString)) {

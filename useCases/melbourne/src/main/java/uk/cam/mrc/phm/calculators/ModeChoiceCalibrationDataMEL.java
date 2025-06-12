@@ -41,11 +41,11 @@ public class ModeChoiceCalibrationDataMEL implements ModeChoiceCalibrationData {
         }
         Map<Purpose, Map<Mode, Double>> zoneCalibrationFactors = calibrationFactors.get(region);
         if (zoneCalibrationFactors == null) {
-            logger.warn("No calibration factors found for region {}. This will give rise to a NullPointerException.", region);
+            logger.warn("Region {} not found within calibrationFactors. This will give rise to a NullPointerException.", region);
         }
         Map<Mode, Double> zoneTripPurpose = zoneCalibrationFactors.get(tripPurpose);
         if (zoneTripPurpose == null) {
-            logger.warn("No calibration factors found for trip purpose {} in region {}. This will give rise to a NullPointerException.", tripPurpose, region);
+            logger.warn("No purpose {} in region {}. This will give rise to a NullPointerException.", tripPurpose, region);
         }
         for (Mode mode : Mode.values()) {
             if (zoneTripPurpose == null || !zoneTripPurpose.containsKey(mode)) {

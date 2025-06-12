@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import uk.cam.mrc.phm.util.parseMEL;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 
 public class CalibrationRegionMapReaderMEL extends AbstractCsvReader {
 
@@ -23,10 +22,7 @@ public class CalibrationRegionMapReaderMEL extends AbstractCsvReader {
 
     @Override
     protected void processHeader(String[] header) {
-//        logger.info(Arrays.toString(header));
-        header = Arrays.stream(header).map(
-                h -> h.replace("\"", "").trim()
-        ).toArray(String[]::new);
+        header = parseMEL.stringParse(header);
         zoneIndex = MitoUtil.findPositionInArray("SA1_MAIN16", header);
         regionIndex = MitoUtil.findPositionInArray("calibrationRegion", header);
     }
@@ -34,7 +30,7 @@ public class CalibrationRegionMapReaderMEL extends AbstractCsvReader {
     @Override
     protected void processRecord(String[] record) {
         int zone = parseMEL.zoneParse(record[zoneIndex]);
-        String region = record[regionIndex];
+        String region = parseMEL.stringParse(record[regionIndex]);
 
         dataSet.getModeChoiceCalibrationData().getZoneToRegionMap().put(zone, region);
         //return null;

@@ -12,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 import uk.cam.mrc.phm.util.parseMEL;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 
 /**
  * Created by Nico on 17.07.2017.
@@ -43,9 +42,7 @@ public class JobReaderMEL extends AbstractCsvReader {
 
     @Override
     protected void processHeader(String[] header) {
-        header = Arrays.stream(header).map(
-                h -> h.replace("\"", "").trim()
-            ).toArray(String[]::new);
+        header = parseMEL.stringParse(header);
         posId = MitoUtil.findPositionInArray("id", header);
         posZone = MitoUtil.findPositionInArray("zone", header);
         posWorker = MitoUtil.findPositionInArray("personId", header);
@@ -59,7 +56,7 @@ public class JobReaderMEL extends AbstractCsvReader {
         int id = Integer.parseInt(record[posId]);
         int zoneId = parseMEL.zoneParse(record[posZone]);
         int worker = Integer.parseInt(record[posWorker]);
-        String type = record[posType];
+        String type = parseMEL.stringParse(record[posType]);
         if (worker > 0) {
             MitoZone zone = dataSet.getZones().get(zoneId);
             if (zone == null) {
