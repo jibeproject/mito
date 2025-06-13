@@ -50,7 +50,7 @@ public final class TravelDemandGeneratorMEL {
     private Module timeOfDayChoice;
     private Module tripScaling;
     private Module matsimPopulationGenerator;
-    private final Module longDistanceTraffic;
+    private Module longDistanceTraffic;
 
     private TravelDemandGeneratorMEL(
             DataSet dataSet,
@@ -301,6 +301,7 @@ public final class TravelDemandGeneratorMEL {
 
         if (Resources.instance.getBoolean(Properties.ADD_EXTERNAL_FLOWS, false)) {
             longDistanceTraffic.run();
+            longDistanceTraffic = null; // release memory
         }
 
         TripGenerationWriter.writeTripsByPurposeAndZone(dataSet, scenarioName);
