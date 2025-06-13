@@ -40,16 +40,16 @@ public final class TravelDemandGeneratorMEL {
 
     private final DataSet dataSet;
 
-    private final Module tripGenerationMandatory;
-    private final Module distributionMandatory;
-    private final Module tripGenerationDiscretionary;
-    private final Module modeSetChoice;
-    private final Module distributionDiscretionary;
-    private final Module modeChoice;
-    private final Module dayOfWeekChoice;
-    private final Module timeOfDayChoice;
-    private final Module tripScaling;
-    private final Module matsimPopulationGenerator;
+    private Module tripGenerationMandatory;
+    private Module distributionMandatory;
+    private Module tripGenerationDiscretionary;
+    private Module modeSetChoice;
+    private Module distributionDiscretionary;
+    private Module modeChoice;
+    private Module dayOfWeekChoice;
+    private Module timeOfDayChoice;
+    private Module tripScaling;
+    private Module matsimPopulationGenerator;
     private final Module longDistanceTraffic;
 
     private TravelDemandGeneratorMEL(
@@ -248,19 +248,24 @@ public final class TravelDemandGeneratorMEL {
         logger.info("Running Module: Microscopic Trip Generation");
 
         tripGenerationMandatory.run();
+        tripGenerationMandatory = null; // release memory
 
         logger.info("Running Module: Microscopic Trip Distribution");
         distributionMandatory.run();
+        distributionMandatory = null; // release memory
 
         tripGenerationDiscretionary.run();
+        tripGenerationDiscretionary = null; // release memory
 
         if(Resources.instance.getBoolean(Properties.RUN_MODESET,false)) {
             logger.info("Running Module: Mode set choice");
             modeSetChoice.run();
+            modeSetChoice = null; // release memory
         }
 
         logger.info("Running Module: Microscopic Trip Distribution");
         distributionDiscretionary.run();
+        distributionDiscretionary = null; // release memory
 
         logger.info("Running Module: Trip to Mode Assignment (Mode Choice)");
         modeChoice.run();
@@ -277,17 +282,22 @@ public final class TravelDemandGeneratorMEL {
                 modeChoiceCalibrationData.close();
             }
         }
+        modeChoice = null; // release memory
 
         logger.info("Running day of week choice");
         dayOfWeekChoice.run();
+        dayOfWeekChoice = null; // release memory
 
         logger.info("Running time of day choice");
         timeOfDayChoice.run();
+        timeOfDayChoice = null; // release memory
 
         logger.info("Running trip scaling");
         tripScaling.run();
+        tripScaling = null; // release memory
 
         matsimPopulationGenerator.run();
+        matsimPopulationGenerator = null; // release memory
 
         if (Resources.instance.getBoolean(Properties.ADD_EXTERNAL_FLOWS, false)) {
             longDistanceTraffic.run();
