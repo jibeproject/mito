@@ -72,7 +72,6 @@ public class CyclingShareAdjustment extends Module {
                     break;
                 case HBS:
                 case HBO:
-                case HBR:
                     utility += getCoefficient("purposeHBD");
                     break;
                 case NHBW:
@@ -113,7 +112,18 @@ public class CyclingShareAdjustment extends Module {
             return 0;
         }
 
-        List<MitoTrip> nonBikeTrips = allTrips.stream().filter(trip -> trip.getTripMode() != Mode.bicycle).collect(Collectors.toList());
+        EnumSet<Purpose> eligiblePurposes = EnumSet.of(
+                Purpose.HBW, Purpose.HBE,    // → HBM
+                Purpose.HBS, Purpose.HBO,    // → HBD
+                Purpose.NHBW,                // → NHBM
+                Purpose.NHBO                 // → NHBD
+        );
+        
+        // only non-bike and eligible purpose trips
+        List<MitoTrip> nonBikeTrips = allTrips.stream()
+                .filter(trip -> trip.getTripMode() != Mode.bicycle)
+                .filter(trip -> eligiblePurposes.contains(trip.getTripPurpose()))
+                .collect(Collectors.toList());
 
         int seed = Resources.instance.getInt(Properties.RANDOM_SEED, 0);
         Random random = new Random(seed);
