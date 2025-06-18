@@ -8,12 +8,18 @@ import de.tum.bgu.msm.data.DataSet;
 import de.tum.bgu.msm.data.MitoTrip;
 import de.tum.bgu.msm.resources.Properties;
 import de.tum.bgu.msm.util.LogitTools;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +29,12 @@ import java.util.stream.Collectors;
 
 public class CyclingShareAdjustment extends Module {
     private static final Logger logger = LogManager.getLogger(CyclingShareAdjustment.class);
+    private static final EnumSet<Purpose> eligiblePurposes = EnumSet.of(
+            Purpose.HBW, Purpose.HBE,   // → HBM
+            Purpose.HBS, Purpose.HBO,   // → HBD
+            Purpose.NHBW,               // → NHBM
+            Purpose.NHBO                // → NHBD
+    );
 
     private final Map<String, Double> coefficients;
     private final double targetShare;
@@ -43,13 +55,18 @@ public class CyclingShareAdjustment extends Module {
 
     @Override
     public void run() {
-        logger.info("Running cycling share adjustment to reach " + (targetShare * 100) + "%");
+        logger.info("Running cycling share adjustment to reach {}%", targetShare * 100);
 
-        LogitTools<BikeChoice> bikeChoiceLogit = new LogitTools<>(BikeChoice.class);
         List<MitoTrip> allTrips = new ArrayList<>(dataSet.getTrips().values());
-        Map<MitoTrip, Double> bikeProbability = new HashMap<>(allTrips.size());
+        List<MitoTrip> candidates = allTrips.stream()
+                .filter(trip -> trip.getTripMode() != Mode.bicycle)
+                .filter(trip -> eligiblePurposes.contains(trip.getTripPurpose()))
+                .collect(Collectors.toList());
 
-        for (MitoTrip trip : allTrips) {
+        Map<MitoTrip, Double> bikeProbability = new HashMap<>(candidates.size());
+        LogitTools<BikeChoice> bikeChoiceLogit = new LogitTools<>(BikeChoice.class);
+
+        for (MitoTrip trip : candidates) {
             int origin = trip.getTripOrigin().getZoneId();
             int destination = trip.getTripDestination().getZoneId();
 
@@ -81,7 +98,7 @@ public class CyclingShareAdjustment extends Module {
                     utility += getCoefficient("purposeNHBD");;
                     break;
                 default:
-                    logger.error("Unknown purpose " + purpose);
+                    logger.warn("Ignoring purpose{}", purpose);
             }
 
             EnumMap<BikeChoice, Double> choiceUtilities = new EnumMap<>(BikeChoice.class);
@@ -91,14 +108,17 @@ public class CyclingShareAdjustment extends Module {
             bikeProbability.put(trip, bikeChoiceLogit.getProbabilitiesMNL(choiceUtilities).get(BikeChoice.BIKE));
         }
 
-        int adjustedTrips = applyProbabilisticAdjustments(allTrips, bikeProbability, targetShare);
-        logger.info("Adjusted " + adjustedTrips + " trips to bike (out of " + allTrips.size() + ").");
+        writeCyclingPropensity(bikeProbability);
+
+        int adjustedTrips = applyProbabilisticAdjustments(allTrips, candidates, bikeProbability, targetShare);
+        logger.info("Adjusted {} trips to bike (out of {}).", adjustedTrips, allTrips.size());
 
         reportModeShares();
     }
 
     private int applyProbabilisticAdjustments(
             List<MitoTrip> allTrips,
+            List<MitoTrip> candidates,
             Map<MitoTrip, Double> bikeProbability,
             double targetShare
     ) {
@@ -108,29 +128,21 @@ public class CyclingShareAdjustment extends Module {
         int desiredTotalBikes = (int) Math.round(totalTrips * targetShare);
         int toBike = Math.max(0, desiredTotalBikes - (int) existingBikeCount);
 
-        if (toBike <= 0) {
+        if (candidates.size() < toBike) {
+            logger.warn("Only {} eligible trips but {} requested; will convert {} trips only.",
+                    candidates.size(), toBike, candidates.size());
+        }
+
+        if (toBike == 0) {
             return 0;
         }
 
-        EnumSet<Purpose> eligiblePurposes = EnumSet.of(
-                Purpose.HBW, Purpose.HBE,    // → HBM
-                Purpose.HBS, Purpose.HBO,    // → HBD
-                Purpose.NHBW,                // → NHBM
-                Purpose.NHBO                 // → NHBD
-        );
-        
-        // only non-bike and eligible purpose trips
-        List<MitoTrip> nonBikeTrips = allTrips.stream()
-                .filter(trip -> trip.getTripMode() != Mode.bicycle)
-                .filter(trip -> eligiblePurposes.contains(trip.getTripPurpose()))
-                .collect(Collectors.toList());
-
-        int seed = Resources.instance.getInt(Properties.RANDOM_SEED, 0);
+        int seed = Resources.instance.getInt(Properties.RANDOM_SEED, 1);
         Random random = new Random(seed);
 
         PriorityQueue<Map.Entry<MitoTrip, Double>> minHeap = new PriorityQueue<>(Comparator.comparingDouble(Map.Entry::getValue));
 
-        for (MitoTrip candidate : nonBikeTrips) {
+        for (MitoTrip candidate : candidates) {
             double weight = bikeProbability.getOrDefault(candidate, 0.0);
             if (weight <= 0) {
                 continue;
@@ -153,28 +165,54 @@ public class CyclingShareAdjustment extends Module {
     }
 
     private Map<String, Double> readCyclingCoefficients(String csvFile) throws IOException {
-        Map<String, Double> coefficientMap = new HashMap<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(csvFile))) {
-            reader.readLine();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length < 2)
-                    continue;
-                String variableName = parts[0].trim();
-                double value   = Double.parseDouble(parts[1].trim());
-                coefficientMap.put(variableName, value);
+        Map<String, Double> coefficientsMap = new HashMap<>();
+        try (
+                Reader input = Files.newBufferedReader(Paths.get(csvFile), StandardCharsets.UTF_8);
+                CSVParser parser = new CSVParser(input, CSVFormat.DEFAULT.withFirstRecordAsHeader().withTrim())
+        ) {
+            for (CSVRecord record : parser) {
+                String variableName = record.get("Variable");
+                double value        = Double.parseDouble(record.get("Estimate"));
+                coefficientsMap.put(variableName, value);
             }
         }
-        return coefficientMap;
+        return coefficientsMap;
     }
 
     private double getCoefficient(String name) {
         Double estimate = coefficients.get(name);
         if (estimate == null) {
-            throw new RuntimeException(name + "Cycling coefficient not found");
+            throw new RuntimeException("Cycling coefficient for" + name +  "not found");
         }
         return estimate;
+    }
+
+    private void writeCyclingPropensity(Map<MitoTrip, Double> bikeProbability) {
+        java.io.File outFile = new java.io.File("scenOutput/cycling/cyclingPropensity.csv");
+        java.io.File parentDir = outFile.getParentFile();
+        if (!parentDir.exists()) {
+            parentDir.mkdirs();
+        }
+
+        try (PrintWriter out = new PrintWriter(outFile)) {
+            out.println("tripId,origZone,destZone,purpose,age,dist,bikeProb");
+
+            for (Map.Entry<MitoTrip, Double> entry : bikeProbability.entrySet()) {
+                MitoTrip trip = entry.getKey();
+                int orig = trip.getTripOrigin().getZoneId();
+                int dest = trip.getTripDestination().getZoneId();
+                double dist = dataSet.getTravelDistancesNMT().getTravelDistance(orig, dest) * 1000.0;
+                double bikeProb = entry.getValue();
+
+                out.printf("%s,%d,%d,%s,%d,%.1f,%.5f%n",
+                        trip.getId(), orig, dest, trip.getTripPurpose(),
+                        trip.getPerson().getAge(), dist, bikeProb );
+            }
+
+            logger.info("wrote cycling propensity CSV to {}", outFile.getAbsolutePath());
+        } catch (IOException error) {
+            logger.error("Failed to write cycling propensity CSV at {}", outFile.getAbsolutePath(), error);
+        }
     }
 
     private void reportModeShares() {

@@ -334,7 +334,7 @@ public final class TravelDemandGeneratorMCR {
         // If enabled, increase the overall cycling share by converting the highest propensity trips to bicycle
         if (Resources.instance.getBoolean(Properties.RUN_CYCLING_SHARE_ADJUSTMENT, false)) {
             double targetShare = Resources.instance.getDouble(Properties.CYCLING_SHARE_TARGET, 0.20);
-            logger.info("Running Module: Cycling Share Adjustment → target=" + (targetShare*100) + "%");
+            logger.info("Running Module: Cycling Share Adjustment");
             new CyclingShareAdjustment(dataSet, targetShare).run();
         }
 
