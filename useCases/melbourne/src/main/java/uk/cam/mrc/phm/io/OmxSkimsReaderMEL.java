@@ -82,7 +82,7 @@ public class OmxSkimsReaderMEL extends AbstractOmxReader implements SkimsReader 
 
         // NHBW
         readTravelTimeSkim("bike_NHBW",Properties.ACTIVE_COST_NHBO_SKIM.replace("NHBO","NHBW"),Properties.BIKE_COST_SKIM_MATRIX);
-        readTravelTimeSkim("walk_NHBW",(Properties.ACTIVE_COST_NHBO_SKIM).replace("NHBO","NHBW"),Properties.WALK_COST_SKIM_MATRIX);
+        readTravelTimeSkim("walk_NHBW",Properties.ACTIVE_COST_NHBO_SKIM.replace("NHBO","NHBW"),Properties.WALK_COST_SKIM_MATRIX);
     }
 
     private void readTravelTimeSkim(String name, String omxFilePath, String matrix) {
