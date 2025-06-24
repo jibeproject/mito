@@ -37,13 +37,14 @@ public class DestinationUtilityByPurposeGenerator implements Callable<Triple<Pur
         final IndexedDoubleMatrix2D utilityMatrix = new IndexedDoubleMatrix2D(zones.values(), zones.values());
         for (MitoZone origin : zones.values()) {
             for (MitoZone destination : zones.values()) {
-                final double utility =  calculator.calculateUtility(destination.getTripAttraction(purpose),
-                        travelDistances.getTravelDistance(origin.getId(), destination.getId()),categoryIndex);
+                double tripAttraction = destination.getTripAttraction(purpose);
+                double distances = travelDistances.getTravelDistance(origin.getId(), destination.getId());
+                final double utility =  calculator.calculateUtility(tripAttraction,
+                        distances,categoryIndex);
                 if (Double.isInfinite(utility) || Double.isNaN(utility)) {
                     throw new RuntimeException(utility + " utility calculated! Please check calculation!" +
-                            " Origin: " + origin + " | Destination: " + destination + " | Distance: "
-                            + travelDistances.getTravelDistance(origin.getId(), destination.getId()) +
-                            " | Purpose: " + purpose + " | attraction rate: " + destination.getTripAttraction(purpose));
+                            " Origin: " + origin + " | Destination: " + destination + " | Distance: " + distances +
+                            " | Purpose: " + purpose + " | attraction rate: " + tripAttraction);
                 }
                 utilityMatrix.setIndexed(origin.getId(), destination.getId(), utility);
             }

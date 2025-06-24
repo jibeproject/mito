@@ -16,9 +16,7 @@ import org.matsim.api.core.v01.population.Population;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.ControllerConfigGroup;
-import org.matsim.core.config.groups.ReplanningConfigGroup;
 import org.matsim.core.config.groups.ScoringConfigGroup.ActivityParams;
-import org.matsim.core.config.groups.ScoringConfigGroup.ModeParams;
 import org.matsim.core.config.groups.QSimConfigGroup;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
@@ -41,16 +39,21 @@ import routing.components.LinkStress;
 import uk.cam.mrc.phm.util.MelbourneImplementationConfig;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
+
+import static uk.cam.mrc.phm.util.ExtractCoefficient.extractCoefficient;
+import static uk.cam.mrc.phm.util.MelbourneImplementationConfig.getMelbourneProperties;
+import static uk.cam.mrc.phm.util.parseMEL.getHoursAsSeconds;
 
 public class RunMatsimActiveMode {
 
     private static final Logger logger = LogManager.getLogger(RunMatsimActiveMode.class);
+    static java.util.Properties properties = getMelbourneProperties();
 
-    public static final String ACTIVE_SPEEDS = "C:\\Users\\Corin Staves\\git\\manchester\\input\\maxSpeeds.csv";
-    private static final String MATSIM_NETWORK = "C:\\Users\\Corin Staves\\git\\manchester\\input\\mito\\trafficAssignment\\network.xml";
-    private static final String MATSIM_PLAN = "C:\\Users\\Corin Staves\\git\\manchester\\scenOutput\\base_fix_7\\2021\\matsimPlans_thursday.xml.gz";
+    static String ACTIVE_SPEEDS = properties.getProperty("ACTIVE_SPEEDS");
+    static String MATSIM_NETWORK = properties.getProperty("MATSIM_NETWORK");
+    static String MATSIM_PLAN =  properties.getProperty("MATSIM_PLAN");
+
     private static final List<Day> MATSIM_DAY =new ArrayList<>(Collections.singleton(Day.thursday));
 
     public static void main(String[] args) {
@@ -59,11 +62,9 @@ public class RunMatsimActiveMode {
         //model.run();
         final DataSet dataSet = model.getData();
 
-
-        boolean runAssignment = Resources.instance.getBoolean(Properties.RUN_TRAFFIC_ASSIGNMENT, false);
-        runAssignment = Boolean.TRUE;
+        // boolean runAssignment = Resources.instance.getBoolean(Properties.RUN_TRAFFIC_ASSIGNMENT, false);
+        boolean runAssignment = true;
         if (runAssignment) {
-
             Scenario scenario = ScenarioUtils.loadScenario(ConfigUtils.createConfig());
             new PopulationReader(scenario).readFile(MATSIM_PLAN);
 
@@ -84,7 +85,6 @@ public class RunMatsimActiveMode {
                         populationBikePedByDay.computeIfAbsent(day, p -> PopulationUtils.createPopulation(ConfigUtils.createConfig())).addPerson(person);
                         break;
                     default:
-                        continue;
                 }
             }
 
@@ -98,7 +98,7 @@ public class RunMatsimActiveMode {
 
             //simulate bikePed by day
             for (Day day : MATSIM_DAY) {
-                logger.info("Starting " + day.toString().toUpperCase() + " MATSim simulation");
+                logger.info("Starting {} MATSim simulation", day.toString().toUpperCase());
                 String outputSubDirectory = "scenOutput/" + model.getScenarioName() + "/" + dataSet.getYear();
                 bikePedConfig.controller().setOutputDirectory(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment/" + day + "/bikePed/");
                 bikePedConfig.controller().setRunId(String.valueOf(dataSet.getYear()));
@@ -107,7 +107,7 @@ public class RunMatsimActiveMode {
                 //initialize scenario
                 MutableScenario matsimScenario = (MutableScenario) ScenarioUtils.loadScenario(bikePedConfig);
                 matsimScenario.setPopulation(populationBikePedByDay.get(day));
-                logger.info("total population " + day + " | Bike Walk: " + populationBikePedByDay.get(day).getPersons().size());
+                logger.info("total population {} | Bike Walk: {}", day, populationBikePedByDay.get(day).getPersons().size());
 
                 // set vehicles
                 EnumMap<Mode, EnumMap<MitoGender, Map<Integer,Double>>> allSpeeds = SpeedsReader.readData(ACTIVE_SPEEDS);
@@ -167,7 +167,7 @@ public class RunMatsimActiveMode {
 
     private static void fillBikePedConfig(Config bikePedConfig) {
         // set input file and basic controler settings
-        bikePedConfig.controller().setLastIteration(1);
+        bikePedConfig.controller().setLastIteration(0);
         bikePedConfig.controller().setWritePlansInterval(Math.max(bikePedConfig.controller().getLastIteration(), 1));
         bikePedConfig.controller().setWriteEventsInterval(Math.max(bikePedConfig.controller().getLastIteration(), 1));
         bikePedConfig.controller().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
@@ -184,9 +184,9 @@ public class RunMatsimActiveMode {
         mainModeList.add(TransportMode.walk);
         bikePedConfig.qsim().setMainModes(mainModeList);
         bikePedConfig.routing().setNetworkModes(mainModeList);
-        bikePedConfig.routing().removeModeRoutingParams("bike");
-        bikePedConfig.routing().removeModeRoutingParams("walk");
-        bikePedConfig.routing().removeModeRoutingParams("pt");
+        bikePedConfig.routing().removeTeleportedModeParams("bike");
+        bikePedConfig.routing().removeTeleportedModeParams("walk");
+        bikePedConfig.routing().removeTeleportedModeParams("pt");
 
 
         // BIKE ATTRIBUTES
@@ -194,36 +194,10 @@ public class RunMatsimActiveMode {
         bikeAttributes.add(l -> Math.max(Math.min(Gradient.getGradient(l),0.5),0.));
         bikeAttributes.add(l -> LinkStress.getStress(l,TransportMode.bike));
 
-        // Bike weights
-        Function<Person,double[]> bikeWeights = p -> {
-            switch((Purpose) p.getAttributes().getAttribute("purpose")) {
-                case HBW -> {
-                    if(p.getAttributes().getAttribute("sex").equals(MitoGender.FEMALE)) {
-                        return new double[] {35.9032908,2.3084587 + 2.7762033};
-                    } else {
-                        return new double[] {35.9032908,2.3084587};
-                    }
-                }
-                case HBE -> {
-                    return new double[] {0,4.3075357};
-                }
-                case HBS, HBR, HBO -> {
-                    if((int) p.getAttributes().getAttribute("age") < 15) {
-                        return new double[] {57.0135325,1.2411983 + 6.4243251};
-                    } else {
-                        return new double[] {57.0135325,1.2411983};
-                    }
-                }
-                default -> {
-                    return null;
-                }
-            }
-        };
-
         // Bicycle config group
         BicycleConfigGroup bicycle = (BicycleConfigGroup) bikePedConfig.getModules().get(BicycleConfigGroup.GROUP_NAME);
         bicycle.setAttributes(bikeAttributes);
-        bicycle.setWeights(bikeWeights);
+        bicycle.setWeights(RunMatsimActiveMode::calculateBikeWeights);
 
         // WALK ATTRIBUTES
         List<ToDoubleFunction<Link>> walkAttributes = new ArrayList<>();
@@ -231,97 +205,86 @@ public class RunMatsimActiveMode {
         walkAttributes.add(l -> Math.min(1.,l.getFreespeed() / 22.35));
         walkAttributes.add(l -> JctStress.getStressProp(l,TransportMode.walk));
 
-        // Walk weights
-        Function<Person,double[]> walkWeights = p -> {
-            switch ((Purpose) p.getAttributes().getAttribute("purpose")) {
-                case HBW -> {
-                    return new double[]{0.3307472, 0, 4.9887390};
-                }
-                case HBE -> {
-                    return new double[]{0, 0, 1.0037846};
-                }
-                case HBS, HBR, HBO -> {
-                    if ((int) p.getAttributes().getAttribute("age") < 15) {
-                        return new double[]{0.7789561, 0.4479527 + 2.0418898, 5.8219067};
-                    } else if ((int) p.getAttributes().getAttribute("age") >= 65) {
-                        return new double[]{0.7789561, 0.4479527 + 0.3715017, 5.8219067};
-                    } else {
-                        return new double[]{0.7789561, 0.4479527, 5.8219067};
-                    }
-                }
-                case HBA -> {
-                    return new double[]{0.6908324, 0, 0};
-                }
-                case NHBO -> {
-                    return new double[]{0, 3.4485883, 0};
-                }
-                default -> {
-                    return null;
-                }
-            }
-        };
-
         // Walk config group
         WalkConfigGroup walkConfigGroup = (WalkConfigGroup) bikePedConfig.getModules().get(WalkConfigGroup.GROUP_NAME);
         walkConfigGroup.setAttributes(walkAttributes);
-        walkConfigGroup.setWeights(walkWeights);
+        walkConfigGroup.setWeights(RunMatsimActiveMode::calculateWalkWeights);
 
-        // set scoring parameters
-        ModeParams bicycleParams = new ModeParams(TransportMode.bike);
-        bicycleParams.setConstant(0. );
-        bicycleParams.setMarginalUtilityOfDistance(-0.0004 );
-        bicycleParams.setMarginalUtilityOfTraveling(-6.0 );
-        bicycleParams.setMonetaryDistanceRate(0. );
-        bikePedConfig.scoring().addModeParams(bicycleParams);
-
-        ModeParams walkParams = new ModeParams(TransportMode.walk);
-        walkParams.setConstant(0. );
-        walkParams.setMarginalUtilityOfDistance(-0.0004 );
-        walkParams.setMarginalUtilityOfTraveling(-6.0 );
-        walkParams.setMonetaryDistanceRate(0. );
-        bikePedConfig.scoring().addModeParams(walkParams);
-
-        ActivityParams homeActivity = new ActivityParams("home").setTypicalDuration(12 * 60 * 60);
+        ActivityParams homeActivity = new ActivityParams("home").setTypicalDuration(getHoursAsSeconds(12));
         bikePedConfig.scoring().addActivityParams(homeActivity);
 
-        ActivityParams workActivity = new ActivityParams("work").setTypicalDuration(8 * 60 * 60);
+        ActivityParams workActivity = new ActivityParams("work").setTypicalDuration(getHoursAsSeconds(8));
         bikePedConfig.scoring().addActivityParams(workActivity);
 
-        ActivityParams educationActivity = new ActivityParams("education").setTypicalDuration(8 * 60 * 60);
+        ActivityParams educationActivity = new ActivityParams("education").setTypicalDuration(getHoursAsSeconds(8));
         bikePedConfig.scoring().addActivityParams(educationActivity);
 
-        ActivityParams shoppingActivity = new ActivityParams("shopping").setTypicalDuration(1 * 60 * 60);
+        ActivityParams shoppingActivity = new ActivityParams("shopping").setTypicalDuration(getHoursAsSeconds(1));
         bikePedConfig.scoring().addActivityParams(shoppingActivity);
 
-        ActivityParams recreationActivity = new ActivityParams("recreation").setTypicalDuration(1 * 60 * 60);
+        ActivityParams recreationActivity = new ActivityParams("recreation").setTypicalDuration(getHoursAsSeconds(1));
         bikePedConfig.scoring().addActivityParams(recreationActivity);
 
-        ActivityParams otherActivity = new ActivityParams("other").setTypicalDuration(1 * 60 * 60);
+        ActivityParams otherActivity = new ActivityParams("other").setTypicalDuration(getHoursAsSeconds(1));
         bikePedConfig.scoring().addActivityParams(otherActivity);
 
-        ActivityParams airportActivity = new ActivityParams("airport").setTypicalDuration(1 * 60 * 60);
+        ActivityParams airportActivity = new ActivityParams("airport").setTypicalDuration(getHoursAsSeconds(1));
         bikePedConfig.scoring().addActivityParams(airportActivity);
-
-        //Set strategy
-        bikePedConfig.replanning().setMaxAgentPlanMemorySize(5);
-        {
-            ReplanningConfigGroup.StrategySettings strategySettings = new ReplanningConfigGroup.StrategySettings();
-            strategySettings.setStrategyName("ChangeExpBeta");
-            strategySettings.setWeight(0.8);
-            bikePedConfig.replanning().addStrategySettings(strategySettings);
-        }
-
-        {
-            ReplanningConfigGroup.StrategySettings strategySettings = new ReplanningConfigGroup.StrategySettings();
-            strategySettings.setStrategyName("ReRoute");
-            strategySettings.setWeight(0.2);
-            bikePedConfig.replanning().addStrategySettings(strategySettings);
-        }
-
 
         bikePedConfig.transit().setUsingTransitInMobsim(false);
         bikePedConfig.controller().setRoutingAlgorithmType(ControllerConfigGroup.RoutingAlgorithmType.Dijkstra);
 
+    }
+
+    public static double[] calculateActiveModeWeights(String mode, Person person) {
+        double grad = 0.0;
+        double stressLink = 0.0;
+        double vgvi = 0.0;
+        double speed = 0.0;
+
+        MitoGender gender = (MitoGender) person.getAttributes().getAttribute("sex");
+        int age = (int) person.getAttributes().getAttribute("age");
+
+        for (String purposeString : Properties.TRIP_PURPOSES.split(",")) {
+            Purpose purpose = Purpose.valueOf(purposeString.trim());
+            grad += extractCoefficient(purpose, mode, "grad");
+            stressLink += extractCoefficient(purpose, mode, "stressLink");
+            vgvi += extractCoefficient(purpose, mode, "vgvi");
+            speed += extractCoefficient(purpose, mode, "speed");
+
+            // Interaction terms
+            if (gender.equals(MitoGender.FEMALE)) {
+                grad += extractCoefficient(purpose, mode, "grad_f");
+                stressLink += extractCoefficient(purpose, mode, "stressLink_f");
+                vgvi += extractCoefficient(purpose, mode, "vgvi_f");
+                speed += extractCoefficient(purpose, mode, "speed_f");
+            }
+
+            if (age < 16) {
+                grad += extractCoefficient(purpose, mode, "grad_c");
+                stressLink += extractCoefficient(purpose, mode, "stressLink_c");
+                vgvi += extractCoefficient(purpose, mode, "vgvi_c");
+                speed += extractCoefficient(purpose, mode, "speed_c");
+            }
+
+            if (age >= 65) {
+                grad += extractCoefficient(purpose, mode, "grad_e");
+                stressLink += extractCoefficient(purpose, mode, "stressLink_e");
+                vgvi += extractCoefficient(purpose, mode, "vgvi_e");
+                speed += extractCoefficient(purpose, mode, "speed_e");
+            }
+        }
+
+        // Return aggregated coefficients
+        return new double[] {grad, stressLink, vgvi, speed};
+    }
+
+    public static double[] calculateBikeWeights(Person person) {
+        return calculateActiveModeWeights("bike", person);
+    }
+
+    public static double[] calculateWalkWeights(Person person) {
+        return calculateActiveModeWeights("walk", person);
     }
 
     public static Network extractModeSpecificNetwork(String networkFile, Set<String> transportModes) {

@@ -38,7 +38,7 @@ public class SkimTravelTimes implements TravelTimes {
      * @param factor a scalar factor which every entry is multiplied with
      */
     public final void readSkim(final String mode, final String file, final String matrixName, final double factor) {
-        logger.info("Reading " + mode + " skim");
+        logger.info("Reading " + mode + " skim (" + file + ": " + matrixName +")");;
         final OmxFile omx = new OmxFile(file);
         omx.openReadOnly();
         final Set<String> lookupNames = omx.getLookupNames();

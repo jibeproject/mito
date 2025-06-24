@@ -82,10 +82,10 @@ public final class MitoModelMEL {
             new BorderDampersReader(dataSet).read();
         }
         new JobReaderMEL(dataSet, config.getJobTypeFactory()).read();
-        new SchoolsReader(dataSet).read();
-        new HouseholdsReader(dataSet).read();
+        new SchoolsReaderMEL(dataSet).read();
+        new HouseholdsReaderMEL(dataSet).read();
         new HouseholdsCoordReaderMEL(dataSet).read();
-        new PersonsReader7days(dataSet).read();
+        new PersonsReader7daysMEL(dataSet).read();
         dataSet.setTravelTimes(new SkimTravelTimes());
         new OmxSkimsReaderMEL(dataSet).read();
         readAdditionalData();
@@ -93,8 +93,8 @@ public final class MitoModelMEL {
 
     private void readAdditionalData() {
         dataSet.setModeChoiceCalibrationData(new ModeChoiceCalibrationDataMEL());
-        new CalibrationDataReader(dataSet).read();
-        new CalibrationRegionMapReader(dataSet).read();
+        new CalibrationDataReaderMEL(dataSet).read();
+        new CalibrationRegionMapReaderMEL(dataSet).read();
         //TODO: bike model for Manchester?
         new BicycleOwnershipReaderAndModel(dataSet).read();
     }
@@ -121,6 +121,8 @@ public final class MitoModelMEL {
         MitoUtil.initializeRandomNumber(random);
     }
 
-
+    public Resources getResources() {
+        return Resources.instance;
+    }
 
 }

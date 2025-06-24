@@ -3,11 +3,11 @@ package uk.cam.mrc.phm.calculators;
 import de.tum.bgu.msm.data.DataSet;
 import de.tum.bgu.msm.data.MitoZone;
 import de.tum.bgu.msm.data.Purpose;
-import de.tum.bgu.msm.io.input.readers.TripAttractionRatesReader;
 import de.tum.bgu.msm.modules.tripGeneration.AttractionCalculator;
 import de.tum.bgu.msm.modules.tripGeneration.ExplanatoryVariable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.cam.mrc.phm.io.TripAttractionRatesReaderMEL;
 
 import static de.tum.bgu.msm.modules.tripGeneration.ExplanatoryVariable.HH;
 
@@ -22,7 +22,7 @@ public class AttractionCalculatorMEL implements AttractionCalculator {
     public AttractionCalculatorMEL(DataSet dataSet, Purpose purpose) {
         this.dataSet = dataSet;
         this.purpose = purpose;
-        new TripAttractionRatesReader(dataSet, purpose).read();
+        new TripAttractionRatesReaderMEL(dataSet, purpose).read();
     }
 
     @Override
@@ -35,7 +35,6 @@ public class AttractionCalculatorMEL implements AttractionCalculator {
                     if(HH.equals(variable)) {
                         attribute = zone.getNumberOfHouseholds();
                     }else if(zone.getPoiWeightsByType().get(variable.toString())==null) {
-                        //logger.warn("Zone has no explanatory variable " + variable + " defined.");
                         continue;
                     }else{
                         attribute = zone.getPoiWeightsByType().get(variable.toString());
@@ -45,7 +44,7 @@ public class AttractionCalculatorMEL implements AttractionCalculator {
                         throw new RuntimeException("Purpose " + purpose + " does not have an attraction" +
                                 " rate for variable " + variable + " registered.");
                     }
-                    tripAttraction += attribute * rate;
+                    tripAttraction += (float) (attribute * rate);
                 }
                 zone.setTripAttraction(purpose, tripAttraction);
         }

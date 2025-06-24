@@ -178,7 +178,7 @@ public class MitoZone implements Id, Location {
 
     public double getTripAttraction(Purpose purpose) {
         Double rate = this.tripAttraction.get(purpose);
-        if (rate == null) {
+        if (rate == null || Double.isNaN(rate)) {
             throw new RuntimeException("No trip attraction rate set for zone " + zoneId + ". Please make sure to only call " +
                     "this method after trip generation module!");
         }
