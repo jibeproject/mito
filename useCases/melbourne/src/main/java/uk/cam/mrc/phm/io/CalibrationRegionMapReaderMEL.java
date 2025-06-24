@@ -4,9 +4,11 @@ import de.tum.bgu.msm.data.DataSet;
 import de.tum.bgu.msm.io.input.AbstractCsvReader;
 import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import uk.cam.mrc.phm.util.parseMEL;
 
-import java.util.Arrays;
+import java.nio.file.Path;
 
 public class CalibrationRegionMapReaderMEL extends AbstractCsvReader {
 
@@ -16,14 +18,11 @@ public class CalibrationRegionMapReaderMEL extends AbstractCsvReader {
     public CalibrationRegionMapReaderMEL(DataSet dataSet) {
         super(dataSet);
     }
-    private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(CalibrationRegionMapReaderMEL.class);
+    private static final Logger logger = LogManager.getLogger(CalibrationRegionMapReaderMEL.class);
 
     @Override
     protected void processHeader(String[] header) {
-//        logger.info(Arrays.toString(header));
-        header = Arrays.stream(header).map(
-                h -> h.replace("\"", "").trim()
-        ).toArray(String[]::new);
+        header = parseMEL.stringParse(header);
         zoneIndex = MitoUtil.findPositionInArray("SA1_MAIN16", header);
         regionIndex = MitoUtil.findPositionInArray("calibrationRegion", header);
     }
@@ -31,7 +30,7 @@ public class CalibrationRegionMapReaderMEL extends AbstractCsvReader {
     @Override
     protected void processRecord(String[] record) {
         int zone = parseMEL.zoneParse(record[zoneIndex]);
-        String region = record[regionIndex];
+        String region = parseMEL.stringParse(record[regionIndex]);
 
         dataSet.getModeChoiceCalibrationData().getZoneToRegionMap().put(zone, region);
         //return null;
@@ -39,6 +38,8 @@ public class CalibrationRegionMapReaderMEL extends AbstractCsvReader {
 
     @Override
     public void read() {
-        super.read(Resources.instance.getCalibrationRegionsPath(), ",");
+        Path filePath = Resources.instance.getCalibrationRegionsPath().toAbsolutePath();
+        logger.info("Reading calibration regions data from ascii file ({})", filePath);
+        super.read(filePath, ",");
     }
 }

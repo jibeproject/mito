@@ -11,7 +11,6 @@ import de.tum.bgu.msm.modules.modeChoice.ModeChoice;
 import de.tum.bgu.msm.modules.modeChoice.ModeChoiceCalibrationData;
 import de.tum.bgu.msm.modules.plansConverter.externalFlows.LongDistanceTraffic;
 import de.tum.bgu.msm.modules.scaling.TripScaling;
-import de.tum.bgu.msm.modules.timeOfDay.TimeOfDayChoice;
 import de.tum.bgu.msm.modules.tripDistribution.TripDistribution;
 import de.tum.bgu.msm.modules.tripGeneration.TripGeneration;
 import de.tum.bgu.msm.modules.tripGeneration.TripGeneratorType;
@@ -41,17 +40,17 @@ public final class TravelDemandGeneratorMEL {
 
     private final DataSet dataSet;
 
-    private final Module tripGenerationMandatory;
-    private final Module distributionMandatory;
-    private final Module tripGenerationDiscretionary;
-    private final Module modeSetChoice;
-    private final Module distributionDiscretionary;
-    private final Module modeChoice;
-    private final Module dayOfWeekChoice;
-    private final Module timeOfDayChoice;
-    private final Module tripScaling;
-    private final Module matsimPopulationGenerator;
-    private final Module longDistanceTraffic;
+    private Module tripGenerationMandatory;
+    private Module distributionMandatory;
+    private Module tripGenerationDiscretionary;
+    private Module modeSetChoice;
+    private Module distributionDiscretionary;
+    private Module modeChoice;
+    private Module dayOfWeekChoice;
+    private Module timeOfDayChoice;
+    private Module tripScaling;
+    private Module matsimPopulationGenerator;
+    private Module longDistanceTraffic;
 
     private TravelDemandGeneratorMEL(
             DataSet dataSet,
@@ -113,18 +112,48 @@ public final class TravelDemandGeneratorMEL {
             discretionaryPurposes.removeAll(mandatoryPurposes);
 
             //from here
-            tripGenerationMandatory = new TripGeneration(dataSet, mandatoryPurposes, new MitoTripFactory7days());
-            mandatoryPurposes.forEach(purpose -> ((TripGeneration) tripGenerationMandatory).registerTripGenerator(purpose, new MitoTripFactory7days(), TripGeneratorType.PersonBasedHurdlePolr,new TripGenCalculatorMEL(dataSet),
-                    new AttractionCalculatorMEL(dataSet,purpose)));
+            tripGenerationMandatory = new TripGeneration(
+                    dataSet,
+                    mandatoryPurposes,
+                    new MitoTripFactory7days()
+            );
+            mandatoryPurposes.forEach(
+        purpose -> (
+                    (TripGeneration) tripGenerationMandatory
+                ).registerTripGenerator(
+                    purpose, new
+                    MitoTripFactory7days(),
+                    TripGeneratorType.PersonBasedHurdlePolr,
+                    new TripGenCalculatorMEL(dataSet),
+                    new AttractionCalculatorMEL(dataSet,purpose)
+                )
+            );
 
             distributionMandatory = new TripDistribution(dataSet, mandatoryPurposes);
-            mandatoryPurposes.forEach(purpose -> ((TripDistribution) distributionMandatory).registerDestinationUtilityCalculator(purpose, new DestinationUtilityCalculatorMEL(purpose)));
+            mandatoryPurposes.forEach(purpose -> (
+                    (TripDistribution) distributionMandatory
+            ).registerDestinationUtilityCalculator(
+                    purpose,
+                    new DestinationUtilityCalculatorMEL(purpose)
+                )
+            );
 
             tripGenerationDiscretionary = new TripGeneration(dataSet, discretionaryPurposes, new MitoTripFactory7days());
-            discretionaryPurposes.forEach(purpose -> ((TripGeneration) tripGenerationDiscretionary).registerTripGenerator(purpose, new MitoTripFactory7days(),TripGeneratorType.PersonBasedHurdleNegBin,new TripGenCalculatorMEL(dataSet),
-                    new AttractionCalculatorMEL(dataSet,purpose)));
+            discretionaryPurposes.forEach(
+        purpose -> (
+                        (TripGeneration) tripGenerationDiscretionary
+                ).registerTripGenerator(
+                        purpose,
+                        new MitoTripFactory7days(),
+                        TripGeneratorType.PersonBasedHurdleNegBin,
+                        new TripGenCalculatorMEL(dataSet),
+                        new AttractionCalculatorMEL(dataSet,purpose)
+                )
+            );
 
-            modeSetChoice = new ModeSetChoice(dataSet, purposes, new ModeSetCalculatorMEL(dataSet));
+            if(Resources.instance.getBoolean(Properties.RUN_MODESET,false)) {
+                modeSetChoice = new ModeSetChoice(dataSet, purposes, new ModeSetCalculatorMEL(dataSet));
+            }
 
             distributionDiscretionary = new TripDistribution(dataSet, discretionaryPurposes);
             // Register ALL purposes here, because we need the mandatory purpose matrices for NHBW / NHBO
@@ -133,13 +162,22 @@ public final class TravelDemandGeneratorMEL {
             ((TripDistribution) distributionDiscretionary).registerDestinationUtilityCalculator(RRT, new DestinationUtilityCalculatorRrtMEL(RRT));
 
             modeChoice = new ModeChoice(dataSet, purposes);
-            purposes.forEach(purpose -> ((ModeChoice) modeChoice).registerModeChoiceCalculator(purpose, new CalibratingModeChoiceCalculatorImpl(new ModeChoiceCalculatorMEL(purpose, dataSet), dataSet.getModeChoiceCalibrationData())));
+            ModeChoiceCalibrationData calibrationData = dataSet.getModeChoiceCalibrationData();
+            purposes.forEach(purpose -> (
+                    (ModeChoice) modeChoice).registerModeChoiceCalculator(
+                            purpose,
+                            new CalibratingModeChoiceCalculatorImpl(
+                                    new ModeChoiceCalculatorMEL(purpose, dataSet),
+                                    calibrationData
+                            )
+                    )
+            );
             //Override the calculator for RRT
             ((ModeChoice) modeChoice).registerModeChoiceCalculator(RRT, new CalibratingModeChoiceCalculatorImpl(new ModeChoiceCalculatorRrtMEL(dataSet), dataSet.getModeChoiceCalibrationData()));
 
             dayOfWeekChoice = new DayOfWeekChoice(dataSet, purposes);
 
-            timeOfDayChoice = new TimeOfDayChoice(dataSet, purposes);
+            timeOfDayChoice = new TimeOfDayChoiceMEL(dataSet, purposes);
             //until here it must be divided into two blocks - mandatory and discretionary
 
             tripScaling = new TripScaling(dataSet, purposes);
@@ -210,19 +248,24 @@ public final class TravelDemandGeneratorMEL {
         logger.info("Running Module: Microscopic Trip Generation");
 
         tripGenerationMandatory.run();
+        tripGenerationMandatory = null; // release memory
 
         logger.info("Running Module: Microscopic Trip Distribution");
         distributionMandatory.run();
+        distributionMandatory = null; // release memory
 
         tripGenerationDiscretionary.run();
+        tripGenerationDiscretionary = null; // release memory
 
         if(Resources.instance.getBoolean(Properties.RUN_MODESET,false)) {
             logger.info("Running Module: Mode set choice");
             modeSetChoice.run();
+            modeSetChoice = null; // release memory
         }
 
         logger.info("Running Module: Microscopic Trip Distribution");
         distributionDiscretionary.run();
+        distributionDiscretionary = null; // release memory
 
         logger.info("Running Module: Trip to Mode Assignment (Mode Choice)");
         modeChoice.run();
@@ -239,20 +282,26 @@ public final class TravelDemandGeneratorMEL {
                 modeChoiceCalibrationData.close();
             }
         }
+        modeChoice = null; // release memory
 
         logger.info("Running day of week choice");
         dayOfWeekChoice.run();
+        dayOfWeekChoice = null; // release memory
 
         logger.info("Running time of day choice");
         timeOfDayChoice.run();
+        timeOfDayChoice = null; // release memory
 
         logger.info("Running trip scaling");
         tripScaling.run();
+        tripScaling = null; // release memory
 
         matsimPopulationGenerator.run();
+        matsimPopulationGenerator = null; // release memory
 
         if (Resources.instance.getBoolean(Properties.ADD_EXTERNAL_FLOWS, false)) {
             longDistanceTraffic.run();
+            longDistanceTraffic = null; // release memory
         }
 
         TripGenerationWriter.writeTripsByPurposeAndZone(dataSet, scenarioName);

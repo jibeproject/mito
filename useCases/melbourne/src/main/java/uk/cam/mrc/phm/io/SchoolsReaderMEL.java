@@ -12,7 +12,6 @@ import org.locationtech.jts.geom.Coordinate;
 import uk.cam.mrc.phm.util.parseMEL;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 
 public class SchoolsReaderMEL extends AbstractCsvReader {
 
@@ -30,9 +29,7 @@ public class SchoolsReaderMEL extends AbstractCsvReader {
 
     @Override
     protected void processHeader(String[] header) {
-        header = Arrays.stream(header).map(
-                h -> h.replace("\"", "").trim()
-            ).toArray(String[]::new);
+        header = parseMEL.stringParse(header);
         posId = MitoUtil.findPositionInArray("id", header);
         posZone = MitoUtil.findPositionInArray("zone", header);
         posOccupancy = MitoUtil.findPositionInArray("occupancy", header);
@@ -55,8 +52,8 @@ public class SchoolsReaderMEL extends AbstractCsvReader {
 
     @Override
     public void read() {
-        logger.info("Reading school micro data from ascii file");
         Path filePath = Resources.instance.getSchoolsFilePath();
+        logger.info("Reading school micro data from ascii file ({})", filePath);
         super.read(filePath, ",");
     }
 }

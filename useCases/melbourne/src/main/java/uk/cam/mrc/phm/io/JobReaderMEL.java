@@ -9,10 +9,10 @@ import de.tum.bgu.msm.resources.Resources;
 import de.tum.bgu.msm.util.MitoUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.locationtech.jts.geom.Coordinate;
 import uk.cam.mrc.phm.util.parseMEL;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 
 /**
  * Created by Nico on 17.07.2017.
@@ -36,22 +36,20 @@ public class JobReaderMEL extends AbstractCsvReader {
 
     @Override
     public void read() {
-        logger.info("Reading job micro data from ascii file");
         Path filePath = Resources.instance.getJobsFilePath();
+        logger.info("Reading job micro data from ascii file ({})", filePath);
         super.read(filePath, ",");
     }
 
     @Override
     protected void processHeader(String[] header) {
-        header = Arrays.stream(header).map(
-                h -> h.replace("\"", "").trim()
-            ).toArray(String[]::new);
+        header = parseMEL.stringParse(header);
         posId = MitoUtil.findPositionInArray("id", header);
         posZone = MitoUtil.findPositionInArray("zone", header);
         posWorker = MitoUtil.findPositionInArray("personId", header);
         posType = MitoUtil.findPositionInArray("type", header);
-        //posJobCoordX = MitoUtil.findPositionInArray("coordX", cleanHeader);
-        //posJobCoordY = MitoUtil.findPositionInArray("coordY", cleanHeader);
+        posJobCoordX = MitoUtil.findPositionInArray("coordX", header);
+        posJobCoordY = MitoUtil.findPositionInArray("coordY", header);
     }
 
     @Override
@@ -59,7 +57,7 @@ public class JobReaderMEL extends AbstractCsvReader {
         int id = Integer.parseInt(record[posId]);
         int zoneId = parseMEL.zoneParse(record[posZone]);
         int worker = Integer.parseInt(record[posWorker]);
-        String type = record[posType];
+        String type = parseMEL.stringParse(record[posType]);
         if (worker > 0) {
             MitoZone zone = dataSet.getZones().get(zoneId);
             if (zone == null) {
@@ -73,10 +71,11 @@ public class JobReaderMEL extends AbstractCsvReader {
                 //logger.error("Job Type " + type + " used in job microdata but is not defined");
             }
 
-            /*Coordinate coordinate = (new Coordinate(Double.parseDouble(record[posJobCoordX]),
+            Coordinate job_location = (new Coordinate(Double.parseDouble(record[posJobCoordX]),
             		Double.parseDouble(record[posJobCoordY])));
-*/
-            MitoJob job = new MitoJob(zone, zone.getRandomCoord(MitoUtil.getRandomObject()), id);
+
+            // MitoJob job = new MitoJob(zone, zone.getRandomCoord(MitoUtil.getRandomObject()), id);
+            MitoJob job = new MitoJob(zone, job_location, id);
             dataSet.addJob(job);
         }
     }

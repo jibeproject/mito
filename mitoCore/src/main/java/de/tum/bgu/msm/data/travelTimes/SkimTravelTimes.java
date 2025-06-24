@@ -174,7 +174,12 @@ public class SkimTravelTimes implements TravelTimes {
 				throw new RuntimeException("define transit travel modes!!");
 			}
 		} else {
-			return matricesByMode.get(mode).getIndexed(originZone, destinationZone);
+            IndexedDoubleMatrix2D matrix = matricesByMode.get(mode);
+            if (matrix == null) {
+                logger.warn("Travel time for mode {} not found. Available modes: {}", mode, matricesByMode.keySet());
+            }
+            assert matrix != null;
+            return matrix.getIndexed(originZone, destinationZone);
 		}
 	}
 	

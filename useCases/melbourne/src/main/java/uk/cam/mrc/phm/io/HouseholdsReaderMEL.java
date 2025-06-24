@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 import uk.cam.mrc.phm.util.parseMEL;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 
 /**
  * Created by Nico on 17.07.2017.
@@ -21,7 +20,7 @@ public class HouseholdsReaderMEL extends AbstractCsvReader {
     private int posId = -1;
     private int posTaz = -1;
     private int posAutos = -1;
-    private static final Logger logger = LogManager.getLogger(de.tum.bgu.msm.io.input.readers.HouseholdsReader.class);
+    private static final Logger logger = LogManager.getLogger(HouseholdsReaderMEL.class);
     private static final double scaleFactorForTripGeneration = Resources.instance.getDouble(Properties.SCALE_FACTOR_FOR_TRIP_GENERATION, 1.0);
 
     public HouseholdsReaderMEL(DataSet dataSet) {
@@ -30,16 +29,14 @@ public class HouseholdsReaderMEL extends AbstractCsvReader {
 
     @Override
     public void read() {
-        logger.info("  Reading household micro data from ascii file");
         Path filePath = Resources.instance.getHouseholdsFilePath();
+        logger.info("  Reading household micro data from ascii file ({})", filePath);
         super.read(filePath, ",");
     }
 
     @Override
     protected void processHeader(String[] header) {
-        header = Arrays.stream(header).map(
-                h -> h.replace("\"", "").trim()
-        ).toArray(String[]::new);
+        header = parseMEL.stringParse(header);
         posId = MitoUtil.findPositionInArray("id", header);
         posTaz = MitoUtil.findPositionInArray("zone", header);
         posAutos = MitoUtil.findPositionInArray("autos", header);

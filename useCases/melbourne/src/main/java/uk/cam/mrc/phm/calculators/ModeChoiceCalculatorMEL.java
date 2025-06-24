@@ -63,18 +63,18 @@ public class ModeChoiceCalculatorMEL extends AbstractModeChoiceCalculator {
             double utility = modeCoef.get("asc");
 
             // Age
-            if(age < 15){
-                utility += modeCoef.get("age_5_14");
-            } else if (age < 25) {
-                utility += modeCoef.get("age_15_24");
+            if(age < 16){
+                utility += modeCoef.get("age_under16");
+            } else if (age < 24) {
+                utility += modeCoef.get("age_16_24");
             } else if (age < 40) {
                 utility += 0;
             } else if (age < 55) {
-                utility += modeCoef.get("age_40_54");
-            } else if (age < 70) {
-                utility += modeCoef.get("age_55_69");
+                utility += modeCoef.get("age_45_54");
+            } else if (age < 65) {
+                utility += modeCoef.get("age_55_64");
             } else {
-                utility += modeCoef.get("age_70");
+                utility += modeCoef.get("age_65up");
             }
 
             // gender
@@ -82,24 +82,24 @@ public class ModeChoiceCalculatorMEL extends AbstractModeChoiceCalculator {
                 utility += modeCoef.get("female");
             }
 
-            // occupation
-            if (MitoOccupationStatus.WORKER.equals(person.getMitoOccupationStatus())){
-                utility += modeCoef.get("occupation_worker");
-            }
+//            // occupation
+//            if (MitoOccupationStatus.WORKER.equals(person.getMitoOccupationStatus())){
+//                utility += modeCoef.get("occupation_worker");
+//            }
 
-            // Household income
-            if (hhincome < 1500) {
-                utility += modeCoef.get("income_low");
-            } else if (hhincome > 5000) {
-                utility += modeCoef.get("income_high");
-            }
+//            // Household income
+//            if (hhincome < 1500) {
+//                utility += modeCoef.get("income_low");
+//            } else if (hhincome > 5000) {
+//                utility += modeCoef.get("income_high");
+//            }
 
-            // purpose
-            if (purpose.equals(Purpose.HBR)) {
-                utility += modeCoef.get("recreation_trip");
-            } else if (purpose.equals(Purpose.HBO)) {
-                utility += modeCoef.get("other_trip");
-            }
+//            // purpose
+//            if (purpose.equals(Purpose.HBR)) {
+//                utility += modeCoef.get("recreation_trip");
+//            } else if (purpose.equals(Purpose.HBO)) {
+//                utility += modeCoef.get("other_trip");
+//            }
 
             // Household cars
             if (hhAutos == 0) {
@@ -142,10 +142,10 @@ public class ModeChoiceCalculatorMEL extends AbstractModeChoiceCalculator {
         switch(purpose) {
             case HBW:
                 walkSkimName = "walk_HBW";
-                if (person.getMitoGender().equals(MitoGender.MALE)) {
-                    bikeSkimName = "bike_HBW";
-                } else {
+                if (person.getMitoGender().equals(MitoGender.FEMALE)) {
                     bikeSkimName = "bike_HBW_female";
+                } else {
+                    bikeSkimName = "bike_HBW";
                 }
                 break;
             case HBE:
@@ -153,34 +153,47 @@ public class ModeChoiceCalculatorMEL extends AbstractModeChoiceCalculator {
                 bikeSkimName = "bike_HBE";
                 break;
             case HBS:
+                walkSkimName = "walk_HBD";
+                bikeSkimName = "bike_HBD";
+                break;
             case HBR:
+                if (person.getAge()<16) {
+                    walkSkimName = "walk_child";
+                    bikeSkimName = "bike_child";
+                } else if (person.getMitoGender().equals(MitoGender.FEMALE)) {
+                    walkSkimName = "walk";
+                    bikeSkimName = "bike_female";
+
+                } else {
+                    walkSkimName = "walk";
+                    bikeSkimName = "bike";
+                }
+                break;
             case HBO:
                 walkSkimName = "walk_HBD";
                 bikeSkimName = "bike_HBD";
-                if(person.getAge() < 15) {
-                    walkSkimName = "walk_HBD_child";
-                    bikeSkimName = "bike_HBD_child";
-                } else if (person.getAge() >= 65) {
-                    walkSkimName = "walk_HBD_elderly";
-                }
                 break;
             case HBA:
-                walkSkimName = "walk_HBA";
-                bikeSkimName = "bike";
+                bikeSkimName = "bike_HBA";
+                walkSkimName = "walk";
                 break;
             case NHBO:
                 walkSkimName = "walk_NHBO";
-                bikeSkimName = "bike";
+                bikeSkimName = "bike_NHBO";
                 break;
             case NHBW:
-                walkSkimName = "walk";
-                bikeSkimName = "bike";
+                walkSkimName = "walk_NHBW";
+                bikeSkimName = "bike_NHBW";
                 break;
             default:
                 LOGGER.error("Unknown purpose " + purpose);
         }
 
         // Get walk and bike cost from skims
+        assert walkSkimName != null;
+        assert bikeSkimName != null;
+
+
         double gcWalk = travelTimes.getTravelTime(originZone, destinationZone, peakHour_s, walkSkimName);
         double gcBicycle = travelTimes.getTravelTime(originZone, destinationZone, peakHour_s, bikeSkimName);
 

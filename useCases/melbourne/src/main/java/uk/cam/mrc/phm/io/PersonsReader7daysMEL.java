@@ -14,7 +14,7 @@ import java.util.List;
 
 public class PersonsReader7daysMEL extends AbstractCsvReader {
 
-    private static final Logger logger = LogManager.getLogger(de.tum.bgu.msm.io.PersonsReader7days.class);
+    private static final Logger logger = LogManager.getLogger(PersonsReader7daysMEL.class);
 
     private int posId = -1;
     private int posHhId = -1;
@@ -34,8 +34,8 @@ public class PersonsReader7daysMEL extends AbstractCsvReader {
 
     @Override
     public void read() {
-        logger.info("  Reading person micro data from ascii file");
         Path filePath = Resources.instance.getPersonsFilePath();
+        logger.info("  Reading person micro data from ascii file ({})", filePath);
         super.read(filePath, ",");
         int noIncomeHouseholds = 0;
         for(MitoHousehold household: dataSet.getHouseholds().values()) {
@@ -51,9 +51,7 @@ public class PersonsReader7daysMEL extends AbstractCsvReader {
 
     @Override
     public void processHeader(String[] header) {
-        header = Arrays.stream(header).map(
-                h -> h.replace("\"", "").trim()
-        ).toArray(String[]::new);
+        header = parseMEL.stringParse(header);
         List<String> headerList = Arrays.asList(header);
         posId = headerList.indexOf("id");
         posHhId = headerList.indexOf("hhid");
@@ -77,8 +75,8 @@ public class PersonsReader7daysMEL extends AbstractCsvReader {
         }
         MitoHousehold hh = dataSet.getHouseholds().get(hhid);
 
-        final int age = Integer.parseInt(record[posAge]);
-        final String genderString = record[posSex].replace("\"", "").trim();
+        final int age = parseMEL.intParse(record[posAge]);
+        final String genderString = parseMEL.stringParse(record[posSex]);
         int genderCode;
         if ("Female".equalsIgnoreCase(genderString)) {
             genderCode = 2;
@@ -94,7 +92,7 @@ public class PersonsReader7daysMEL extends AbstractCsvReader {
 
         final int workplace = parseMEL.intParse(record[posWorkplaceId]);
 
-        final String schoolString = record[posSchoolId].replace("\"", "").trim();
+        final String schoolString = parseMEL.stringParse(record[posSchoolId]);
         final int school;
         if ("NA".equalsIgnoreCase(schoolString)) {
             school = -1; // Use -1 to indicate missing data

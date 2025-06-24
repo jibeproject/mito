@@ -34,8 +34,23 @@ public class ModeChoiceCalibrationDataMEL implements ModeChoiceCalibrationData {
     public double[] getCalibrationFactorsAsArray(Purpose tripPurpose, Location tripOrigin) {
 
         double[] factors = new double[Mode.values().length];
+        int zoneId = tripOrigin.getZoneId();
+        String region = zoneToRegionMap.get(zoneId);
+        if (region == null) {
+            logger.warn("No region found for zoneId {}. This may give rise to a NullPointerException.", zoneId);
+        }
+        Map<Purpose, Map<Mode, Double>> zoneCalibrationFactors = calibrationFactors.get(region);
+        if (zoneCalibrationFactors == null) {
+            logger.warn("Region {} not found within calibrationFactors. This may give rise to a NullPointerException.", region);
+        }
+        assert zoneCalibrationFactors != null;
+        Map<Mode, Double> zoneTripPurpose = zoneCalibrationFactors.get(tripPurpose);
+        if (zoneTripPurpose == null) {
+            logger.warn("No purpose {} in region {}. This may give rise to a NullPointerException.", tripPurpose, region);
+        }
+        assert zoneTripPurpose != null;
         for (Mode mode : Mode.values()) {
-            factors[mode.getId()] = calibrationFactors.get(zoneToRegionMap.get(tripOrigin.getZoneId())).get(tripPurpose).getOrDefault(mode, 0.);
+            factors[mode.getId()] = zoneTripPurpose.getOrDefault(mode, 0.);
         }
         return factors;
     }
@@ -90,7 +105,17 @@ public class ModeChoiceCalibrationDataMEL implements ModeChoiceCalibrationData {
             for (Purpose purpose : purposes) {
                 for (Mode mode : Mode.values()) {
                     double observedShare = observedModalShare.get(region).get(purpose).getOrDefault(mode, 0.);
-                    double tripAtRegionAndPurpose = simulatedTripsByRegionPurposeAndMode.get(region).get(purpose).values().stream().mapToInt(Integer::intValue).sum();
+                    Map<Purpose, Map<Mode, Integer>> regionMap = simulatedTripsByRegionPurposeAndMode.get(region);
+                    if (regionMap == null) {
+                        logger.warn("No simulated trips for region: {}", region);
+                        continue;
+                    }
+                    Map<Mode, Integer> purposeMap = regionMap.get(purpose);
+                    if (purposeMap == null) {
+                        logger.warn("No simulated trips for purpose: {} in region: {}", purpose, region);
+                        continue;
+                    }
+                    double tripAtRegionAndPurpose = purposeMap.values().stream().mapToInt(Integer::intValue).sum();
                     double simulatedShare;
                     if (tripAtRegionAndPurpose != 0) {
                         simulatedShare = simulatedTripsByRegionPurposeAndMode.get(region).get(purpose).getOrDefault(mode, 0) / tripAtRegionAndPurpose;
