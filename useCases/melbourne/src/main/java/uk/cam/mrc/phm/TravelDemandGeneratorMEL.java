@@ -293,8 +293,6 @@ public final class TravelDemandGeneratorMEL {
         }
 
 
-//        modeChoice = null; // release memory
-
         logger.info("Running day of week choice");
         dayOfWeekChoice.run();
         dayOfWeekChoice = null; // release memory

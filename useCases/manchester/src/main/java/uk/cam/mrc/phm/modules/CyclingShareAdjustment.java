@@ -108,8 +108,6 @@ public class CyclingShareAdjustment extends Module {
             bikeProbability.put(trip, bikeChoiceLogit.getProbabilitiesMNL(choiceUtilities).get(BikeChoice.BIKE));
         }
 
-        writeCyclingPropensity(bikeProbability);
-
         int adjustedTrips = applyProbabilisticAdjustments(allTrips, candidates, bikeProbability, targetShare);
         logger.info("Adjusted {} trips to bike (out of {}).", adjustedTrips, allTrips.size());
 
@@ -185,34 +183,6 @@ public class CyclingShareAdjustment extends Module {
             throw new RuntimeException("Cycling coefficient for" + name +  "not found");
         }
         return estimate;
-    }
-
-    private void writeCyclingPropensity(Map<MitoTrip, Double> bikeProbability) {
-        java.io.File outFile = new java.io.File("scenOutput/cycling/cyclingPropensity.csv");
-        java.io.File parentDir = outFile.getParentFile();
-        if (!parentDir.exists()) {
-            parentDir.mkdirs();
-        }
-
-        try (PrintWriter out = new PrintWriter(outFile)) {
-            out.println("tripId,origZone,destZone,purpose,age,dist,bikeProb");
-
-            for (Map.Entry<MitoTrip, Double> entry : bikeProbability.entrySet()) {
-                MitoTrip trip = entry.getKey();
-                int orig = trip.getTripOrigin().getZoneId();
-                int dest = trip.getTripDestination().getZoneId();
-                double dist = dataSet.getTravelDistancesNMT().getTravelDistance(orig, dest) * 1000.0;
-                double bikeProb = entry.getValue();
-
-                out.printf("%s,%d,%d,%s,%d,%.1f,%.5f%n",
-                        trip.getId(), orig, dest, trip.getTripPurpose(),
-                        trip.getPerson().getAge(), dist, bikeProb );
-            }
-
-            logger.info("wrote cycling propensity CSV to {}", outFile.getAbsolutePath());
-        } catch (IOException error) {
-            logger.error("Failed to write cycling propensity CSV at {}", outFile.getAbsolutePath(), error);
-        }
     }
 
     private void reportModeShares() {
