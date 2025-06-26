@@ -25,19 +25,16 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/msmobility/mito</url>
-        <connection>scm:git:git://github.com/msmobility/mito.git</connection>
-        <developerConnection>scm:git:git@github.com:msmobility/mito.git</developerConnection>
+        <url>https://github.com/jibeproject/mito</url>
+        <connection>scm:git:git://github.com/jibeproject/mito.git</connection>
+        <developerConnection>scm:git:git@github.com:jibeproject/mito.git</developerConnection>
     </scm>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>msm</id>
-            <url>https://maven.cloudsmith.io/msmobility/mito/</url>
-        </snapshotRepository>
         <repository>
-            <id>msm-snapshots</id>
-            <url>https://maven.cloudsmith.io/msmobility/mito/</url>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/jibeproject/mito</url>
         </repository>
     </distributionManagement>
 
@@ -55,8 +52,8 @@
             </snapshots>
         </repository>
         <repository>
-            <id>mito</id>
-            <url>https://dl.cloudsmith.io/public/msmobility/mito/maven/</url>
+            <id>JIBE MITO</id>
+            <url>https://maven.pkg.github.com/jibeproject/mito</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
