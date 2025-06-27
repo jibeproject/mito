@@ -14,7 +14,7 @@
         <module>analysis</module>
     </modules>
     <version>master-SNAPSHOT</version>
-    <description>Microscopic Transportation Orchestrator</description>
+    <description>Microscopic Transportation Orchestrator, implemented for the JIBE project</description>
     <inceptionYear>2015</inceptionYear>
 
     <licenses>
@@ -33,12 +33,12 @@
     <distributionManagement>
         <snapshotRepository>
             <id>github</id>
-            <name>JIBE MITO Packages</name>
+            <name>GitHub Packages</name>
             <url>https://maven.pkg.github.com/jibeproject/mito</url>
         </snapshotRepository>
         <repository>
             <id>github</id>
-            <name>JIBE MITO Packages</name>
+            <name>GitHub Packages</name>
             <url>https://maven.pkg.github.com/jibeproject/mito</url>
         </repository>
     </distributionManagement>
