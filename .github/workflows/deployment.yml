@@ -24,6 +24,9 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
+      - name: Clean EMF cache
+        run: rm -rf ~/.m2/repository/org/eclipse/emf
+        
       - name: Build with Maven
         run: mvn package -DskipTests=true -Dhdf5lib-absolute-path=`pwd`/lib/linux64/libjhdf5.so -DforkMode=always --fail-at-end --batch-mode -Dmatsim.preferLocalDtds=true
 
