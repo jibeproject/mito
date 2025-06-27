@@ -13,7 +13,7 @@
         <module>useCases</module>
         <module>analysis</module>
     </modules>
-    <version>main-SNAPSHOT</version>
+    <version>master-SNAPSHOT</version>
     <description>Microscopic Transportation Orchestrator</description>
     <inceptionYear>2015</inceptionYear>
 
