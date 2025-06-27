@@ -14,7 +14,7 @@ jobs:
       - name: Set up JDK 23 with Maven auth
         uses: actions/setup-java@v4
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '23'
           cache: 'maven'
           server-id: github
