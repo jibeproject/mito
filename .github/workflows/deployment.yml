@@ -10,12 +10,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up JDK 23
+      
+      - name: Set up JDK 23 with Maven auth
         uses: actions/setup-java@v4
         with:
           distribution: 'adopt'
           java-version: '23'
+          cache: 'maven'
+          server-id: github
+          server-username: ${{ github.actor }}
+          server-password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cache Maven packages
         uses: actions/cache@v4
@@ -23,11 +27,11 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-
+        
       - name: Build with Maven
         run: mvn package -DskipTests=true -Dhdf5lib-absolute-path=`pwd`/lib/linux64/libjhdf5.so -DforkMode=always --fail-at-end --batch-mode -Dmatsim.preferLocalDtds=true
 
       - name: Publish to GitHub Packages
-        run: mvn deploy -DskipTests=true --fail-at-end --batch-mode -Dmatsim.preferLocalDtds=true
+        run: mvn deploy -DskipTests=true --fail-at-end --batch-mode -Dmatsim.preferLocalDtds=true -e -X
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
