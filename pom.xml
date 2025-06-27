@@ -4,9 +4,9 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.tum.bgu.msm.mito</groupId>
-    <artifactId>mito-jibe</artifactId>
+    <artifactId>mito-parent</artifactId>
     <packaging>pom</packaging>
-    <name>mito-jibe</name>
+    <name>mito-parent</name>
     <modules>
         <module>mitoCore</module>
         <module>extensions</module>

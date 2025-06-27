@@ -1,50 +1,38 @@
-name: GitHub Packages Deployment
+
+name: Java CI
 
 on:
   push:
-    branches: [ main]
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Set up JDK 23 with Maven auth
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '23'
-          cache: 'maven'
-          server-id: github
-          server-username: ${{ github.actor }}
-          server-password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Cache Maven packages
+      - name: Cache Maven dependencies
         uses: actions/cache@v4
         with:
           path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-
-      - name: Set up Maven settings.xml for GitHub Packages
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Configure Maven for GitHub Packages
         run: |
           mkdir -p ~/.m2
-          echo "<settings>
-            <servers>
-              <server>
-                <id>github</id>
-                <username>${{ github.actor }}</username>
-                <password>${{ secrets.GITHUB_TOKEN }}</password>
-              </server>
-            </servers>
-          </settings>" > ~/.m2/settings.xml
-        
+          echo '<settings><servers><server><id>github</id><username>${GITHUB_ACTOR}</username><password>${{ secrets.GITHUB_TOKEN }}</password></server></servers></settings>' > ~/.m2/settings.xml
       - name: Build with Maven
-        run: mvn package -DskipTests=true -Dhdf5lib-absolute-path=`pwd`/lib/linux64/libjhdf5.so -DforkMode=always --fail-at-end --batch-mode -Dmatsim.preferLocalDtds=true
-
-      - name: Publish to GitHub Packages
-        run: mvn deploy -DskipTests=true --fail-at-end --batch-mode -Dmatsim.preferLocalDtds=true -DuniqueVersion=true -e -X
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: mvn test -Dhdf5lib-absolute-path=`pwd`/lib/linux64/libjhdf5.so --fail-at-end --batch-mode -Dmatsim.preferLocalDtds=true -pl !useCases/munich,!useCases/kagawa,!useCases/germany -am
