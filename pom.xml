@@ -4,9 +4,9 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.tum.bgu.msm.mito</groupId>
-    <artifactId>mito-parent</artifactId>
+    <artifactId>mito-jibe</artifactId>
     <packaging>pom</packaging>
-    <name>mito-parent</name>
+    <name>mito-jibe</name>
     <modules>
         <module>mitoCore</module>
         <module>extensions</module>
@@ -33,11 +33,12 @@
     <distributionManagement>
         <snapshotRepository>
             <id>github</id>
+            <name>JIBE MITO Packages</name>
             <url>https://maven.pkg.github.com/jibeproject/mito</url>
         </snapshotRepository>
         <repository>
             <id>github</id>
-            <name>GitHub Packages</name>
+            <name>JIBE MITO Packages</name>
             <url>https://maven.pkg.github.com/jibeproject/mito</url>
         </repository>
     </distributionManagement>
