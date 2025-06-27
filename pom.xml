@@ -36,11 +36,11 @@
             <name>GitHub Packages</name>
             <url>https://maven.pkg.github.com/jibeproject/mito</url>
         </snapshotRepository>
-        <repository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/jibeproject/mito</url>
-        </repository>
+<!--        <repository>-->
+<!--            <id>github</id>-->
+<!--            <name>GitHub Packages</name>-->
+<!--            <url>https://maven.pkg.github.com/jibeproject/mito</url>-->
+<!--        </repository>-->
     </distributionManagement>
 
     <repositories>
