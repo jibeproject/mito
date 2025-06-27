@@ -40,8 +40,16 @@
 
     <repositories>
         <repository>
-            <id>msm</id>
-            <url>https://dl.cloudsmith.io/public/msmobility/msm/maven/</url>
+             <id>central</id>
+             <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+             <id>eclipse</id>
+             <url>https://repo.eclipse.org/content/groups/releases/</url>
+        </repository>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/jibeproject/mito</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
@@ -52,12 +60,8 @@
             </snapshots>
         </repository>
         <repository>
-            <id>central</id>
-            <url>https://repo.maven.apache.org/maven2</url>
-        </repository>
-        <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/jibeproject/mito</url>
+            <id>msm</id>
+            <url>https://dl.cloudsmith.io/public/msmobility/msm/maven/</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
