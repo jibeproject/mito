@@ -31,6 +31,10 @@
     </scm>
 
     <distributionManagement>
+        <snapshotRepository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/jibeproject/mito</url>
+        </snapshotRepository>
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
