@@ -17,6 +17,7 @@
         <module>kagawa</module>
         <module>germany</module>
         <module>melbourne</module>
+        <module>munich</module>
     </modules>
 
     <properties>
