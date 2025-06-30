@@ -48,4 +48,4 @@ jobs:
         run: mvn package -Dhdf5lib-absolute-path=`pwd`/lib/linux64/libjhdf5.so -DforkMode=always --fail-at-end --batch-mode -Dmatsim.preferLocalDtds=true -pl !useCases/munich,!useCases/kagawa,!useCases/germany -am
 
       - name: Publish to GitHub Packages
-        run: mvn deploy -DskipTests=true --fail-at-end --batch-mode -Dmatsim.preferLocalDtds=true  -pl !useCases/munich,!useCases/kagawa,!useCases/germany -am -e -X
+        run: mvn deploy -DskipTests=true --fail-at-end --batch-mode -Dmatsim.preferLocalDtds=true  -pl !useCases/munich,!useCases/kagawa,!useCases/germany -am -e

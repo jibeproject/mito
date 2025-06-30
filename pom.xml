@@ -13,7 +13,7 @@
         <module>useCases</module>
         <module>analysis</module>
     </modules>
-    <version>master-SNAPSHOT</version>
+    <version>0.1.0-jibe-SNAPSHOT</version>
     <description>Microscopic Transportation Orchestrator, implemented for the JIBE project</description>
     <inceptionYear>2015</inceptionYear>
 
@@ -138,10 +138,6 @@
                     <fork>true</fork>
                     <meminitial>128m</meminitial>
                     <maxmem>512m</maxmem>
-                    <compilerArguments>
-                        <Xmaxwarns>4000</Xmaxwarns>
-                        <Xmaxerrs>100</Xmaxerrs>
-                    </compilerArguments>
                 </configuration>
             </plugin>
             <plugin>

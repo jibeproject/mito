@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.tum.bgu.msm.mito</groupId>
         <artifactId>mito-parent</artifactId>
-        <version>master-SNAPSHOT</version>
+        <version>0.1.0-jibe-SNAPSHOT</version>
     </parent>
 
     <artifactId>useCases</artifactId>
