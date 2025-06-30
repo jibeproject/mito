@@ -45,7 +45,7 @@ jobs:
           </settings>" > ~/.m2/settings.xml
 
       - name: Build with Maven
-        run: mvn package -Dhdf5lib-absolute-path=`pwd`/lib/linux64/libjhdf5.so -DforkMode=always --fail-at-end --batch-mode -Dmatsim.preferLocalDtds=true -pl !useCases/munich,!useCases/kagawa,!useCases/germany -am
+        run: mvn package -Dhdf5lib-absolute-path=`pwd`/lib/linux64/libjhdf5.so -DforkMode=always --fail-at-end --batch-mode -Dmatsim.preferLocalDtds=true
 
       - name: Publish to GitHub Packages
-        run: mvn deploy -DskipTests=true --fail-at-end --batch-mode -Dmatsim.preferLocalDtds=true  -pl !useCases/munich,!useCases/kagawa,!useCases/germany -am -e
+        run: mvn deploy -DskipTests=true --fail-at-end --batch-mode -Dmatsim.preferLocalDtds=true -e
