@@ -14,7 +14,7 @@
     <modules>
         <module>moped2mito</module>
         <module>mito7days</module>
-        <module>activeRouting</module>
+        <module>active-routing</module>
     </modules>
 
     <properties>

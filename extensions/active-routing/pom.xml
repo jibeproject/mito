@@ -9,7 +9,7 @@
         <version>0.1.0-jibe-SNAPSHOT</version>
     </parent>
 
-    <artifactId>activeRouting</artifactId>
+    <artifactId>active-routing</artifactId>
 
     <dependencies>
         <dependency>
