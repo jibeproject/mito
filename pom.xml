@@ -8,13 +8,13 @@
     <packaging>pom</packaging>
     <name>mito-parent</name>
     <modules>
-        <module>mitoCore</module>
+        <module>mito-core</module>
         <module>extensions</module>
-        <module>useCases</module>
-        <module>analysis</module>
+        <module>use-cases</module>
+<!--        <module>analysis</module>-->
     </modules>
-    <version>master-SNAPSHOT</version>
-    <description>Microscopic Transportation Orchestrator</description>
+    <version>0.1.0-jibe-SNAPSHOT</version>
+    <description>Microscopic Transportation Orchestrator, implemented for the JIBE project</description>
     <inceptionYear>2015</inceptionYear>
 
     <licenses>
@@ -25,23 +25,33 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/msmobility/mito</url>
-        <connection>scm:git:git://github.com/msmobility/mito.git</connection>
-        <developerConnection>scm:git:git@github.com:msmobility/mito.git</developerConnection>
+        <url>https://github.com/jibeproject/mito</url>
+        <connection>scm:git:git://github.com/jibeproject/mito.git</connection>
+        <developerConnection>scm:git:git@github.com:jibeproject/mito.git</developerConnection>
     </scm>
 
     <distributionManagement>
         <snapshotRepository>
-            <id>msm</id>
-            <url>https://maven.cloudsmith.io/msmobility/mito/</url>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/jibeproject/mito</url>
         </snapshotRepository>
-        <repository>
-            <id>msm-snapshots</id>
-            <url>https://maven.cloudsmith.io/msmobility/mito/</url>
-        </repository>
+<!--        <repository>-->
+<!--            <id>github</id>-->
+<!--            <name>GitHub Packages</name>-->
+<!--            <url>https://maven.pkg.github.com/jibeproject/mito</url>-->
+<!--        </repository>-->
     </distributionManagement>
 
     <repositories>
+        <repository>
+             <id>central</id>
+             <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+             <id>eclipse</id>
+             <url>https://repo.eclipse.org/content/groups/releases/</url>
+        </repository>
         <repository>
             <id>msm</id>
             <url>https://dl.cloudsmith.io/public/msmobility/msm/maven/</url>
@@ -85,6 +95,11 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.1.2</version>
+            </plugin>
+            <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
@@ -123,10 +138,6 @@
                     <fork>true</fork>
                     <meminitial>128m</meminitial>
                     <maxmem>512m</maxmem>
-                    <compilerArguments>
-                        <Xmaxwarns>4000</Xmaxwarns>
-                        <Xmaxerrs>100</Xmaxerrs>
-                    </compilerArguments>
                 </configuration>
             </plugin>
             <plugin>
