@@ -9,7 +9,7 @@
         <version>0.1.0-jibe-SNAPSHOT</version>
     </parent>
 
-    <artifactId>mitoCore</artifactId>
+    <artifactId>mito-core</artifactId>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>

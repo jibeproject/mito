@@ -74,7 +74,7 @@ public class TripGeneration extends Module {
     public void run() {
         logger.info("  Started microscopic trip generation model.");
         generateRawTrips();
-        //TODO: move airport related codes to useCases/munich/scenarios
+        //TODO: move airport related codes to use-cases/munich/scenarios
 //        if (addAirportDemand){
 //            generateAirportTrips(scaleFactorForTripGeneration);
 //        }

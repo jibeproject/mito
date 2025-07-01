@@ -5,25 +5,24 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>de.tum.bgu.msm.mito</groupId>
-        <artifactId>useCases</artifactId>
+        <artifactId>mito-parent</artifactId>
         <version>0.1.0-jibe-SNAPSHOT</version>
     </parent>
 
-    <artifactId>kagawa</artifactId>
+    <artifactId>use-cases</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+<!--        <module>munich</module>-->
+        <module>manchester</module>
+<!--        <module>kagawa</module>-->
+<!--        <module>germany</module>-->
+        <module>melbourne</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>de.tum.bgu.msm.mito</groupId>
-            <artifactId>mitoCore</artifactId>
-            <version>0.1.0-jibe-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
 
 </project>

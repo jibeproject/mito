@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>de.tum.bgu.msm.mito</groupId>
-        <artifactId>useCases</artifactId>
+        <artifactId>use-cases</artifactId>
         <version>0.1.0-jibe-SNAPSHOT</version>
     </parent>
 
@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>de.tum.bgu.msm.mito</groupId>
-            <artifactId>mitoCore</artifactId>
+            <artifactId>mito-core</artifactId>
             <version>0.1.0-jibe-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
