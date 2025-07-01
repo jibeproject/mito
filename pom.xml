@@ -8,9 +8,9 @@
     <packaging>pom</packaging>
     <name>mito-parent</name>
     <modules>
-        <module>mitoCore</module>
+        <module>mito-core</module>
         <module>extensions</module>
-        <module>useCases</module>
+        <module>use-cases</module>
 <!--        <module>analysis</module>-->
     </modules>
     <version>0.1.0-jibe-SNAPSHOT</version>

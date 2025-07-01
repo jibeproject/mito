@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>de.tum.bgu.msm.mito</groupId>
-        <artifactId>useCases</artifactId>
+        <artifactId>use-cases</artifactId>
         <version>0.1.0-jibe-SNAPSHOT</version>
     </parent>
 
-    <artifactId>munich</artifactId>
+    <artifactId>melbourne</artifactId>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>de.tum.bgu.msm.mito</groupId>
-            <artifactId>mitoCore</artifactId>
+            <artifactId>mito-core</artifactId>
             <version>0.1.0-jibe-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
@@ -30,8 +30,12 @@
             <version>0.1.0-jibe-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>de.tum.bgu.msm.mito</groupId>
+            <artifactId>active-routing</artifactId>
+            <version>0.1.0-jibe-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
-
-
 
 </project>

@@ -11,4 +11,4 @@ out
 *.iml
 
 *.log
-/useCases/munich/test/muc/scenOutput/
+/use-cases/munich/test/muc/scenOutput/

@@ -14,7 +14,7 @@
     <modules>
         <module>moped2mito</module>
         <module>mito7days</module>
-        <module>activeRouting</module>
+        <module>active-routing</module>
     </modules>
 
     <properties>
@@ -26,7 +26,7 @@
     <dependencies>
         <dependency>
             <groupId>de.tum.bgu.msm.mito</groupId>
-            <artifactId>mitoCore</artifactId>
+            <artifactId>mito-core</artifactId>
             <version>0.1.0-jibe-SNAPSHOT</version>
         </dependency>
     </dependencies>

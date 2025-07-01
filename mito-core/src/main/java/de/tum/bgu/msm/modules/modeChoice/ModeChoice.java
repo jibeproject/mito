@@ -31,7 +31,7 @@ public class ModeChoice extends Module {
     public ModeChoice(DataSet dataSet, List<Purpose> purposes) {
         super(dataSet, purposes);
         boolean includeAV = Resources.instance.getBoolean(AUTONOMOUS_VEHICLE_CHOICE, false);
-        //TODO: move AV related codes to useCases/munich/scenarios
+        //TODO: move AV related codes to use-cases/munich/scenarios
         //AV option is deactivated for now, since it uses outdate mode choice calculators.
     }
 
