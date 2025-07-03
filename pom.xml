@@ -11,7 +11,7 @@
         <module>mito-core</module>
         <module>extensions</module>
         <module>use-cases</module>
-<!--        <module>analysis</module>-->
+        <module>analysis</module>
     </modules>
     <version>0.1.0-jibe-SNAPSHOT</version>
     <description>Microscopic Transportation Orchestrator, implemented for the JIBE project</description>

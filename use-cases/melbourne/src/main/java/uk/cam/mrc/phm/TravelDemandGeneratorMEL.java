@@ -268,6 +268,8 @@ public final class TravelDemandGeneratorMEL {
         distributionDiscretionary.run();
         distributionDiscretionary = null; // release memory
 
+        checkForNullDestinations(dataSet);
+
         logger.info("Running Module: Trip to Mode Assignment (Mode Choice)");
         modeChoice.run();
 
@@ -327,6 +329,18 @@ public final class TravelDemandGeneratorMEL {
         }
         if (Resources.instance.getBoolean(Properties.WRITE_MATSIM_POPULATION, true)) {
             SummarizeData7daysMEL.writeMatsimPlans(dataSet, scenarioName);
+        }
+    }
+
+    public void checkForNullDestinations(DataSet dataSet) {
+        long nullDestCount = dataSet.getTrips().values().stream()
+                .filter(trip -> trip.getTripDestination() == null)
+                .count();
+        if (nullDestCount > 0) {
+            logger.warn("Found {} trips with null destinations.", nullDestCount);
+            throw new IllegalStateException("Trips with null destinations found. This indicates an issue with the trip generation or distribution process.");
+        } else {
+            logger.info("No trips with null destinations found.");
         }
     }
 }

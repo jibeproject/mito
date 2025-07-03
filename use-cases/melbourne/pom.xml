@@ -36,6 +36,12 @@
             <version>0.1.0-jibe-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>de.tum.bgu.msm.mito</groupId>
+            <artifactId>analysis</artifactId>
+            <version>0.1.0-jibe-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>
