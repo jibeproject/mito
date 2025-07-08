@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="MitoMEL" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="uk.cam.mrc.phm.MitoMEL" />
+    <module name="melbourne" />
+    <option name="PROGRAM_PARAMETERS" value="./mito7daysMEL_reference.properties ./configBase.xml" />
+    <option name="VM_PARAMETERS" value="-Xmx204g -Djava.library.path=&quot;../mito/lib/linux64&quot;" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../melbourne" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="uk.cam.mrc.phm.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
