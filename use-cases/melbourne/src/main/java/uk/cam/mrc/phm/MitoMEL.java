@@ -21,6 +21,10 @@ import uk.cam.mrc.phm.util.MelbourneImplementationConfig;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class MitoMEL {
 
@@ -57,18 +61,38 @@ public class MitoMEL {
                 populationByDay.computeIfAbsent(day, p -> PopulationUtils.createPopulation(ConfigUtils.createConfig())).addPerson(person);
             }
 
+            ExecutorService executor = Executors.newFixedThreadPool(Day.values().length);
+            Map<Day, Future<Controler>> futures = new EnumMap<>(Day.class);
+
             for (Day day : Day.values()) {
-                logger.info("Starting " + day.toString().toUpperCase() + " MATSim simulation");
-                config.controller().setOutputDirectory(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment/" + day.toString());
-                MutableScenario matsimScenario = (MutableScenario) ScenarioUtils.loadScenario(config);
-                matsimScenario.setPopulation(populationByDay.get(day));
-                controlers.put(day, new Controler(matsimScenario));
-                controlers.get(day).run();
+                futures.put(day, executor.submit(() -> {
+                    logger.info("Starting " + day.toString().toUpperCase() + " MATSim simulation");
+                    config.controller().setOutputDirectory(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment/" + day.toString());
+                    MutableScenario matsimScenario = (MutableScenario) ScenarioUtils.loadScenario(config);
+                    matsimScenario.setPopulation(populationByDay.get(day));
+                    Controler controler = new Controler(matsimScenario);
+                    controler.run();
+                    return controler;
+                }));
             }
+
+            // Wait for all tasks to complete and collect results
+            for (Day day : Day.values()) {
+                try {
+                    controlers.put(day, futures.get(day).get());
+                } catch (InterruptedException | ExecutionException e) {
+                    logger.error("Error running simulation for {}", day, e);
+                }
+            }
+            executor.shutdown();
 
             //TODO: print seperate skim for each day of week?
             if (Resources.instance.getBoolean(Properties.PRINT_OUT_SKIM, false)) {
-                CarSkimUpdater skimUpdater = new CarSkimUpdater(controlers.get(Day.monday), model.getData(), model.getScenarioName());
+                CarSkimUpdater skimUpdater = new CarSkimUpdater(
+                        controlers.get(Day.monday),
+                        model.getData(),
+                        model.getScenarioName()
+                );
                 skimUpdater.run();
             }
         }
