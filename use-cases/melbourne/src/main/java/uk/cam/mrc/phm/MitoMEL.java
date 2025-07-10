@@ -66,9 +66,11 @@ public class MitoMEL {
 
             for (Day day : Day.values()) {
                 futures.put(day, executor.submit(() -> {
-                    logger.info("Starting " + day.toString().toUpperCase() + " MATSim simulation");
-                    config.controller().setOutputDirectory(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment/" + day.toString());
-                    MutableScenario matsimScenario = (MutableScenario) ScenarioUtils.loadScenario(config);
+                    logger.info("Starting {} MATSim simulation", day.toString().toUpperCase());
+                    Config dayConfig = ConfigUtils.loadConfig(args[1]);
+                    ConfigureMatsim.setDemandSpecificConfigSettings(dayConfig);
+                    dayConfig.controller().setOutputDirectory(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment/" + day.toString());
+                    MutableScenario matsimScenario = (MutableScenario) ScenarioUtils.loadScenario(dayConfig);
                     matsimScenario.setPopulation(populationByDay.get(day));
                     Controler controler = new Controler(matsimScenario);
                     controler.run();
