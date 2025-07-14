@@ -69,10 +69,11 @@ public class MitoMEL {
                 String outputDirectory = Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment/" + day.toString();
                 File itersDir = new File(outputDirectory, "ITERS");
                 File outputLinks = new File(itersDir, "output_links.csv.gz");
-                File iter99 = new File(itersDir, "99");
+                int iterations = Resources.instance.getInt(Properties.MATSIM_ITERATIONS, 100);
+                File iterDir = new File(itersDir, String.valueOf(iterations));
 
                 try {
-                    if (outputLinks.exists() && iter99.exists() && iter99.isDirectory()) {
+                    if (outputLinks.exists() && iterDir.exists() && iterDir.isDirectory()) {
                         logger.info("Skipping {}: output already exists.", day);
                         continue;
                     }
