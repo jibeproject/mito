@@ -27,14 +27,20 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import static uk.cam.mrc.phm.util.MelbourneImplementationConfig.getMelbournePropertiesFile;
+
 public class MitoMEL {
 
     private static final Logger logger = LogManager.getLogger(MitoMEL.class);
 
     public static void main(String[] args) {
         logger.info("Started the Microsimulation Transport Orchestrator (MITO) based on 2017 models");
+        java.util.Properties mitoMelbourneProperties = getMelbournePropertiesFile(args[0]);
+        String scenarioName = mitoMelbourneProperties.getProperty(Properties.SCENARIO_NAME);
+        String scenarioYear = mitoMelbourneProperties.getProperty(Properties.SCENARIO_YEAR);
+        logger.info("Scenario: {}\nYear: {}", scenarioName, scenarioYear);
         MitoModelMEL model = MitoModelMEL.standAloneModel(args[0], MelbourneImplementationConfig.get());
-        String outputSubDirectory = "scenOutput/" + model.getScenarioName() + "/" + Properties.SCENARIO_YEAR;
+        String outputSubDirectory = "scenOutput/" + scenarioName + "/" + scenarioYear;
         File tripsFile = new File(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/microData/trips.csv");
         if (!tripsFile.exists()) {
             model.run();
