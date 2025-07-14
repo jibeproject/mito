@@ -18,6 +18,7 @@ import org.matsim.core.scenario.MutableScenario;
 import org.matsim.core.scenario.ScenarioUtils;
 import uk.cam.mrc.phm.util.MelbourneImplementationConfig;
 
+import java.io.File;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,11 +66,28 @@ public class MitoMEL {
             Map<Day, Future<Controler>> futures = new EnumMap<>(Day.class);
 
             for (Day day : Day.values()) {
+                String outputDirectory = Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment/" + day.toString();
+                File itersDir = new File(outputDirectory, "ITERS");
+                File outputLinks = new File(itersDir, "output_links.csv.gz");
+                File iter99 = new File(itersDir, "99");
+
+                try {
+                    if (outputLinks.exists() && iter99.exists() && iter99.isDirectory()) {
+                        logger.info("Skipping {}: output already exists.", day);
+                        continue;
+                    }
+                } catch (SecurityException e) {
+                    logger.error("Permission denied while checking files for {}: {}", day, e.getMessage());
+                    continue;
+                } catch (Exception e) {
+                    logger.error("Unexpected error while checking files for {}: {}", day, e.getMessage());
+                    continue;
+                }
                 futures.put(day, executor.submit(() -> {
                     logger.info("Starting {} MATSim simulation", day.toString().toUpperCase());
                     Config dayConfig = ConfigUtils.loadConfig(args[1]);
                     ConfigureMatsim.setDemandSpecificConfigSettings(dayConfig);
-                    dayConfig.controller().setOutputDirectory(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment/" + day.toString());
+                    dayConfig.controller().setOutputDirectory(outputDirectory);
                     MutableScenario matsimScenario = (MutableScenario) ScenarioUtils.loadScenario(dayConfig);
                     matsimScenario.setPopulation(populationByDay.get(day));
                     Controler controler = new Controler(matsimScenario);
@@ -79,7 +97,7 @@ public class MitoMEL {
             }
 
             // Wait for all tasks to complete and collect results
-            for (Day day : Day.values()) {
+            for (Day day : futures.keySet()) {
                 try {
                     controlers.put(day, futures.get(day).get());
                 } catch (InterruptedException | ExecutionException e) {
