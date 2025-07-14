@@ -70,11 +70,11 @@ public class MitoMEL {
                 File itersDir = new File(outputDirectory, "ITERS");
                 File outputLinks = new File(itersDir, "output_links.csv.gz");
                 int iterations = Resources.instance.getInt(Properties.MATSIM_ITERATIONS, 100);
-                File iterDir = new File(itersDir, String.valueOf(iterations));
+                File iterDir = new File(itersDir, "it." + String.valueOf(iterations));
 
                 try {
                     if (outputLinks.exists() && iterDir.exists() && iterDir.isDirectory()) {
-                        logger.info("Skipping {}: output already exists.", day);
+                        logger.info("Skipping {}: output already exists ({}).", day, outputLinks.getAbsolutePath());
                         continue;
                     }
                 } catch (SecurityException e) {
