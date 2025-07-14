@@ -34,7 +34,13 @@ public class MitoMEL {
     public static void main(String[] args) {
         logger.info("Started the Microsimulation Transport Orchestrator (MITO) based on 2017 models");
         MitoModelMEL model = MitoModelMEL.standAloneModel(args[0], MelbourneImplementationConfig.get());
-        model.run();
+        String outputSubDirectory = "scenOutput/" + model.getScenarioName() + "/" + Properties.SCENARIO_YEAR;
+        File tripsFile = new File(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/microData/trips.csv");
+        if (!tripsFile.exists()) {
+            model.run();
+        } else {
+            logger.info("Skipping model.run(): trips.csv already exists at {}", tripsFile.getAbsolutePath());
+        }
         final DataSet dataSet = model.getData();
 
         boolean runAssignment = Resources.instance.getBoolean(Properties.RUN_TRAFFIC_ASSIGNMENT, false);
@@ -51,8 +57,6 @@ public class MitoMEL {
                 config = ConfigureMatsim.configureMatsim();
             }
 
-            String outputSubDirectory = "scenOutput/" + model.getScenarioName() + "/" + dataSet.getYear();
-
             final EnumMap<Day, Controler> controlers = new EnumMap<>(Day.class);
 
             Map<Day, Population> populationByDay = new HashMap<>();
@@ -67,8 +71,8 @@ public class MitoMEL {
 
             for (Day day : Day.values()) {
                 String outputDirectory = Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment/" + day.toString();
+                File outputLinks = new File(outputDirectory, "output_links.csv.gz");
                 File itersDir = new File(outputDirectory, "ITERS");
-                File outputLinks = new File(itersDir, "output_links.csv.gz");
                 int iterations = Resources.instance.getInt(Properties.MATSIM_ITERATIONS, 100);
                 File iterDir = new File(itersDir, "it." + String.valueOf(iterations));
 
