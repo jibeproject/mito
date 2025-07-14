@@ -41,12 +41,7 @@ public class MitoMEL {
         logger.info("Scenario: {}\nYear: {}", scenarioName, scenarioYear);
         MitoModelMEL model = MitoModelMEL.standAloneModel(args[0], MelbourneImplementationConfig.get());
         String outputSubDirectory = "scenOutput/" + scenarioName + "/" + scenarioYear;
-        File tripsFile = new File(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/microData/trips.csv");
-        if (!tripsFile.exists()) {
-            model.run();
-        } else {
-            logger.info("Skipping model.run(): trips.csv already exists at {}", tripsFile.getAbsolutePath());
-        }
+        model.run();
         final DataSet dataSet = model.getData();
 
         boolean runAssignment = Resources.instance.getBoolean(Properties.RUN_TRAFFIC_ASSIGNMENT, false);
