@@ -38,7 +38,7 @@ public class MitoMEL {
         java.util.Properties mitoMelbourneProperties = getMelbournePropertiesFile(args[0]);
         String scenarioName = mitoMelbourneProperties.getProperty(Properties.SCENARIO_NAME);
         String scenarioYear = mitoMelbourneProperties.getProperty(Properties.SCENARIO_YEAR);
-        logger.info("Scenario: {}\nYear: {}", scenarioName, scenarioYear);
+        logger.info("Scenario: {}; Year: {}", scenarioName, scenarioYear);
         MitoModelMEL model = MitoModelMEL.standAloneModel(args[0], MelbourneImplementationConfig.get());
         String outputSubDirectory = "scenOutput/" + scenarioName + "/" + scenarioYear;
         model.run();
