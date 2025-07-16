@@ -18,9 +18,16 @@ import org.matsim.core.scenario.MutableScenario;
 import org.matsim.core.scenario.ScenarioUtils;
 import uk.cam.mrc.phm.util.MelbourneImplementationConfig;
 
+import java.io.File;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import static uk.cam.mrc.phm.util.MelbourneImplementationConfig.getMelbournePropertiesFile;
 
 public class MitoMEL {
 
@@ -28,7 +35,12 @@ public class MitoMEL {
 
     public static void main(String[] args) {
         logger.info("Started the Microsimulation Transport Orchestrator (MITO) based on 2017 models");
+        java.util.Properties mitoMelbourneProperties = getMelbournePropertiesFile(args[0]);
+        String scenarioName = mitoMelbourneProperties.getProperty(Properties.SCENARIO_NAME);
+        String scenarioYear = mitoMelbourneProperties.getProperty(Properties.SCENARIO_YEAR);
+        logger.info("Scenario: {}; Year: {}", scenarioName, scenarioYear);
         MitoModelMEL model = MitoModelMEL.standAloneModel(args[0], MelbourneImplementationConfig.get());
+        String outputSubDirectory = "scenOutput/" + scenarioName + "/" + scenarioYear;
         model.run();
         final DataSet dataSet = model.getData();
 
@@ -46,8 +58,6 @@ public class MitoMEL {
                 config = ConfigureMatsim.configureMatsim();
             }
 
-            String outputSubDirectory = "scenOutput/" + model.getScenarioName() + "/" + dataSet.getYear();
-
             final EnumMap<Day, Controler> controlers = new EnumMap<>(Day.class);
 
             Map<Day, Population> populationByDay = new HashMap<>();
@@ -57,18 +67,58 @@ public class MitoMEL {
                 populationByDay.computeIfAbsent(day, p -> PopulationUtils.createPopulation(ConfigUtils.createConfig())).addPerson(person);
             }
 
+            ExecutorService executor = Executors.newFixedThreadPool(Day.values().length);
+            Map<Day, Future<Controler>> futures = new EnumMap<>(Day.class);
+
             for (Day day : Day.values()) {
-                logger.info("Starting " + day.toString().toUpperCase() + " MATSim simulation");
-                config.controller().setOutputDirectory(Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment/" + day.toString());
-                MutableScenario matsimScenario = (MutableScenario) ScenarioUtils.loadScenario(config);
-                matsimScenario.setPopulation(populationByDay.get(day));
-                controlers.put(day, new Controler(matsimScenario));
-                controlers.get(day).run();
+                String outputDirectory = Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment/" + day.toString();
+                File outputLinks = new File(outputDirectory, "output_links.csv.gz");
+                File itersDir = new File(outputDirectory, "ITERS");
+                int iterations = Resources.instance.getInt(Properties.MATSIM_ITERATIONS, 100);
+                File iterDir = new File(itersDir, "it." + String.valueOf(iterations));
+
+                try {
+                    if (outputLinks.exists() && iterDir.exists() && iterDir.isDirectory()) {
+                        logger.info("Skipping {}: output already exists ({}).", day, outputLinks.getAbsolutePath());
+                        continue;
+                    }
+                } catch (SecurityException e) {
+                    logger.error("Permission denied while checking files for {}: {}", day, e.getMessage());
+                    continue;
+                } catch (Exception e) {
+                    logger.error("Unexpected error while checking files for {}: {}", day, e.getMessage());
+                    continue;
+                }
+                futures.put(day, executor.submit(() -> {
+                    logger.info("Starting {} MATSim simulation", day.toString().toUpperCase());
+                    Config dayConfig = ConfigUtils.loadConfig(args[1]);
+                    ConfigureMatsim.setDemandSpecificConfigSettings(dayConfig);
+                    dayConfig.controller().setOutputDirectory(outputDirectory);
+                    MutableScenario matsimScenario = (MutableScenario) ScenarioUtils.loadScenario(dayConfig);
+                    matsimScenario.setPopulation(populationByDay.get(day));
+                    Controler controler = new Controler(matsimScenario);
+                    controler.run();
+                    return controler;
+                }));
             }
+
+            // Wait for all tasks to complete and collect results
+            for (Day day : futures.keySet()) {
+                try {
+                    controlers.put(day, futures.get(day).get());
+                } catch (InterruptedException | ExecutionException e) {
+                    logger.error("Error running simulation for {}", day, e);
+                }
+            }
+            executor.shutdown();
 
             //TODO: print seperate skim for each day of week?
             if (Resources.instance.getBoolean(Properties.PRINT_OUT_SKIM, false)) {
-                CarSkimUpdater skimUpdater = new CarSkimUpdater(controlers.get(Day.monday), model.getData(), model.getScenarioName());
+                CarSkimUpdater skimUpdater = new CarSkimUpdater(
+                        controlers.get(Day.monday),
+                        model.getData(),
+                        model.getScenarioName()
+                );
                 skimUpdater.run();
             }
         }
