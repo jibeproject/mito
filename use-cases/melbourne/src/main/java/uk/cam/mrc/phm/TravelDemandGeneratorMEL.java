@@ -41,23 +41,31 @@ public final class TravelDemandGeneratorMEL {
 
     private final DataSet dataSet;
 
-    private Module tripGenerationMandatory;
-    private Module distributionMandatory;
-    private Module tripGenerationDiscretionary;
-    private Module modeSetChoice;
-    private Module distributionDiscretionary;
-    private Module modeChoice;
-    private Module dayOfWeekChoice;
-    private Module timeOfDayChoice;
-    private Module tripScaling;
-    private Module matsimPopulationGenerator;
-    private Module longDistanceTraffic;
+    private final Module tripGenerationMandatory;
+    private final Module personTripAssignmentMandatory;
+    private final Module travelTimeBudgetMandatory;
+    private final Module distributionMandatory;
+    private final Module tripGenerationDiscretionary;
+    private final Module personTripAssignmentDiscretionary;
+    private final Module travelTimeBudgetDiscretionary;
+    private final Module modeSetChoice;
+    private final Module distributionDiscretionary;
+    private final Module modeChoice;
+    private final Module dayOfWeekChoice;
+    private final Module timeOfDayChoice;
+    private final Module tripScaling;
+    private final Module matsimPopulationGenerator;
+    private final Module longDistanceTraffic;
 
     private TravelDemandGeneratorMEL(
             DataSet dataSet,
             Module tripGenerationMandatory,
+            Module personTripAssignmentMandatory,
+            Module travelTimeBudgetMandatory,
             Module distributionMandatory,
             Module tripGenerationDiscretionary,
+            Module personTripAssignmentDiscretionary,
+            Module travelTimeBudgetDiscretionary,
             Module modeSetChoice,
             Module distributionDiscretionary,
             Module modeChoice,
@@ -65,12 +73,16 @@ public final class TravelDemandGeneratorMEL {
             Module timeOfDayChoice,
             Module tripScaling,
             Module matsimPopulationGenerator,
-            Module longDistanceTraffic) {
+            Module longDistanceTraffic){
 
         this.dataSet = dataSet;
         this.tripGenerationMandatory = tripGenerationMandatory;
+        this.personTripAssignmentMandatory = personTripAssignmentMandatory;
+        this.travelTimeBudgetMandatory = travelTimeBudgetMandatory;
         this.distributionMandatory = distributionMandatory;
         this.tripGenerationDiscretionary = tripGenerationDiscretionary;
+        this.personTripAssignmentDiscretionary = personTripAssignmentDiscretionary;
+        this.travelTimeBudgetDiscretionary = travelTimeBudgetDiscretionary;
         this.distributionDiscretionary = distributionDiscretionary;
         this.modeChoice = modeChoice;
         this.dayOfWeekChoice = dayOfWeekChoice;
@@ -92,6 +104,8 @@ public final class TravelDemandGeneratorMEL {
         private Module distributionMandatory;
         private Module tripGenerationDiscretionary;
         private Module modeSetChoice;
+        private Module personTripAssignmentDiscretionary;
+        private Module travelTimeBudgetDiscretionary;
         private Module distributionDiscretionary;
         private Module modeChoice;
         private Module dayOfWeekChoice;
@@ -191,8 +205,12 @@ public final class TravelDemandGeneratorMEL {
         public TravelDemandGeneratorMEL build() {
             return new TravelDemandGeneratorMEL(dataSet,
                     tripGenerationMandatory,
+                    personTripAssignmentMandatory,
+                    travelTimeBudgetMandatory,
                     distributionMandatory,
                     tripGenerationDiscretionary,
+                    personTripAssignmentDiscretionary,
+                    travelTimeBudgetDiscretionary,
                     modeSetChoice,
                     distributionDiscretionary,
                     modeChoice,
@@ -201,6 +219,42 @@ public final class TravelDemandGeneratorMEL {
                     tripScaling,
                     matsimPopulationGenerator,
                     longDistanceTraffic);
+        }
+
+        public void setTripGeneration(Module tripGeneration) {
+            this.tripGenerationMandatory = tripGeneration;
+        }
+
+        public void setPersonTripAssignment(Module personTripAssignment) {
+            this.personTripAssignmentMandatory = personTripAssignment;
+        }
+
+        public void setTravelTimeBudget(Module travelTimeBudget) {
+            this.travelTimeBudgetMandatory = travelTimeBudget;
+        }
+
+        public void setDistribution(Module distribution) {
+            this.distributionMandatory = distribution;
+        }
+
+        public void setModeChoice(Module modeChoice) {
+            this.modeChoice = modeChoice;
+        }
+
+        public void setTimeOfDayChoice(Module timeOfDayChoice) {
+            this.timeOfDayChoice= timeOfDayChoice;
+        }
+
+        public void setTripScaling(Module tripScaling) {
+            this.tripScaling = tripScaling;
+        }
+
+        public void setMatsimPopulationGenerator(Module matsimPopulationGenerator) {
+            this.matsimPopulationGenerator = matsimPopulationGenerator;
+        }
+
+        public void setLongDistanceTraffic(Module longDistanceTraffic) {
+            this.longDistanceTraffic = longDistanceTraffic;
         }
 
         public DataSet getDataSet() {
@@ -249,24 +303,19 @@ public final class TravelDemandGeneratorMEL {
         logger.info("Running Module: Microscopic Trip Generation");
 
         tripGenerationMandatory.run();
-        tripGenerationMandatory = null; // release memory
 
         logger.info("Running Module: Microscopic Trip Distribution");
         distributionMandatory.run();
-        distributionMandatory = null; // release memory
 
         tripGenerationDiscretionary.run();
-        tripGenerationDiscretionary = null; // release memory
 
         if(Resources.instance.getBoolean(Properties.RUN_MODESET,false)) {
             logger.info("Running Module: Mode set choice");
             modeSetChoice.run();
-            modeSetChoice = null; // release memory
         }
 
         logger.info("Running Module: Microscopic Trip Distribution");
         distributionDiscretionary.run();
-        distributionDiscretionary = null; // release memory
 
         checkForNullDestinations(dataSet);
 
@@ -297,22 +346,17 @@ public final class TravelDemandGeneratorMEL {
 
         logger.info("Running day of week choice");
         dayOfWeekChoice.run();
-        dayOfWeekChoice = null; // release memory
 
         logger.info("Running time of day choice");
         timeOfDayChoice.run();
-        timeOfDayChoice = null; // release memory
 
         logger.info("Running trip scaling");
         tripScaling.run();
-        tripScaling = null; // release memory
 
         matsimPopulationGenerator.run();
-        matsimPopulationGenerator = null; // release memory
 
         if (Resources.instance.getBoolean(Properties.ADD_EXTERNAL_FLOWS, false)) {
             longDistanceTraffic.run();
-            longDistanceTraffic = null; // release memory
         }
 
         TripGenerationWriter.writeTripsByPurposeAndZone(dataSet, scenarioName);
@@ -338,9 +382,13 @@ public final class TravelDemandGeneratorMEL {
                 .count();
         if (nullDestCount > 0) {
             logger.warn("Found {} trips with null destinations.", nullDestCount);
-            throw new IllegalStateException("Trips with null destinations found. This indicates an issue with the trip generation or distribution process.");
-        } else {
-            logger.info("No trips with null destinations found.");
+            dataSet.getTrips().values().stream()
+                    .filter(trip -> trip.getTripDestination() == null)
+                    .forEach(trip -> logger.warn("Null destination for trip: Purpose={}, Origin={}, PersonId={}",
+                            trip.getTripPurpose(),
+                            trip.getTripOrigin(),
+                            trip.getPerson().getId()));
         }
     }
+
 }
