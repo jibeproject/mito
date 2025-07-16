@@ -27,13 +27,20 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import static uk.cam.mrc.phm.util.MelbourneImplementationConfig.getMelbournePropertiesFile;
+
 public class MitoMEL {
 
     private static final Logger logger = LogManager.getLogger(MitoMEL.class);
 
     public static void main(String[] args) {
         logger.info("Started the Microsimulation Transport Orchestrator (MITO) based on 2017 models");
+        java.util.Properties mitoMelbourneProperties = getMelbournePropertiesFile(args[0]);
+        String scenarioName = mitoMelbourneProperties.getProperty(Properties.SCENARIO_NAME);
+        String scenarioYear = mitoMelbourneProperties.getProperty(Properties.SCENARIO_YEAR);
+        logger.info("Scenario: {}; Year: {}", scenarioName, scenarioYear);
         MitoModelMEL model = MitoModelMEL.standAloneModel(args[0], MelbourneImplementationConfig.get());
+        String outputSubDirectory = "scenOutput/" + scenarioName + "/" + scenarioYear;
         model.run();
         final DataSet dataSet = model.getData();
 
@@ -51,8 +58,6 @@ public class MitoMEL {
                 config = ConfigureMatsim.configureMatsim();
             }
 
-            String outputSubDirectory = "scenOutput/" + model.getScenarioName() + "/" + dataSet.getYear();
-
             final EnumMap<Day, Controler> controlers = new EnumMap<>(Day.class);
 
             Map<Day, Population> populationByDay = new HashMap<>();
@@ -67,14 +72,14 @@ public class MitoMEL {
 
             for (Day day : Day.values()) {
                 String outputDirectory = Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory + "/trafficAssignment/" + day.toString();
+                File outputLinks = new File(outputDirectory, "output_links.csv.gz");
                 File itersDir = new File(outputDirectory, "ITERS");
-                File outputLinks = new File(itersDir, "output_links.csv.gz");
                 int iterations = Resources.instance.getInt(Properties.MATSIM_ITERATIONS, 100);
-                File iterDir = new File(itersDir, String.valueOf(iterations));
+                File iterDir = new File(itersDir, "it." + String.valueOf(iterations));
 
                 try {
                     if (outputLinks.exists() && iterDir.exists() && iterDir.isDirectory()) {
-                        logger.info("Skipping {}: output already exists.", day);
+                        logger.info("Skipping {}: output already exists ({}).", day, outputLinks.getAbsolutePath());
                         continue;
                     }
                 } catch (SecurityException e) {
