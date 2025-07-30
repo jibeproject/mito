@@ -57,7 +57,7 @@ public class JobReaderMEL extends AbstractCsvReader {
     @Override
     protected void processRecord(String[] record) {
         int id = Integer.parseInt(record[posId]);
-        long microBuildingId = Long.parseLong(record[posMicroBuildingId]);
+        String microBuildingId = parseMEL.stringParse(record[posMicroBuildingId]);
         int zoneId = parseMEL.zoneParse(record[posZone]);
         int worker = Integer.parseInt(record[posWorker]);
         String type = parseMEL.stringParse(record[posType]);
@@ -75,7 +75,7 @@ public class JobReaderMEL extends AbstractCsvReader {
             }
 
             Coordinate coordinate;
-            if(microBuildingId != -1) {
+            if(!microBuildingId.equals("NA")) {
                 coordinate = (new Coordinate(Double.parseDouble(record[posJobCoordX]),Double.parseDouble(record[posJobCoordY])));
             } else {
                 coordinate = zone.getCentroid().getCoordinate();
