@@ -29,6 +29,7 @@ public class ZonesReaderMEL extends AbstractCsvReader {
     private static final Logger logger = LogManager.getLogger(ZonesReaderMEL.class);
     private int idIndex;
     private int areaTypeIndex;
+    private int posVacancyRate;
     private int popCentroidXIndex;
     private int popCentroidYIndex;
     private static final String ZONE_ID = Resources.instance.getString(Properties.ZONE_SHAPEFILE_ID_FIELD);
@@ -70,6 +71,7 @@ public class ZonesReaderMEL extends AbstractCsvReader {
         ).toArray(String[]::new);
         idIndex = MitoUtil.findPositionInArray(ZONE_ID,header);
         areaTypeIndex = MitoUtil.findPositionInArray("urbanType", header);
+        posVacancyRate = MitoUtil.findPositionInArray("vacancy_rate", header);
         popCentroidXIndex = MitoUtil.findPositionInArray(projectProperties.getProperty("zone.pop.centroid.x.field"), header);
         popCentroidYIndex = MitoUtil.findPositionInArray(projectProperties.getProperty("zone.pop.centroid.y.field"), header);
     }
@@ -78,18 +80,19 @@ public class ZonesReaderMEL extends AbstractCsvReader {
     protected void processRecord(String[] record) {
         int zoneId = Integer.parseInt(record[idIndex]);
         String urbanType = parseMEL.stringParse(record[areaTypeIndex]);
+        double vacancyRate = Double.parseDouble(record[posVacancyRate]);
         String xStr = record[popCentroidXIndex];
         String yStr = record[popCentroidYIndex];
         MitoZone zone = new MitoZone(zoneId, null);
         zone.setAreaTypeR("urban".equals(urbanType)? AreaTypes.RType.URBAN : AreaTypes.RType.RURAL);
-        if (!"NA".equalsIgnoreCase(xStr) && !"NA".equalsIgnoreCase(yStr)) {
-            zone.setCentroid(
-                    new Coordinate(
-                            Double.parseDouble(xStr),
-                            Double.parseDouble(yStr)
-                    )
-            );
-        }
+        zone.setVacancyRate(vacancyRate);
+        int zonesLackingCoordinates = 0;
+        zone.setCentroid(
+                new Coordinate(
+                        Double.parseDouble(xStr),
+                        Double.parseDouble(yStr)
+                )
+        );
         dataSet.addZone(zone);
     }
 }
