@@ -44,8 +44,6 @@ public class TripAttractionRatesReaderMEL extends AbstractCsvReader {
         int purposeIndex = parseMEL.findPositionInArray(purpose.name(), header);
         if (purposeIndex >= 0) {
             indexForPurpose.put(purpose, purposeIndex);
-        } else {
-            logger.warn("{} not found in header;  rates will be set to 0.0 for this purpose.", purpose.name());
         }
     }
 
@@ -58,7 +56,6 @@ public class TripAttractionRatesReaderMEL extends AbstractCsvReader {
         } else {
             double rate = Double.parseDouble(record[indexForPurpose.get(purpose)]);
             purpose.setTripAttractionForVariable(variable, rate);
-//            logger.warn("Set trip attraction rate for purpose {} and variable {} to {}", purpose.name(), variable, rate);
         }
     }
 }

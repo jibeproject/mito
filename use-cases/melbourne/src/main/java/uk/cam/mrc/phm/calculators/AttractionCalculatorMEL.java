@@ -10,7 +10,6 @@ import uk.cam.mrc.phm.io.TripAttractionRatesReaderMEL;
 import java.util.List;
 
 import static de.tum.bgu.msm.modules.tripGeneration.ExplanatoryVariable.HH;
-import static java.lang.Double.NaN;
 
 public class AttractionCalculatorMEL implements AttractionCalculator {
 
@@ -28,36 +27,34 @@ public class AttractionCalculatorMEL implements AttractionCalculator {
 
     @Override
     public void run() {
-        logger.info("  Calculating trip attractions");
+        logger.info("  Calculating trip attractions for purpose {}", purpose.toString());
+
+        // Zone level attractions
         for (MitoZone zone : dataSet.getZones().values()) {
-                Double tripAttraction = 0.0;
-                for (ExplanatoryVariable variable : ExplanatoryVariable.values()) {
-                    double attribute;
-                    if(HH.equals(variable)) {
-                        attribute = zone.getNumberOfHouseholds();
-                        // logger.info("AttractionCalculatorMEL: HH.equals(variable) is true, using number of households: {}", attribute);
-                    }else if(zone.getPoiWeightsByType().get(variable.toString())==null) {
-                        // logger.info("AttractionCalculatorMEL: No POI weights found for variable {}", variable);
-                        continue;
-                    }else{
-                        attribute = zone.getPoiWeightsByType().get(variable.toString());
-                        // logger.info("AttractionCalculatorMEL: Using POI weights for variable {}: {}", variable, attribute);
-                    }
-                    Double rate = purpose.getTripAttractionForVariable(variable);
-                    if(rate == null) {
-                        throw new RuntimeException("Purpose " + purpose + " does not have an attraction" +
-                                " rate for variable " + variable + " registered.");
-                    }
-                    tripAttraction += (Double) (attribute * rate);
-                    if(Double.isNaN(tripAttraction)) {
-                        throw new RuntimeException("Trip attraction for zone " + zone.getId() + " is NaN. " +
-                                "Variable: " + variable + ", attribute: " + attribute + ", rate: " + rate);
-                    }
+            double tripAttraction = 0;
+            for (ExplanatoryVariable variable : ExplanatoryVariable.values()) {
+                double attribute;
+                if(HH.equals(variable)) {
+                    attribute = zone.getNumberOfHouseholds();
+                }else if(zone.getPoiWeightsByType().get(variable.toString())==null) {
+                    //logger.warn("Zone has no explanatory variable " + variable + " defined.");
+                    continue;
+                }else{
+                    attribute = zone.getPoiWeightsByType().get(variable.toString());
                 }
-                zone.setTripAttraction(purpose, tripAttraction);
-            // Weight for specific buildings  --- USED FOR MANCHESTER, PERHAPS NOT FOR MELBOURNE
+                Double rate = purpose.getTripAttractionForVariable(variable);
+                if(rate == null) {
+                    throw new RuntimeException("Purpose " + purpose + " does not have an attraction" +
+                            " rate for variable " + variable + " registered.");
+                }
+                tripAttraction += attribute * rate;
+            }
+            zone.setTripAttraction(purpose, tripAttraction);
+
+
+            // Weight for specific buildings
             List<MicroLocation> microDestinations = zone.getMicroDestinations();
-            if(microDestinations.size() > 0) {
+            if(!microDestinations.isEmpty()) {
                 double[] microDestinationWeights = new double[microDestinations.size()];
                 for(int i = 0 ; i < microDestinations.size() ; i++) {
                     MicroLocation loc = microDestinations.get(i);
