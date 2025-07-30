@@ -86,7 +86,6 @@ public class ZonesReaderMEL extends AbstractCsvReader {
         MitoZone zone = new MitoZone(zoneId, null);
         zone.setAreaTypeR("urban".equals(urbanType)? AreaTypes.RType.URBAN : AreaTypes.RType.RURAL);
         zone.setVacancyRate(vacancyRate);
-        int zonesLackingCoordinates = 0;
         zone.setCentroid(
                 new Coordinate(
                         Double.parseDouble(xStr),
