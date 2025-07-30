@@ -77,12 +77,14 @@ public final class TimeOfDayChoiceMEL extends Module {
                     }
                     counter++;
                     if (LongMath.isPowerOfTwo(counter)) {
-                        logger.info(counter + " times of day assigned");
+                        logger.info("{} times of day assigned", counter);
                     }
                 }
             });
         }
-        logger.warn(issues + " trips have no time of day since they have no origin, destination or mode");
+        if (issues > 0) {
+            logger.warn("{} trips have no time of day since they have no origin, destination or mode", issues);
+        }
     }
 
     private int chooseDepartureTime(MitoTrip mitoTrip) {
