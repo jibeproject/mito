@@ -23,6 +23,7 @@ public class JobReaderMEL extends AbstractCsvReader {
     private final JobTypeFactory factory;
 
     private int posId = -1;
+    private int posMicroBuildingId = -1;
     private int posZone = -1;
     private int posWorker = -1;
     private int posType = -1;
@@ -45,6 +46,7 @@ public class JobReaderMEL extends AbstractCsvReader {
     protected void processHeader(String[] header) {
         header = parseMEL.stringParse(header);
         posId = MitoUtil.findPositionInArray("id", header);
+        posMicroBuildingId = MitoUtil.findPositionInArray("microBuildingID", header);
         posZone = MitoUtil.findPositionInArray("zone", header);
         posWorker = MitoUtil.findPositionInArray("personId", header);
         posType = MitoUtil.findPositionInArray("type", header);
@@ -55,6 +57,7 @@ public class JobReaderMEL extends AbstractCsvReader {
     @Override
     protected void processRecord(String[] record) {
         int id = Integer.parseInt(record[posId]);
+        String microBuildingId = parseMEL.stringParse(record[posMicroBuildingId]);
         int zoneId = parseMEL.zoneParse(record[posZone]);
         int worker = Integer.parseInt(record[posWorker]);
         String type = parseMEL.stringParse(record[posType]);
@@ -71,11 +74,13 @@ public class JobReaderMEL extends AbstractCsvReader {
                 //logger.error("Job Type " + type + " used in job microdata but is not defined");
             }
 
-            Coordinate job_location = (new Coordinate(Double.parseDouble(record[posJobCoordX]),
-            		Double.parseDouble(record[posJobCoordY])));
-
-            // MitoJob job = new MitoJob(zone, zone.getRandomCoord(MitoUtil.getRandomObject()), id);
-            MitoJob job = new MitoJob(zone, job_location, id);
+            Coordinate coordinate;
+            if(!microBuildingId.equals("NA")) {
+                coordinate = (new Coordinate(Double.parseDouble(record[posJobCoordX]),Double.parseDouble(record[posJobCoordY])));
+            } else {
+                coordinate = zone.getCentroid().getCoordinate();
+            }
+            MitoJob job = new MitoJob(zone, coordinate, id);
             dataSet.addJob(job);
         }
     }

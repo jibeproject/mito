@@ -106,11 +106,14 @@ public final class MatsimPopulationGenerator7days extends Module {
             }
 
             if (ConcurrencyUtils.isPowerOf2(assignedTripCounter.incrementAndGet())){
-                logger.warn( assignedTripCounter.get()  + " MATSim agents created");
+                logger.info("{} MATSim agents created", assignedTripCounter.get());
             }
 
         });
-        logger.warn( nonAssignedTripCounter.get()  + " trips do not have trip origin, destination or mode and cannot be assigned in MATSim");
+        int nonAssignedTrips = nonAssignedTripCounter.get();
+        if (nonAssignedTrips > 0) {
+            logger.warn("{} trips do not have trip origin, destination or mode and cannot be assigned in MATSim", nonAssignedTrips);
+        }
         return population;
     }
 
