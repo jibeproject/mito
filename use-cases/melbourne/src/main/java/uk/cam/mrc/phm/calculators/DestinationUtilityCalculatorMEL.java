@@ -84,10 +84,28 @@ public class DestinationUtilityCalculatorMEL extends AbstractDestinationUtilityC
 
     @Override
     public List<Predicate<MitoPerson>> getCategories() {
-        List<Predicate<MitoPerson>> filters = new ArrayList<>();
-        filters.add(0,p -> p.getHousehold().getAutos() == 0);
-        filters.add(1,p -> p.getHousehold().getAutosPerAdult() > 0 && p.getHousehold().getAutosPerAdult() < 1);
-        filters.add(2,p -> p.getHousehold().getAutosPerAdult() >= 1);
+        Predicate<MitoPerson> hasNoCar    = p -> p.getHousehold().getAutos() == 0;
+        Predicate<MitoPerson> hasCar      = p -> p.getHousehold().getAutos() > 0;
+
+        Predicate<MitoPerson> Under18  = p -> p.getAge() < 18;
+
+        Predicate<MitoPerson> isStudent    = p -> p.getMitoOccupationStatus() == MitoOccupationStatus.STUDENT;
+        Predicate<MitoPerson> isEmployed   = p -> p.getMitoOccupationStatus() == MitoOccupationStatus.WORKER;
+        Predicate<MitoPerson> isUnemployed = p -> p.getMitoOccupationStatus() == MitoOccupationStatus.UNEMPLOYED;
+        Predicate<MitoPerson> isRetired    = p -> p.getMitoOccupationStatus() == MitoOccupationStatus.RETIRED;
+
+        List<Predicate<MitoPerson>> filters = new ArrayList<>(10);
+
+        filters.add(0, Under18.and(hasNoCar));          // 0: <18 & No Car
+        filters.add(1, Under18.and(hasCar));            // 1: <18 & Car
+        filters.add(2, isStudent.and(hasNoCar));        // 2: Student & No Car
+        filters.add(3, isStudent.and(hasCar));          // 3: Student & Car
+        filters.add(4, isEmployed.and(hasNoCar));       // 4: Employed & No Car
+        filters.add(5, isEmployed.and(hasCar));         // 5: Employed & Car
+        filters.add(6, isUnemployed.and(hasNoCar));     // 6: Unemployed & No Car
+        filters.add(7, isUnemployed.and(hasCar));       // 7: Unemployed & Car
+        filters.add(8, isRetired.and(hasNoCar));        // 8: Retired & No Car
+        filters.add(9, isRetired.and(hasCar));          // 9: Retired & Car
         return filters;
     }
 }
