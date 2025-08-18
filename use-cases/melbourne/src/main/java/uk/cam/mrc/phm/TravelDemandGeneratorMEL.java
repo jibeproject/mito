@@ -303,6 +303,21 @@ public final class TravelDemandGeneratorMEL {
         logger.info("Running Module: Microscopic Trip Generation");
 
 
+        tripGenerationMandatory.run();
+
+        logger.info("Running Module: Microscopic Trip Distribution");
+        distributionMandatory.run();
+
+        tripGenerationDiscretionary.run();
+
+        if(Resources.instance.getBoolean(Properties.RUN_MODESET,false)) {
+            logger.info("Running Module: Mode set choice");
+            modeSetChoice.run();
+        }
+
+        logger.info("Running Module: Microscopic Trip Distribution");
+        distributionDiscretionary.run();
+
         //      Running trip distribution calibration
         ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBW,
                 new double[] {3.44,4.43,9.61,8.19,12.54,13.18,11.31,5.98,8.61,7.51},false);
@@ -323,20 +338,6 @@ public final class TravelDemandGeneratorMEL {
         ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBA,
                 new double[] {2.86,2.86,3.44,3.55,3.08,3.47,2.56,2.75,5.27,4.24},false);
 
-        tripGenerationMandatory.run();
-
-        logger.info("Running Module: Microscopic Trip Distribution");
-        distributionMandatory.run();
-
-        tripGenerationDiscretionary.run();
-
-        if(Resources.instance.getBoolean(Properties.RUN_MODESET,false)) {
-            logger.info("Running Module: Mode set choice");
-            modeSetChoice.run();
-        }
-
-        logger.info("Running Module: Microscopic Trip Distribution");
-        distributionDiscretionary.run();
         checkForNullDestinations(dataSet);
 
         logger.info("Running Module: Trip to Mode Assignment (Mode Choice)");
