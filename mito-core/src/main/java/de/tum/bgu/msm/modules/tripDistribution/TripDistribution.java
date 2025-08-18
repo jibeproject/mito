@@ -159,7 +159,9 @@ public class TripDistribution extends Module {
             // Distribution of airport trips to the airport does not need a matrix of weights
             if (!purpose.equals(AIRPORT)){
                 AbstractDestinationUtilityCalculator utilityCalculator = tripDistributionCalculatorsByPurpose.get(purpose).getFirst();
+                logger.info("Purpose: {}, Categories: {}", purpose, utilityCalculator.getCategories().size());
                 for(int i = 0; i < utilityCalculator.getCategories().size() ; i++) {
+                    logger.info("Creating task for purpose: {}, category index: {}", purpose, i);
                     utilityCalcTasks.add(new DestinationUtilityByPurposeGenerator(purpose, dataSet, utilityCalculator, i));
                 }
             }
