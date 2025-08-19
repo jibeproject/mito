@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class DestinationUtilityCalculatorMEL extends AbstractDestinationUtilityCalculator {
-
+    // Initial travel distance parameters for Melbourne are based on the average of three categories from the Manchester model
+    // Subsequent calibration (see TravelDemandGeneratorMEL) updates the initial values based on sociodemographic categories from the VISTA 2012-20 dataset
     // HBW mean: (-0.10565083158495737 + -0.04366834773482148 + -0.029824447609604468) / 3 = -0.05971454230979444
     private final static double[] TRAVEL_DISTANCE_PARAM_HBW = fillArray(-0.05971454230979444, 10);
     private final static double IMPEDANCE_PARAM_HBW = 9;

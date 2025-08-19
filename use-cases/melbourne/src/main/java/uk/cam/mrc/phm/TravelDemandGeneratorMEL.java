@@ -318,7 +318,11 @@ public final class TravelDemandGeneratorMEL {
         logger.info("Running Module: Microscopic Trip Distribution");
         distributionDiscretionary.run();
 
-        //      Running trip distribution calibration
+        // Running trip distribution calibration
+        // Updates the initial values (see DestinationUtilityCalculatorMEL) based on sociodemographic categories from the VISTA 2012-20 dataset
+        // Trip distribution median calibration restricts adjustment range from 0.5 to 2 (if median is below this range, it is set to 0.5, if above to 2, else the median is used
+        // To allow greater flexibility across categories, the mean calibration is used instead
+
 //        // Median calibration
 //        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBW,
 //                new double[] {3.44,4.43,9.61,8.19,12.54,13.18,11.31,5.98,8.61,7.51},true);
