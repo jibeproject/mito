@@ -28,8 +28,8 @@ public class DestinationUtilityCalculatorMEL extends AbstractDestinationUtilityC
     // HBO mean: (-0.028762939944400743 + -0.013710304239040036 + -0.010043876974845265) / 3 = -0.017172707052428348
     private final static double[] TRAVEL_DISTANCE_PARAM_HBO = fillArray(-0.017172707052428348, 10);
     private final static double IMPEDANCE_PARAM_HBO = 53;
-    //    private final static double[] TRAVEL_DISTANCE_PARAM_RRT = {-0.12877572260971806}; //redundant?
-    //    private final static double IMPEDANCE_PARAM_RRT = 20; //redundant?
+//    private final static double[] TRAVEL_DISTANCE_PARAM_RRT = {-0.12877572260971806}; //redundant?
+//    private final static double IMPEDANCE_PARAM_RRT = 20; //redundant?
     // NHBW mean: (-0.38036997226527924 + -0.05575584617535517 + -0.02997957948287176) / 3 = -0.15570113264116872
     private final static double[] TRAVEL_DISTANCE_PARAM_NHBW = fillArray(-0.15570113264116872, 10);
     private final static double IMPEDANCE_PARAM_NHBW = 15.1;
@@ -70,10 +70,10 @@ public class DestinationUtilityCalculatorMEL extends AbstractDestinationUtilityC
                 distanceParams = TRAVEL_DISTANCE_PARAM_HBO;
                 impedanceParam = IMPEDANCE_PARAM_HBO;
                 break;
-            case RRT:
-                distanceParams = TRAVEL_DISTANCE_PARAM_RRT;
-                impedanceParam = IMPEDANCE_PARAM_RRT;
-                break;
+//            case RRT:
+//                distanceParams = TRAVEL_DISTANCE_PARAM_RRT;
+//                impedanceParam = IMPEDANCE_PARAM_RRT;
+//                break;
             case NHBW:
                 distanceParams = TRAVEL_DISTANCE_PARAM_NHBW;
                 impedanceParam = IMPEDANCE_PARAM_NHBW;

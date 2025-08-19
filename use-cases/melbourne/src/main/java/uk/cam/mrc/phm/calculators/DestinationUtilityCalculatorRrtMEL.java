@@ -47,10 +47,6 @@ public class DestinationUtilityCalculatorRrtMEL extends AbstractDestinationUtili
         }else{
             //when no mode set, apply constant RRT distance decay to all population rather than by car ownership
             filters.add(p -> true);
-
-            //filters.add(0,p -> p.getHousehold().getAutos() == 0);
-            //filters.add(1,p -> p.getHousehold().getAutosPerAdult() > 0 && p.getHousehold().getAutosPerAdult() < 1);
-            //filters.add(2,p -> p.getHousehold().getAutosPerAdult() >= 1);
         }
 
         return filters;
