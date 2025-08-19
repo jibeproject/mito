@@ -39,7 +39,7 @@ public class DestinationUtilityCalculatorMEL extends AbstractDestinationUtilityC
 
     private static double[] fillArray(double value, int length) {
         double[] arr = new double[length];
-        for (int i = 0; i < length; i++) arr[i] = value;
+        Arrays.fill(arr, value);
         return arr;
     }
 
