@@ -337,7 +337,9 @@ public class TripDistribution extends Module {
                 }
             }
         }
-
+        if (simulatedDistance.isEmpty()) {
+            throw new RuntimeException("No trips found for purpose " + purpose + " to calibrate against!");
+        }
         for(int i = 0 ; i < categories ; i++) {
             simulatedDistance.get(i).sort();
             double median = DoubleDescriptive.median(simulatedDistance.get(i));
