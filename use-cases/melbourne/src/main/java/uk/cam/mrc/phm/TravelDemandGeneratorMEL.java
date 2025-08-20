@@ -392,8 +392,8 @@ public final class TravelDemandGeneratorMEL {
 //                    new double[]{4.78, 5.01, 13.12, 16.15, 6.38, 8.76, 5.2, 5.71, 8.55, 9.71}, false); // Completed 2025-08-20 DestinationUtilityCalculatorMEL updated
 //            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBA,
 //                    new double[]{5.46, 5.32, 6.04, 6.27, 5.87, 6.55, 4.48, 4.92, 10.41, 7.81}, false); // Completed 2025-08-20 DestinationUtilityCalculatorMEL updated
-            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBS,
-                    new double[]{6.78, 6.29, 5.87, 5.72, 5.87, 5.63, 5.32, 5.19, 4.95, 4.24}, false);
+//            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBS,
+//                    new double[]{6.78, 6.29, 5.87, 5.72, 5.87, 5.63, 5.32, 5.19, 4.95, 4.24}, false);
             ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBR,
                     new double[]{6.74, 7.26, 6.94, 6.8, 5.7, 6.44, 6.25, 6.56, 6.41, 5.97}, false);
             ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBO,

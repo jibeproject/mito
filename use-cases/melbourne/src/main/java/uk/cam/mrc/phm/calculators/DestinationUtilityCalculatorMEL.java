@@ -30,11 +30,13 @@ public class DestinationUtilityCalculatorMEL extends AbstractDestinationUtilityC
     // HBS mean: (-0.1302481725479954 + -0.0716719631663481 + -0.06272342097190081) / 3 = -0.08888185289574877
 //    private final static double[] TRAVEL_DISTANCE_PARAM_HBS = fillArray(-0.08888185289574877, 10);
     // HBS semi-calibrated (mean); 2025-08-20 - all groups except for last (retired with car) failed to calibrate, so a custom tweak used for last group.  See https://github.com/jibeproject/mito/issues/76
-    private final static double[] TRAVEL_DISTANCE_PARAM_HBS = {-0.0380812569074194, -0.05409985284216312, -0.03535140547605545, -0.05670814672404346, -0.04367856309857014, -0.06847359315942239, -0.050870231263036664, -0.0813413293498617, -0.06459280156588387, -0.06};
+//    private final static double[] TRAVEL_DISTANCE_PARAM_HBS = {-0.0380812569074194, -0.05409985284216312, -0.03535140547605545, -0.05670814672404346, -0.04367856309857014, -0.06847359315942239, -0.050870231263036664, -0.0813413293498617, -0.06459280156588387, -0.06};
+    // HBS calibrated (mean); 2025-08-20
+    private final static double[] TRAVEL_DISTANCE_PARAM_HBS = {-0.03102653277137382, -0.04046191348789098, -0.029842068377971112, -0.04337614022154041, -0.0355947336094127, -0.047333515387482594, -0.040862219086009066, -0.052208950471959774, -0.04968845296493172, -0.07401201003773145};
     private final static double IMPEDANCE_PARAM_HBS = 12; // Vista-based 5.35 failed to calibrate;
     // HBR mean: (-0.09341006840787956 + -0.046114237946687356 + -0.03142021825706931) / 3 = -0.05764850820354541
     private final static double[] TRAVEL_DISTANCE_PARAM_HBR = fillArray(-0.05764850820354541, 10);
-    private final static double IMPEDANCE_PARAM_HBR = 6.48;
+    private final static double IMPEDANCE_PARAM_HBR = 13; // Vista-based 5.35 failed to calibrate;
     // HBO mean: (-0.028762939944400743 + -0.013710304239040036 + -0.010043876974845265) / 3 = -0.017172707052428348
     private final static double[] TRAVEL_DISTANCE_PARAM_HBO = fillArray(-0.017172707052428348, 10);
     private final static double IMPEDANCE_PARAM_HBO = 11.34;
