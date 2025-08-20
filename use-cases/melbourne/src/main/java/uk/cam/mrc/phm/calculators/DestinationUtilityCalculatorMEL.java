@@ -23,11 +23,16 @@ public class DestinationUtilityCalculatorMEL extends AbstractDestinationUtilityC
     private final static double[] TRAVEL_DISTANCE_PARAM_HBE = {-0.10008116971910894, -0.10008116971910894, -0.05004058485955447, -0.05004058485955447, -0.07529487260192196, -0.08267269997602315, -0.09017464749323888, -0.10008116971910894, -0.08786103638236557, -0.07384966444712061};
     private final static double IMPEDANCE_PARAM_HBE = 6.66;
     // HBA mean: (-0.12740481694077424 + -0.03845635376344552 + -0.03688687152506809) / 3 = -0.06791668040942928
-    private final static double[] TRAVEL_DISTANCE_PARAM_HBA = fillArray(-0.06791668040942928, 10);
-    private final static double IMPEDANCE_PARAM_HBA = 6.03;
+//    private final static double[] TRAVEL_DISTANCE_PARAM_HBA = fillArray(-0.06791668040942928, 10);
+    // HBE calibrated (mean); 2025-08-20
+    private final static double[] TRAVEL_DISTANCE_PARAM_HBA = {-0.0401677743803288, -0.048782854229724275, -0.032931235656713964, -0.038897267876700815, -0.03697260260342743, -0.0380978447440113, -0.05277795067936258, -0.05504614474785929, -0.018419898765729376, -0.030636013480613105};
+    private final static double IMPEDANCE_PARAM_HBA =  12.06; // Vista-based 6.03 failed to calibrate;
     // HBS mean: (-0.1302481725479954 + -0.0716719631663481 + -0.06272342097190081) / 3 = -0.08888185289574877
-    private final static double[] TRAVEL_DISTANCE_PARAM_HBS = fillArray(-0.08888185289574877, 10);
-    private final static double IMPEDANCE_PARAM_HBS = 5.35;
+//    private final static double[] TRAVEL_DISTANCE_PARAM_HBS = fillArray(-0.08888185289574877, 10);
+    // HBS semi-calibrated (mean); 2025-08-20 - all groups except for last (retired with car) failed to calibrate, so a custom tweak used for last group
+    // the parameter 0.18 is a modified version of the suggested adjustment value from the first iteration of the calibration where the group mean was 5.2, higher than the reference of 4.24.  The theory is, if we can make this undershoot through a small modification, it can converge upwards like other groups.
+    private final static double[] TRAVEL_DISTANCE_PARAM_HBS = {-0.0380812569074194, -0.05409985284216312, -0.03535140547605545, -0.05670814672404346, -0.04367856309857014, -0.06847359315942239, -0.050870231263036664, -0.0813413293498617, -0.06459280156588387, -0.18};
+    private final static double IMPEDANCE_PARAM_HBS = 10.70; // Vista-based 5.35 failed to calibrate;
     // HBR mean: (-0.09341006840787956 + -0.046114237946687356 + -0.03142021825706931) / 3 = -0.05764850820354541
     private final static double[] TRAVEL_DISTANCE_PARAM_HBR = fillArray(-0.05764850820354541, 10);
     private final static double IMPEDANCE_PARAM_HBR = 6.48;
