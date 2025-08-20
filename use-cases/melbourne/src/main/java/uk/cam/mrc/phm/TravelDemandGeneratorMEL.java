@@ -318,7 +318,7 @@ public final class TravelDemandGeneratorMEL {
         logger.info("Running Module: Microscopic Trip Distribution");
         distributionDiscretionary.run();
 
-        calibrateDiscretionaryDistanceDistribution("median");
+        calibrateDiscretionaryDistanceDistribution("mean");
 
         checkForNullDestinations(dataSet);
 
