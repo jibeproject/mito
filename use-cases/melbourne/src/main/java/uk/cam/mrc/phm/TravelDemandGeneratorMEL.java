@@ -403,8 +403,6 @@ public final class TravelDemandGeneratorMEL {
                     new double[] {3.18,3.36,1.96,3.98,3.25,3.74,2.91,3.31,2.83,3.27},true);
             ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBW,
                     new double[] {4.24,4.97,3.20,4.50,2.95,3.51,3.00,3.87,4.20,2.71},true);
-            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.RRT,
-                    new double[] {3.35,3.23,2.54,2.64,1.85,2.22,2.18,2.26,1.91,2.22},true);
             ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBA,
                     new double[] {2.86,2.86,3.44,3.55,3.08,3.47,2.56,2.75,5.27,4.24},true);
         } else {
