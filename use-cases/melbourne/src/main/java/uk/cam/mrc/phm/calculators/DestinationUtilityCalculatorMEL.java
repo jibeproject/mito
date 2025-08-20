@@ -29,10 +29,9 @@ public class DestinationUtilityCalculatorMEL extends AbstractDestinationUtilityC
     private final static double IMPEDANCE_PARAM_HBA =  12.06; // Vista-based 6.03 failed to calibrate;
     // HBS mean: (-0.1302481725479954 + -0.0716719631663481 + -0.06272342097190081) / 3 = -0.08888185289574877
 //    private final static double[] TRAVEL_DISTANCE_PARAM_HBS = fillArray(-0.08888185289574877, 10);
-    // HBS semi-calibrated (mean); 2025-08-20 - all groups except for last (retired with car) failed to calibrate, so a custom tweak used for last group
-    // the parameter 0.18 is a modified version of the suggested adjustment value from the first iteration of the calibration where the group mean was 5.2, higher than the reference of 4.24.  The theory is, if we can make this undershoot through a small modification, it can converge upwards like other groups.
-    private final static double[] TRAVEL_DISTANCE_PARAM_HBS = {-0.0380812569074194, -0.05409985284216312, -0.03535140547605545, -0.05670814672404346, -0.04367856309857014, -0.06847359315942239, -0.050870231263036664, -0.0813413293498617, -0.06459280156588387, -0.18};
-    private final static double IMPEDANCE_PARAM_HBS = 10.70; // Vista-based 5.35 failed to calibrate;
+    // HBS semi-calibrated (mean); 2025-08-20 - all groups except for last (retired with car) failed to calibrate, so a custom tweak used for last group.  See https://github.com/jibeproject/mito/issues/76
+    private final static double[] TRAVEL_DISTANCE_PARAM_HBS = {-0.0380812569074194, -0.05409985284216312, -0.03535140547605545, -0.05670814672404346, -0.04367856309857014, -0.06847359315942239, -0.050870231263036664, -0.0813413293498617, -0.06459280156588387, -0.06};
+    private final static double IMPEDANCE_PARAM_HBS = 12; // Vista-based 5.35 failed to calibrate;
     // HBR mean: (-0.09341006840787956 + -0.046114237946687356 + -0.03142021825706931) / 3 = -0.05764850820354541
     private final static double[] TRAVEL_DISTANCE_PARAM_HBR = fillArray(-0.05764850820354541, 10);
     private final static double IMPEDANCE_PARAM_HBR = 6.48;
