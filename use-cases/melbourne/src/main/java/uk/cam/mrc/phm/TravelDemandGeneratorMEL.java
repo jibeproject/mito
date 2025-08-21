@@ -394,14 +394,14 @@ public final class TravelDemandGeneratorMEL {
 //                    new double[]{5.46, 5.32, 6.04, 6.27, 5.87, 6.55, 4.48, 4.92, 10.41, 7.81}, false); // Completed 2025-08-20 DestinationUtilityCalculatorMEL updated
 //            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBS,
 //                    new double[]{6.78, 6.29, 5.87, 5.72, 5.87, 5.63, 5.32, 5.19, 4.95, 4.24}, false);
-            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBR,
-                    new double[]{6.74, 7.26, 6.94, 6.8, 5.7, 6.44, 6.25, 6.56, 6.41, 5.97}, false);
-            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBO,
-                    new double[]{14.58, 10.85, 13.08, 11.13, 13.41, 11.81, 13.65, 11.07, 9.95, 9.96}, false);
-            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBO,
-                    new double[]{7.02, 6.73, 7.57, 8.21, 8.24, 8.06, 7.41, 6.81, 7.37, 7.04}, false);
+//            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBR,
+//                    new double[]{6.74, 7.26, 6.94, 6.8, 5.7, 6.44, 6.25, 6.56, 6.41, 5.97}, false);
+//            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBO,
+//                    new double[]{14.58, 10.85, 13.08, 11.13, 13.41, 11.81, 13.65, 11.07, 9.95, 9.96}, false);
             ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBW,
                     new double[]{9.48, 6.09, 7.79, 9.86, 7.63, 8.08, 3.0, 6.04, 3.18, 4.08}, false);
+            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBO,
+                    new double[]{7.02, 6.73, 7.57, 8.21, 8.24, 8.06, 7.41, 6.81, 7.37, 7.04}, false);
 
         // Median calibration
 //        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBW,

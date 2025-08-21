@@ -52,7 +52,7 @@ public class DestinationUtilityCalculatorMEL extends AbstractDestinationUtilityC
     private final static double IMPEDANCE_PARAM_NHBW = 8.07;
     // NHBO mean: (-0.26157597149372586 + -0.04848404658490696 + -0.042259625478948036) / 3 = -0.11743988151986029
     private final static double[] TRAVEL_DISTANCE_PARAM_NHBO = fillArray(-0.11743988151986029, 10);
-    private final static double IMPEDANCE_PARAM_NHBO = 7.52;
+    private final static double IMPEDANCE_PARAM_NHBO = 15; // vista-based 7.52 failed to calibrate
 
     private static double[] fillArray(double value, int length) {
         double[] arr = new double[length];
