@@ -48,11 +48,15 @@ public class DestinationUtilityCalculatorMEL extends AbstractDestinationUtilityC
     private final static double[] TRAVEL_DISTANCE_PARAM_RRT = {-0.12877572260971806}; //redundant?
     private final static double IMPEDANCE_PARAM_RRT = 20; //redundant?
     // NHBW mean: (-0.38036997226527924 + -0.05575584617535517 + -0.02997957948287176) / 3 = -0.15570113264116872
-    private final static double[] TRAVEL_DISTANCE_PARAM_NHBW = fillArray(-0.15570113264116872, 10);
-    private final static double IMPEDANCE_PARAM_NHBW = 8.07;
+//    private final static double[] TRAVEL_DISTANCE_PARAM_NHBW = fillArray(-0.15570113264116872, 10);
+    // Calibration failed using the pre filled value --- but got very close to the reference means with the following parameters:
+//    private final static double[] TRAVEL_DISTANCE_PARAM_NHBW = {-0.020679185753824134, -0.04185445534029167, -0.02458965389068089, -0.020972051914972072, -0.025712957757384025, -0.028523316381558698, -0.09840513480387361, -0.04112995856842478, -0.10358899901921562, -0.07101987106924562};
+    // NHBW calibrated (mean); 2025-08-25
+    private final static double[] TRAVEL_DISTANCE_PARAM_NHBW = {-0.015052244343644869, -0.02841436782454745, -0.017516333413381546, -0.014961637127491451, -0.018413069248392866, -0.019825807068720492, -0.0593567700212445, -0.02764801170942757, -0.05881265427170848, -0.04304281259391193};
+    private final static double IMPEDANCE_PARAM_NHBW = 14; // vista-based 8.07 failed to calibrate
     // NHBO mean: (-0.26157597149372586 + -0.04848404658490696 + -0.042259625478948036) / 3 = -0.11743988151986029
     private final static double[] TRAVEL_DISTANCE_PARAM_NHBO = fillArray(-0.11743988151986029, 10);
-    private final static double IMPEDANCE_PARAM_NHBO = 15; // vista-based 7.52 failed to calibrate
+    private final static double IMPEDANCE_PARAM_NHBO = 12; // vista-based 7.52 failed to calibrate
 
     private static double[] fillArray(double value, int length) {
         double[] arr = new double[length];
