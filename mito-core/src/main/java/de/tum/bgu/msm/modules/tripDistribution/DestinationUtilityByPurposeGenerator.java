@@ -24,7 +24,7 @@ public class DestinationUtilityByPurposeGenerator implements Callable<Triple<Pur
     private final int categoryIndex;
 
 
-    DestinationUtilityByPurposeGenerator(Purpose purpose, DataSet dataSet, AbstractDestinationUtilityCalculator calculator, int categoryIndex) {
+     DestinationUtilityByPurposeGenerator(Purpose purpose, DataSet dataSet, AbstractDestinationUtilityCalculator calculator, int categoryIndex) {
         this.purpose = purpose;
         this.zones = dataSet.getZones();
         this.travelDistances = dataSet.getTravelDistancesNMT();
