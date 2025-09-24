@@ -43,7 +43,6 @@ import static uk.cam.mrc.phm.util.CoefficientLookup.CoefficientSet;
 import java.util.*;
 import java.util.function.ToDoubleFunction;
 
-import static uk.cam.mrc.phm.util.ExtractCoefficient.extractCoefficient;
 import static uk.cam.mrc.phm.util.MelbourneImplementationConfig.getMelbourneProperties;
 import static uk.cam.mrc.phm.util.parseMEL.getHoursAsSeconds;
 
