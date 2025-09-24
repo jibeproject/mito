@@ -37,6 +37,8 @@ import routing.components.JctStress;
 import routing.components.LinkAmbience;
 import routing.components.LinkStress;
 import uk.cam.mrc.phm.util.MelbourneImplementationConfig;
+import uk.cam.mrc.phm.util.CoefficientLookup;
+import static uk.cam.mrc.phm.util.CoefficientLookup.CoefficientSet;
 
 import java.util.*;
 import java.util.function.ToDoubleFunction;
@@ -58,6 +60,12 @@ public class RunMatsimActiveMode {
 
     public static void main(String[] args) {
         logger.info("Started the Microsimulation Transport Orchestrator (MITO) based on 2017 models");
+
+        // Initialize coefficient lookup table once at startup
+        logger.info("Initializing coefficient lookup table for efficient processing...");
+        CoefficientLookup.initialize();
+        logger.info("Coefficient lookup initialized: {}", CoefficientLookup.getStatistics());
+
         MitoModelMEL model = MitoModelMEL.standAloneModel(args[0], MelbourneImplementationConfig.get());
         //model.run();
         final DataSet dataSet = model.getData();
@@ -244,38 +252,30 @@ public class RunMatsimActiveMode {
 
         MitoGender gender = (MitoGender) person.getAttributes().getAttribute("sex");
         int age = (int) person.getAttributes().getAttribute("age");
+        Purpose purpose = (Purpose) person.getAttributes().getAttribute("purpose");
+        CoefficientSet coeffs = CoefficientLookup.getCoefficients(purpose, mode);
 
-        for (String purposeString : Properties.TRIP_PURPOSES.split(",")) {
-            Purpose purpose = Purpose.valueOf(purposeString.trim());
-            grad += extractCoefficient(purpose, mode, "grad");
-            stressLink += extractCoefficient(purpose, mode, "stressLink");
-            vgvi += extractCoefficient(purpose, mode, "vgvi");
-            speed += extractCoefficient(purpose, mode, "speed");
+        // Base coefficients
+        grad += coeffs.grad;
+        stressLink += coeffs.stressLink;
+        vgvi += coeffs.vgvi;
+        speed += coeffs.speed;
 
-            // Interaction terms
-            if (age >= 16 && gender.equals(MitoGender.FEMALE)) {
-                grad += extractCoefficient(purpose, mode, "grad_f");
-                stressLink += extractCoefficient(purpose, mode, "stressLink_f");
-                vgvi += extractCoefficient(purpose, mode, "vgvi_f");
-                speed += extractCoefficient(purpose, mode, "speed_f");
-            }
-
-            if (age < 16) {
-                grad += extractCoefficient(purpose, mode, "grad_c");
-                stressLink += extractCoefficient(purpose, mode, "stressLink_c");
-                vgvi += extractCoefficient(purpose, mode, "vgvi_c");
-                speed += extractCoefficient(purpose, mode, "speed_c");
-            }
-
-//            if (age >= 65) {
-//                grad += extractCoefficient(purpose, mode, "grad_e");
-//                stressLink += extractCoefficient(purpose, mode, "stressLink_e");
-//                vgvi += extractCoefficient(purpose, mode, "vgvi_e");
-//                speed += extractCoefficient(purpose, mode, "speed_e");
-//            }
+        // Interaction terms - much faster than individual CSV lookups
+        if (age >= 16 && gender.equals(MitoGender.FEMALE)) {
+            grad += coeffs.grad_f;
+            stressLink += coeffs.stressLink_f;
+            vgvi += coeffs.vgvi_f;
+            speed += coeffs.speed_f;
         }
 
-        // Return aggregated coefficients
+        if (age < 16) {
+            grad += coeffs.grad_c;
+            stressLink += coeffs.stressLink_c;
+            vgvi += coeffs.vgvi_c;
+            speed += coeffs.speed_c;
+        }
+
         return new double[] {grad, stressLink, vgvi, speed};
     }
 
