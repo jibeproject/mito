@@ -386,29 +386,29 @@ public final class TravelDemandGeneratorMEL {
         logger.info("Calibrating discretionary trip distribution using mean values");
 
 
-        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBW,
-                new double[]{7.72, 12.22, 16.70, 11.09, 11.23}, false);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBW,
+//                new double[]{7.72, 12.22, 16.70, 11.09, 11.23}, false);
+//
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBE,
+//                new double[]{4.97, 15.70, 8.41, 5.61, 9.60}, false);
 
-        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBE,
-                new double[]{4.97, 15.70, 8.41, 5.61, 9.60}, false);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBA,
+//                new double[]{5.35, 6.25, 6.46, 4.84, 8.12}, false);
 
-        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBA,
-                new double[]{5.35, 6.25, 6.46, 4.84, 8.12}, false);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBS,
+//                new double[]{6.37, 5.74, 5.66, 5.21, 4.35}, false);
 
-        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBS,
-                new double[]{6.37, 5.74, 5.66, 5.21, 4.35}, false);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBR,
+//                new double[]{7.17, 6.81, 6.35, 6.51, 6.03}, false);
 
-        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBR,
-                new double[]{7.17, 6.81, 6.35, 6.51, 6.03}, false);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBO,
+//                new double[]{11.44, 11.33, 12.01, 11.46, 9.96}, false);
 
-        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBO,
-                new double[]{11.44, 11.33, 12.01, 11.46, 9.96}, false);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBW,
+//                new double[]{6.85, 9.63, 8.02, 5.75, 3.93}, false);
 
-        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBW,
-                new double[]{6.85, 9.63, 8.02, 5.75, 3.93}, false);
-
-        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBO,
-                new double[]{6.78, 8.13, 8.08, 6.89, 7.08}, false);
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBO,
+//                new double[]{6.78, 8.13, 8.08, 6.89, 7.08}, false);
 
     }
 
