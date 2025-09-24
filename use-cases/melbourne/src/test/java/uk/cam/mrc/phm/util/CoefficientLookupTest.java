@@ -35,14 +35,14 @@ class CoefficientLookupTest {
 
     @Test
     void testCoefficientLookupInitialization() {
-        // Test that the lookup table can be initialized without errors
+        // Test that the lookup table can be initialised without errors
         assertDoesNotThrow(() -> {
-            CoefficientLookup.initialize();
+            CoefficientLookup.initialise();
         }, "CoefficientLookup initialization should not throw exceptions");
 
         String stats = CoefficientLookup.getStatistics();
         assertNotNull(stats, "Statistics should not be null");
-        assertTrue(stats.contains("Initialized: true"), "Should report as initialized");
+        assertTrue(stats.contains("Initialised: true"), "Should report as initialised");
 
         System.out.println("✅ Initialization test passed");
         System.out.println("Stats: " + stats);
@@ -50,8 +50,8 @@ class CoefficientLookupTest {
 
     @Test
     void testGetCoefficient() {
-        // Ensure lookup is initialized
-        CoefficientLookup.initialize();
+        // Ensure lookup is initialised
+        CoefficientLookup.initialise();
 
         // Test getting individual coefficients
         double coeff1 = CoefficientLookup.getCoefficient(Purpose.NHBW, "bicycle", "grad");
@@ -72,8 +72,8 @@ class CoefficientLookupTest {
 
     @Test
     void testGetCoefficients() {
-        // Ensure lookup is initialized
-        CoefficientLookup.initialize();
+        // Ensure lookup is initialised
+        CoefficientLookup.initialise();
 
         // Test getting coefficient sets
         CoefficientLookup.CoefficientSet bikeCoeffs = CoefficientLookup.getCoefficients(Purpose.NHBW, "bicycle");
@@ -94,7 +94,7 @@ class CoefficientLookupTest {
     @Test
     void testCalculateActiveModeWeightsLogic() {
         // Test the coefficient aggregation logic without depending on RunMatsimActiveMode
-        CoefficientLookup.initialize();
+        CoefficientLookup.initialise();
 
         // Simulate the calculateActiveModeWeights logic manually
         String mode = "bicycle";
@@ -141,8 +141,8 @@ class CoefficientLookupTest {
 
     @Test
     void testPerformanceComparison() {
-        // Ensure lookup is initialized
-        CoefficientLookup.initialize();
+        // Ensure lookup is initialised
+        CoefficientLookup.initialise();
 
         // Test the performance of coefficient lookups (without RunMatsimActiveMode dependency)
         long startTime = System.currentTimeMillis();
@@ -157,14 +157,14 @@ class CoefficientLookupTest {
             assertNotNull(coeffs, "Coefficients should not be null");
         }
 
-        long optimizedTime = System.currentTimeMillis() - startTime;
+        long optimisedTime = System.currentTimeMillis() - startTime;
 
-        // The optimized version should be very fast
-        assertTrue(optimizedTime < 500, "1000 coefficient lookups should be fast (under 500ms)");
+        // The optimised version should be very fast
+        assertTrue(optimisedTime < 500, "1000 coefficient lookups should be fast (under 500ms)");
 
         System.out.println("✅ Performance test passed");
-        System.out.println("  Time for 1000 coefficient lookups: " + optimizedTime + "ms");
-        System.out.println("  Average time per lookup: " + (optimizedTime / 1000.0) + "ms");
+        System.out.println("  Time for 1000 coefficient lookups: " + optimisedTime + "ms");
+        System.out.println("  Average time per lookup: " + (optimisedTime / 1000.0) + "ms");
 
         // Log expected improvement
         System.out.println("📈 Expected improvement: ~100-1000x faster than CSV-per-lookup approach");
@@ -172,8 +172,8 @@ class CoefficientLookupTest {
 
     @Test
     void testThreadSafety() {
-        // Ensure lookup is initialized
-        CoefficientLookup.initialize();
+        // Ensure lookup is initialised
+        CoefficientLookup.initialise();
 
         // Test concurrent access
         List<Thread> threads = new ArrayList<>();
@@ -226,7 +226,7 @@ class CoefficientLookupTest {
 
     @Test
     void testCoefficientSetValues() {
-        CoefficientLookup.initialize();
+        CoefficientLookup.initialise();
 
         // Test that coefficient sets have the expected structure and values
         CoefficientLookup.CoefficientSet bikeCoeffs = CoefficientLookup.getCoefficients(Purpose.NHBW, "bicycle");

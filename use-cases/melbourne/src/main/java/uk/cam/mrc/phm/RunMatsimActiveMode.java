@@ -62,9 +62,9 @@ public class RunMatsimActiveMode {
         logger.info("Started the Microsimulation Transport Orchestrator (MITO) based on 2017 models");
 
         // Initialize coefficient lookup table once at startup
-        logger.info("Initializing coefficient lookup table for efficient processing...");
-        CoefficientLookup.initialize();
-        logger.info("Coefficient lookup initialized: {}", CoefficientLookup.getStatistics());
+        logger.info("Initialising coefficient lookup table for efficient processing...");
+        CoefficientLookup.initialise();
+        logger.info("Coefficient lookup initialised: {}", CoefficientLookup.getStatistics());
 
         MitoModelMEL model = MitoModelMEL.standAloneModel(args[0], MelbourneImplementationConfig.get());
         //model.run();
@@ -261,7 +261,6 @@ public class RunMatsimActiveMode {
         vgvi += coeffs.vgvi;
         speed += coeffs.speed;
 
-        // Interaction terms - much faster than individual CSV lookups
         if (age >= 16 && gender.equals(MitoGender.FEMALE)) {
             grad += coeffs.grad_f;
             stressLink += coeffs.stressLink_f;
