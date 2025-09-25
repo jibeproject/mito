@@ -318,7 +318,7 @@ public final class TravelDemandGeneratorMEL {
         logger.info("Running Module: Microscopic Trip Distribution");
         distributionDiscretionary.run();
 
-//        calibrateDiscretionaryDistanceDistribution(); // Completed 2025-08-25
+        calibrateDiscretionaryDistanceDistribution(); // Completed 2025-08-25
 
         checkForNullDestinations(dataSet);
 
@@ -383,60 +383,32 @@ public final class TravelDemandGeneratorMEL {
         // Updates the initial values (see DestinationUtilityCalculatorMEL) based on sociodemographic categories from the VISTA 2012-20 dataset
         // Trip distribution median calibration restricts adjustment range from 0.5 to 2 (if median is below this range, it is set to 0.5, if above to 2, else the median is used
         // To allow greater flexibility across categories, the mean calibration is used instead
-        logger.info("Calibrating discretionary trip distribution using mean or  median values.");
-        // Actual calibration used
-        // Mean calibration
-            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBW,
-                    new double[]{9.89, 7.51, 12.06, 12.24, 16.29, 16.75, 9.51, 11.21, 10.53, 11.41}, false); // Completed 2025-08-20 DestinationUtilityCalculatorMEL updated
-            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBE,
-                    new double[]{4.78, 5.01, 13.12, 16.15, 6.38, 8.76, 5.2, 5.71, 8.55, 9.71}, false); // Completed 2025-08-20 DestinationUtilityCalculatorMEL updated
-            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBA,
-                    new double[]{5.46, 5.32, 6.04, 6.27, 5.87, 6.55, 4.48, 4.92, 10.41, 7.81}, false); // Completed 2025-08-20 DestinationUtilityCalculatorMEL updated
-            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBS,
-                    new double[]{6.78, 6.29, 5.87, 5.72, 5.87, 5.63, 5.32, 5.19, 4.95, 4.24}, false);  // Completed 2025-08-21 DestinationUtilityCalculatorMEL updated
-            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBR,
-                    new double[]{6.74, 7.26, 6.94, 6.8, 5.7, 6.44, 6.25, 6.56, 6.41, 5.97}, false); // Completed 2025-08-21 DestinationUtilityCalculatorMEL updated
-            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBO,
-                    new double[]{14.58, 10.85, 13.08, 11.13, 13.41, 11.81, 13.65, 11.07, 9.95, 9.96}, false); // Completed 2025-08-21 DestinationUtilityCalculatorMEL updated
-            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBW,
-                    new double[]{9.48, 6.09, 7.79, 9.86, 7.63, 8.08, 3.0, 6.04, 3.18, 4.08}, false); // Completed 2025-08-25 DestinationUtilityCalculatorMEL updated
-            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBO,
-                    new double[]{7.02, 6.73, 7.57, 8.21, 8.24, 8.06, 7.41, 6.81, 7.37, 7.04}, false); // Completed 2025-08-25 DestinationUtilityCalculatorMEL updated
+        logger.info("Calibrating discretionary trip distribution using mean values");
 
-        // Median calibration
+
 //        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBW,
-//                new double[] {3.44,4.43,9.61,8.19,12.54,13.18,11.31,5.98,8.61,7.51},true);
+//                new double[]{7.72, 12.22, 16.70, 11.09, 11.23}, false);
+//
 //        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBE,
-//                new double[] {2.43,2.70,9.55,12.38,3.68,4.56,3.10,4.11,5.10,6.70},true);
+//                new double[]{4.97, 15.70, 8.41, 5.61, 9.60}, false);
+
 //        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBA,
-//                new double[] {2.86,2.86,3.44,3.55,3.08,3.47,2.56,2.75,5.27,4.24},true);
+//                new double[]{5.35, 6.25, 6.46, 4.84, 8.12}, false);
+
 //        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBS,
-//                new double[] {3.62,3.54,2.26,2.91,2.64,2.96,3.04,2.97,2.43,2.46},true);
+//                new double[]{6.37, 5.74, 5.66, 5.21, 4.35}, false);
+
 //        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBR,
-//                new double[] {3.35,3.23,2.54,2.64,1.85,2.22,2.18,2.26,1.91,2.22},true);
+//                new double[]{7.17, 6.81, 6.35, 6.51, 6.03}, false);
+
 //        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBO,
-//                new double[] {6.88,5.69,8.32,6.10,7.35,6.47,6.91,5.91,4.29,5.00},true);
-//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBO,
-//                new double[] {3.18,3.36,1.96,3.98,3.25,3.74,2.91,3.31,2.83,3.27},true);
+//                new double[]{11.44, 11.33, 12.01, 11.46, 9.96}, false);
+
 //        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBW,
-//                new double[] {4.24,4.97,3.20,4.50,2.95,3.51,3.00,3.87,4.20,2.71},true);
-            // Mean calibration
-//            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBW,
-//                    new double[]{9.89, 7.51, 12.06, 12.24, 16.29, 16.75, 9.51, 11.21, 10.53, 11.41}, false); // Completed 2025-08-20
-//            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBE,
-//                    new double[]{4.78, 5.01, 13.12, 16.15, 6.38, 8.76, 5.2, 5.71, 8.55, 9.71}, false); // Completed 2025-08-20
-//            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBA,
-//                    new double[]{5.46, 5.32, 6.04, 6.27, 5.87, 6.55, 4.48, 4.92, 10.41, 7.81}, false);
-//            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBS,
-//                    new double[]{6.78, 6.29, 5.87, 5.72, 5.87, 5.63, 5.32, 5.19, 4.95, 4.24}, false);
-//            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBR,
-//                    new double[]{6.74, 7.26, 6.94, 6.8, 5.7, 6.44, 6.25, 6.56, 6.41, 5.97}, false);
-//            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.HBO,
-//                    new double[]{14.58, 10.85, 13.08, 11.13, 13.41, 11.81, 13.65, 11.07, 9.95, 9.96}, false);
-//            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBO,
-//                    new double[]{7.02, 6.73, 7.57, 8.21, 8.24, 8.06, 7.41, 6.81, 7.37, 7.04}, false);
-//            ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBW,
-//                    new double[]{9.48, 6.09, 7.79, 9.86, 7.63, 8.08, 3.0, 6.04, 3.18, 4.08}, false);
+//                new double[]{6.85, 9.63, 8.02, 5.75, 3.93}, false);
+
+//        ((TripDistribution) distributionDiscretionary).calibrate(Purpose.NHBO,
+//                new double[]{6.78, 8.13, 8.08, 6.89, 7.08}, false);
 
     }
 

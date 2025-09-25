@@ -16,6 +16,7 @@ import org.matsim.core.controler.Controler;
 import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.scenario.MutableScenario;
 import org.matsim.core.scenario.ScenarioUtils;
+import uk.cam.mrc.phm.util.LoggingUtils;
 import uk.cam.mrc.phm.util.MelbourneImplementationConfig;
 
 import java.io.File;
@@ -34,13 +35,20 @@ public class MitoMEL {
     private static final Logger logger = LogManager.getLogger(MitoMEL.class);
 
     public static void main(String[] args) {
-        logger.info("Started the Microsimulation Transport Orchestrator (MITO) based on 2017 models");
         java.util.Properties mitoMelbourneProperties = getMelbournePropertiesFile(args[0]);
         String scenarioName = mitoMelbourneProperties.getProperty(Properties.SCENARIO_NAME);
         String scenarioYear = mitoMelbourneProperties.getProperty(Properties.SCENARIO_YEAR);
-        logger.info("Scenario: {}; Year: {}", scenarioName, scenarioYear);
-        MitoModelMEL model = MitoModelMEL.standAloneModel(args[0], MelbourneImplementationConfig.get());
         String outputSubDirectory = "scenOutput/" + scenarioName + "/" + scenarioYear;
+        String finalOutputDir = "./" + outputSubDirectory;
+        String logFilePath = LoggingUtils.configureFileLoggingForScenario(finalOutputDir, scenarioName, scenarioYear);
+        MitoModelMEL model = MitoModelMEL.standAloneModel(args[0], MelbourneImplementationConfig.get());
+
+        logger.info("Started the Microsimulation Transport Orchestrator (MITO) based on 2017 models");
+        logger.info("Scenario: {}; Year: {}", scenarioName, scenarioYear);
+        if (logFilePath != null) {
+            logger.info("Log file: {}", logFilePath);
+        }
+
         model.run();
         final DataSet dataSet = model.getData();
 
@@ -122,6 +130,7 @@ public class MitoMEL {
                 skimUpdater.run();
             }
         }
+
+        logger.info("MITO processing completed successfully!");
     }
 }
-

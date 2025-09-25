@@ -13,51 +13,46 @@ public class DestinationUtilityCalculatorMEL extends AbstractDestinationUtilityC
     // For impedance, using VISTA 2012-20 based estimates for Melbourne.  See https://github.com/jibeproject/mito/issues/76.
     // Subsequent calibration (see TravelDemandGeneratorMEL) updates the initial values based on sociodemographic categories from the VISTA 2012-20 dataset
     // HBW pre-calibration mean: (-0.10565083158495737 + -0.04366834773482148 + -0.029824447609604468) / 3 = -0.05971454230979444
-//     private final static double[] TRAVEL_DISTANCE_PARAM_HBW = fillArray(-0.05971454230979444, 10);
-    // HBW calibrated (mean); 2025-08-20:
-    private final static double[] TRAVEL_DISTANCE_PARAM_HBW = {-0.014498363345160612, -0.02166297217958154, -0.005688024888241202, -0.011084086697820301, -0.003588055363552403, -0.007924277239485482, -0.012032929116838407, -0.013324079821017833, -0.0118146793539948, -0.012739215635141792};
-    private final static double IMPEDANCE_PARAM_HBW = 16.3;
+//     private final static double[] TRAVEL_DISTANCE_PARAM_HBW = fillArray(-0.05971454230979444, 5);
+    // HBW calibrated (mean); 2025-09-24:
+    private final static double[] TRAVEL_DISTANCE_PARAM_HBW = {-0.020783505403729884, -0.010510436321682146, -0.007639555195306878, -0.01327277482767267, -0.01298129308114014};
+    private final static double IMPEDANCE_PARAM_HBW = 16.3; // vista-based
     // HBE mean: (-0.05660650656401385 + -0.04730781708082465 + -0.048208428932957896) / 3 = -0.05004058485955447
-//    private final static double[] TRAVEL_DISTANCE_PARAM_HBE = fillArray(-0.05004058485955447, 10);
-    // HBE calibrated (mean); 2025-08-20 (replaced NaN values with -0.05004058485955447
-    private final static double[] TRAVEL_DISTANCE_PARAM_HBE = {-0.10008116971910894, -0.10008116971910894, -0.05004058485955447, -0.05004058485955447, -0.07529487260192196, -0.08267269997602315, -0.09017464749323888, -0.10008116971910894, -0.08786103638236557, -0.07384966444712061};
-    private final static double IMPEDANCE_PARAM_HBE = 6.66;
+//    private final static double[] TRAVEL_DISTANCE_PARAM_HBE = fillArray(-0.05004058485955447, 5);
+    // HBE calibrated (mean); 2025-09-24: Filled NaN with mean of other 4 categories
+    private final static double[] TRAVEL_DISTANCE_PARAM_HBE = {-0.10008116971910894, -0.09034951516159911, -0.08330343096898854, -0.10008116971910894, -0.07793229023919002};
+    private final static double IMPEDANCE_PARAM_HBE = 6.66; // vista-based
     // HBA mean: (-0.12740481694077424 + -0.03845635376344552 + -0.03688687152506809) / 3 = -0.06791668040942928
-//    private final static double[] TRAVEL_DISTANCE_PARAM_HBA = fillArray(-0.06791668040942928, 10);
-    // HBE calibrated (mean); 2025-08-20
-    private final static double[] TRAVEL_DISTANCE_PARAM_HBA = {-0.0401677743803288, -0.048782854229724275, -0.032931235656713964, -0.038897267876700815, -0.03697260260342743, -0.0380978447440113, -0.05277795067936258, -0.05504614474785929, -0.018419898765729376, -0.030636013480613105};
-    private final static double IMPEDANCE_PARAM_HBA =  12.06; // Vista-based 6.03 failed to calibrate;
+//    private final static double[] TRAVEL_DISTANCE_PARAM_HBA = fillArray(-0.06791668040942928, 5);
+    // HBE calibrated (mean); 2025-m09-24: NaN for students; filled with mean of other 4 categories
+    private final static double[] TRAVEL_DISTANCE_PARAM_HBA = {-0.10008116971910894, -0.09, -0.08330343096898854, -0.10008116971910894, -0.07793229023919002};
+    private final static double IMPEDANCE_PARAM_HBA =  12;  // vista-based 6.03 failed to calibrate;
     // HBS mean: (-0.1302481725479954 + -0.0716719631663481 + -0.06272342097190081) / 3 = -0.08888185289574877
-//    private final static double[] TRAVEL_DISTANCE_PARAM_HBS = fillArray(-0.08888185289574877, 10);
-    // HBS semi-calibrated (mean); 2025-08-20 - all groups except for last (retired with car) failed to calibrate, so a custom tweak used for last group.  See https://github.com/jibeproject/mito/issues/76
-//    private final static double[] TRAVEL_DISTANCE_PARAM_HBS = {-0.0380812569074194, -0.05409985284216312, -0.03535140547605545, -0.05670814672404346, -0.04367856309857014, -0.06847359315942239, -0.050870231263036664, -0.0813413293498617, -0.06459280156588387, -0.06};
-    // HBS calibrated (mean); 2025-08-20
-    private final static double[] TRAVEL_DISTANCE_PARAM_HBS = {-0.03102653277137382, -0.04046191348789098, -0.029842068377971112, -0.04337614022154041, -0.0355947336094127, -0.047333515387482594, -0.040862219086009066, -0.052208950471959774, -0.04968845296493172, -0.07401201003773145};
+//    private final static double[] TRAVEL_DISTANCE_PARAM_HBS = fillArray(-0.08888185289574877, 5);
+    // HBS semi-calibrated (mean); 2025-09-24:
+    private final static double[] TRAVEL_DISTANCE_PARAM_HBS = {-0.03964389377487448, -0.04192528228123542, -0.046451341749660376, -0.05120119215460288, -0.0699352512509255};
     private final static double IMPEDANCE_PARAM_HBS = 12; // Vista-based 5.35 failed to calibrate;
     // HBR mean: (-0.09341006840787956 + -0.046114237946687356 + -0.03142021825706931) / 3 = -0.05764850820354541
-//    private final static double[] TRAVEL_DISTANCE_PARAM_HBR = fillArray(-0.05764850820354541, 10);
-    // HBR calibrated (mean); 2025-08-20
-    private final static double[] TRAVEL_DISTANCE_PARAM_HBR = {-0.02747468607281923, -0.029037440804503573, -0.022025528120551436, -0.030136071955309124, -0.03244096328993702, -0.03321681577990346, -0.029042660917305396, -0.03225040291491337, -0.03075989390658594, -0.036398231542213014};
+//    private final static double[] TRAVEL_DISTANCE_PARAM_HBR = fillArray(-0.05764850820354541, 5);
+    // HBR calibrated (mean); 2025-09-24:
+    private final static double[] TRAVEL_DISTANCE_PARAM_HBR = {-0.02936753512780351, -0.02942293554267954, -0.03353305138779052, -0.03234631417603561, -0.035779668664114715};
     private final static double IMPEDANCE_PARAM_HBR = 13; // Vista-based 5.35 failed to calibrate;
     // HBO mean: (-0.028762939944400743 + -0.013710304239040036 + -0.010043876974845265) / 3 = -0.017172707052428348
-//    private final static double[] TRAVEL_DISTANCE_PARAM_HBO = fillArray(-0.017172707052428348, 10);
-    // HBO calibrated (mean); 2025-08-20
-    private final static double[] TRAVEL_DISTANCE_PARAM_HBO = {-0.010819027911694274, -0.022200333278638663, -0.009342538295152554, -0.019720062838316166, -0.01173965872646879, -0.019842813713716587, -0.011776666533007876, -0.02139703450767866, -0.020916348160165663, -0.024229439020531124};
-    private final static double IMPEDANCE_PARAM_HBO = 11.34;
+//    private final static double[] TRAVEL_DISTANCE_PARAM_HBO = fillArray(-0.017172707052428348, 5);
+    // HBO calibrated (mean); 2025-09-24:
+    private final static double[] TRAVEL_DISTANCE_PARAM_HBO = {-0.02066889101185145, -0.018586481663333085, -0.019117554306155905, -0.020217423406922206, -0.023928014614250565};
+    private final static double IMPEDANCE_PARAM_HBO = 11.34; // vista-based
     // RRT
     private final static double[] TRAVEL_DISTANCE_PARAM_RRT = {-0.12877572260971806}; //redundant?
     private final static double IMPEDANCE_PARAM_RRT = 20; //redundant?
     // NHBW mean: (-0.38036997226527924 + -0.05575584617535517 + -0.02997957948287176) / 3 = -0.15570113264116872
-//    private final static double[] TRAVEL_DISTANCE_PARAM_NHBW = fillArray(-0.15570113264116872, 10);
-    // Calibration failed using the pre filled value --- but got very close to the reference means with the following parameters:
-//    private final static double[] TRAVEL_DISTANCE_PARAM_NHBW = {-0.020679185753824134, -0.04185445534029167, -0.02458965389068089, -0.020972051914972072, -0.025712957757384025, -0.028523316381558698, -0.09840513480387361, -0.04112995856842478, -0.10358899901921562, -0.07101987106924562};
-    // NHBW calibrated (mean); 2025-08-25
-    private final static double[] TRAVEL_DISTANCE_PARAM_NHBW = {-0.015052244343644869, -0.02841436782454745, -0.017516333413381546, -0.014961637127491451, -0.018413069248392866, -0.019825807068720492, -0.0593567700212445, -0.02764801170942757, -0.05881265427170848, -0.04304281259391193};
+//    private final static double[] TRAVEL_DISTANCE_PARAM_NHBW = fillArray(-0.15570113264116872, 5);
+    private final static double[] TRAVEL_DISTANCE_PARAM_NHBW = {-0.02458062928399578, -0.015219334000855478, -0.019922182615973665, -0.029107105288329882, -0.04545489174853249};
     private final static double IMPEDANCE_PARAM_NHBW = 14; // vista-based 8.07 failed to calibrate
     // NHBO mean: (-0.26157597149372586 + -0.04848404658490696 + -0.042259625478948036) / 3 = -0.11743988151986029
-//    private final static double[] TRAVEL_DISTANCE_PARAM_NHBO = fillArray(-0.11743988151986029, 10);
-    // NHBO calibrated (mean); 2025-08-25
-    private final static double[] TRAVEL_DISTANCE_PARAM_NHBO = {-0.028963831347391764, -0.033644829121100464, -0.02185125544926076, -0.024135692215851136, -0.022129440187969227, -0.026417627090768486, -0.026288234632830094, -0.03232246345613881, -0.02751424857114921, -0.03116939875067189};
+//    private final static double[] TRAVEL_DISTANCE_PARAM_NHBO = fillArray(-0.11743988151986029, 5);
+    // NHBO calibrated (mean);2025-09-24:
+    private final static double[] TRAVEL_DISTANCE_PARAM_NHBO = {-0.03334355948043289, -0.02424962334491562, -0.026225960782632923, -0.03168234036826033, -0.031003268399765204};
     private final static double IMPEDANCE_PARAM_NHBO = 12; // vista-based 7.52 failed to calibrate
 
     private static double[] fillArray(double value, int length) {
@@ -113,8 +108,6 @@ public class DestinationUtilityCalculatorMEL extends AbstractDestinationUtilityC
 
     @Override
     public List<Predicate<MitoPerson>> getCategories() {
-        Predicate<MitoPerson> hasNoCar    = p -> p.getHousehold().getAutos() == 0;
-        Predicate<MitoPerson> hasCar      = p -> p.getHousehold().getAutos() > 0;
 
         Predicate<MitoPerson> Under18  = p -> p.getAge() < 18;
 
@@ -125,16 +118,11 @@ public class DestinationUtilityCalculatorMEL extends AbstractDestinationUtilityC
 
         List<Predicate<MitoPerson>> filters = new ArrayList<>(10);
 
-        filters.add(0, Under18.and(hasNoCar));          // 0: <18 & No Car
-        filters.add(1, Under18.and(hasCar));            // 1: <18 & Car
-        filters.add(2, isStudent.and(hasNoCar));        // 2: Student & No Car
-        filters.add(3, isStudent.and(hasCar));          // 3: Student & Car
-        filters.add(4, isEmployed.and(hasNoCar));       // 4: Employed & No Car
-        filters.add(5, isEmployed.and(hasCar));         // 5: Employed & Car
-        filters.add(6, isUnemployed.and(hasNoCar));     // 6: Unemployed & No Car
-        filters.add(7, isUnemployed.and(hasCar));       // 7: Unemployed & Car
-        filters.add(8, isRetired.and(hasNoCar));        // 8: Retired & No Car
-        filters.add(9, isRetired.and(hasCar));          // 9: Retired & Car
+        filters.add(0, Under18);      // 0: <18
+        filters.add(1, isStudent);    // 1: Student
+        filters.add(2, isEmployed);   // 2: Employed
+        filters.add(3, isUnemployed); // 3: Unemployed
+        filters.add(4, isRetired);    // 4: Retired
         return filters;
     }
 }
