@@ -35,18 +35,19 @@ public class MitoMEL {
     private static final Logger logger = LogManager.getLogger(MitoMEL.class);
 
     public static void main(String[] args) {
-        logger.info("Started the Microsimulation Transport Orchestrator (MITO) based on 2017 models");
         java.util.Properties mitoMelbourneProperties = getMelbournePropertiesFile(args[0]);
         String scenarioName = mitoMelbourneProperties.getProperty(Properties.SCENARIO_NAME);
         String scenarioYear = mitoMelbourneProperties.getProperty(Properties.SCENARIO_YEAR);
-        logger.info("Scenario: {}; Year: {}", scenarioName, scenarioYear);
-
-        MitoModelMEL model = MitoModelMEL.standAloneModel(args[0], MelbourneImplementationConfig.get());
         String outputSubDirectory = "scenOutput/" + scenarioName + "/" + scenarioYear;
+        String finalOutputDir = "./" + outputSubDirectory;
+        String logFilePath = LoggingUtils.configureFileLoggingForScenario(finalOutputDir, scenarioName, scenarioYear);
+        MitoModelMEL model = MitoModelMEL.standAloneModel(args[0], MelbourneImplementationConfig.get());
 
-        // Configure file logging using the utility class
-        String mainOutputDir = Resources.instance.getBaseDirectory().toString() + "/" + outputSubDirectory;
-        LoggingUtils.configureFileLoggingForScenario(mainOutputDir, scenarioName, scenarioYear);
+        logger.info("Started the Microsimulation Transport Orchestrator (MITO) based on 2017 models");
+        logger.info("Scenario: {}; Year: {}", scenarioName, scenarioYear);
+        if (logFilePath != null) {
+            logger.info("Log file: {}", logFilePath);
+        }
 
         model.run();
         final DataSet dataSet = model.getData();
@@ -130,6 +131,6 @@ public class MitoMEL {
             }
         }
 
-        logger.info("MITO processing completed. Check the log file in the output directory for complete output.");
+        logger.info("MITO processing completed successfully!");
     }
 }
