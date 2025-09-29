@@ -58,7 +58,7 @@ public class DestinationUtilityByPurposeGenerator implements Callable<Triple<Pur
             }
         }
 
-        logger.info("Utility matrix for purpose " + purpose + " category " + categoryIndex + " done.");
+        logger.info("Utility matrix for purpose {} category {} done.", purpose, categoryIndex);
         return new ImmutableTriple<>(purpose, categoryIndex, utilityMatrix);
     }
 }
