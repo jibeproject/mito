@@ -33,7 +33,7 @@ public class TripDistribution extends Module {
     protected final EnumMap<Purpose, List<tripDistributionData>> tripDistributionDataByPurpose = new EnumMap<>(Purpose.class);
     protected final EnumMap<Purpose,Map<Integer,Integer>> personCategories = new EnumMap<>(Purpose.class);
     private final Map<Purpose, Tuple<AbstractDestinationUtilityCalculator,TripDistributorType>> tripDistributionCalculatorsByPurpose = new EnumMap<>(Purpose.class);
-    private final int numberOfThreads = Runtime.getRuntime().availableProcessors();
+    private final int numberOfThreads = Runtime.getRuntime().availableProcessors()-1;
 
     public TripDistribution(DataSet dataSet, List<Purpose> purposes) {
         super(dataSet, purposes);
@@ -153,25 +153,50 @@ public class TripDistribution extends Module {
     }
 
     private void buildMatrices(Collection<Purpose> purposes) {
+        // Pre-calculate task count to avoid ArrayList resizing overhead
+        int totalTasks = 0;
+        for (Purpose purpose : purposes) {
+            if (!purpose.equals(AIRPORT)) {
+                AbstractDestinationUtilityCalculator utilityCalculator = tripDistributionCalculatorsByPurpose.get(purpose).getFirst();
+                totalTasks += utilityCalculator.getCategories().size();
+            }
+        }
+
         ConcurrentExecutor<Triple<Purpose, Integer, IndexedDoubleMatrix2D>> executor = ConcurrentExecutor.fixedPoolService(numberOfThreads);
-        List<Callable<Triple<Purpose,Integer, IndexedDoubleMatrix2D>>> utilityCalcTasks = new ArrayList<>();
+        List<Callable<Triple<Purpose,Integer, IndexedDoubleMatrix2D>>> utilityCalcTasks = new ArrayList<>(totalTasks);
+
         for (Purpose purpose : purposes) {
             // Distribution of airport trips to the airport does not need a matrix of weights
             if (!purpose.equals(AIRPORT)){
-                AbstractDestinationUtilityCalculator utilityCalculator = tripDistributionCalculatorsByPurpose.get(purpose).getFirst();
-                logger.info("Purpose: {}, Categories: {}", purpose, utilityCalculator.getCategories().size());
-                for(int i = 0; i < utilityCalculator.getCategories().size() ; i++) {
+                // Cache the tuple lookup to avoid repeated map access
+                Tuple<AbstractDestinationUtilityCalculator, TripDistributorType> calculatorTuple =
+                    tripDistributionCalculatorsByPurpose.get(purpose);
+                AbstractDestinationUtilityCalculator utilityCalculator = calculatorTuple.getFirst();
+
+                // Cache categories list to avoid repeated method calls
+                List<Predicate<MitoPerson>> categories = utilityCalculator.getCategories();
+                int categoryCount = categories.size();
+
+                logger.info("Purpose: {}, Categories: {}", purpose, categoryCount);
+
+                for(int i = 0; i < categoryCount; i++) {
                     logger.info("Creating task for purpose: {}, category index: {}", purpose, i);
                     utilityCalcTasks.add(new DestinationUtilityByPurposeGenerator(purpose, dataSet, utilityCalculator, i));
                 }
             }
         }
+
         List<Triple<Purpose, Integer, IndexedDoubleMatrix2D>> results = executor.submitTasksAndWaitForCompletion(utilityCalcTasks);
+
+        // Process results - use primitive int for better performance
         for(Triple<Purpose, Integer, IndexedDoubleMatrix2D> result: results) {
             Purpose purpose = result.getLeft();
-            Integer index = result.getMiddle();
+            int index = result.getMiddle(); // Use primitive int instead of Integer wrapper
             IndexedDoubleMatrix2D utilityMatrix = result.getRight();
-            tripDistributionDataByPurpose.get(purpose).get(index).setUtilityMatrix(utilityMatrix);
+
+            // Cache the purpose data lookup to avoid repeated map access
+            List<tripDistributionData> purposeData = tripDistributionDataByPurpose.get(purpose);
+            purposeData.get(index).setUtilityMatrix(utilityMatrix);
         }
     }
 

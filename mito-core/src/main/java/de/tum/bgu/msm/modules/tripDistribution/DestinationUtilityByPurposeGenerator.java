@@ -10,6 +10,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -34,22 +35,30 @@ public class DestinationUtilityByPurposeGenerator implements Callable<Triple<Pur
 
     @Override
     public ImmutableTriple<Purpose, Integer, IndexedDoubleMatrix2D> call() {
-        final IndexedDoubleMatrix2D utilityMatrix = new IndexedDoubleMatrix2D(zones.values(), zones.values());
-        for (MitoZone origin : zones.values()) {
-            for (MitoZone destination : zones.values()) {
-                double tripAttraction = destination.getTripAttraction(purpose);
-                double distances = travelDistances.getTravelDistance(origin.getId(), destination.getId());
-                final double utility =  calculator.calculateUtility(tripAttraction,
-                        distances,categoryIndex);
-                if (Double.isInfinite(utility) || Double.isNaN(utility)) {
+        final Collection<MitoZone> zoneCollection = zones.values();
+        final IndexedDoubleMatrix2D utilityMatrix = new IndexedDoubleMatrix2D(zoneCollection, zoneCollection);
+
+        for (MitoZone origin : zoneCollection) {
+            final int originId = origin.getId();
+
+            for (MitoZone destination : zoneCollection) {
+                final int destinationId = destination.getId();
+
+                final double tripAttraction = destination.getTripAttraction(purpose);
+                final double distances = travelDistances.getTravelDistance(originId, destinationId);
+                final double utility = calculator.calculateUtility(tripAttraction, distances, categoryIndex);
+
+                if (!Double.isFinite(utility)) {
                     throw new RuntimeException(utility + " utility calculated! Please check calculation!" +
                             " Origin: " + origin + " | Destination: " + destination + " | Distance: " + distances +
                             " | Purpose: " + purpose + " | attraction rate: " + tripAttraction);
                 }
-                utilityMatrix.setIndexed(origin.getId(), destination.getId(), utility);
+
+                utilityMatrix.setIndexed(originId, destinationId, utility);
             }
         }
-        logger.info("Utility matrix for purpose " + purpose + " category " + categoryIndex + " done.");
+
+        logger.info("Utility matrix for purpose {} category {} done.", purpose, categoryIndex);
         return new ImmutableTriple<>(purpose, categoryIndex, utilityMatrix);
     }
 }

@@ -28,7 +28,7 @@ public final class DayOfWeekChoice extends Module {
     }
 
     private void chooseDepartureDay() {
-        for (Purpose purpose : Purpose.values()) {
+        for (Purpose purpose : probabilitiesByPurpose.keySet()) {
             for (MitoPerson person : dataSet.getPersons().values()) {
                 List<MitoTrip> trips = person.getTripsForPurpose(purpose);
                 if (trips.isEmpty()) continue;

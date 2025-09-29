@@ -38,30 +38,51 @@ public class SkimTravelTimes implements TravelTimes {
      * @param factor a scalar factor which every entry is multiplied with
      */
     public final void readSkim(final String mode, final String file, final String matrixName, final double factor) {
-        logger.info("Reading " + mode + " skim (" + file + ": " + matrixName +")");;
-        final OmxFile omx = new OmxFile(file);
-        omx.openReadOnly();
-        final Set<String> lookupNames = omx.getLookupNames();
-        OmxLookup lookup = null;
-        if(!lookupNames.isEmpty()) {
-            final Iterator<String> iterator = omx.getLookupNames().iterator();
-            final String next = iterator.next();
-            lookup = omx.getLookup(next);
-            if(!lookup.getOmxJavaType().equals(OmxHdf5Datatype.OmxJavaType.INT)) {
-                throw new IllegalArgumentException("Provided omx matrix lookup " +
-                        "is not of type int but of type: " + lookup.getOmxJavaType().name() +
-                        " please use int.");
+        logger.info("Reading {} skim ({}: {})", mode, file, matrixName);
+        try (OmxFile omx = new OmxFile(file)) {
+            omx.openReadOnly();
+            final Set<String> lookupNames = omx.getLookupNames();
+            OmxLookup<?, ?> lookup = null;
+            if (!lookupNames.isEmpty()) {
+                final Iterator<String> iterator = omx.getLookupNames().iterator();
+                final String next = iterator.next();
+                lookup = omx.getLookup(next);
+                if (!lookup.getOmxJavaType().equals(OmxHdf5Datatype.OmxJavaType.INT)) {
+                    throw new IllegalArgumentException("Provided omx matrix lookup " +
+                            "is not of type int but of type: " + lookup.getOmxJavaType().name() +
+                            " please use int.");
+                }
+                if (iterator.hasNext()) {
+                    logger.warn("More than one lookup was provided. Will use the first one (name: {})", next);
+                }
             }
-            if(iterator.hasNext()) {
-                logger.warn("More than one lookup was provided. Will use the first one (name: " + next + ")");
-            }
+
+            // Create matrix and immediately convert - don't hold references longer than necessary
+            final OmxMatrix<?, ?> timeOmxSkimTransit = omx.getMatrix(matrixName);
+            final IndexedDoubleMatrix2D skim = Matrices.convertOmxToDoubleMatrix2D(timeOmxSkimTransit, lookup, factor);
+
+            // Store the matrix result
+            matricesByMode.put(mode, skim);
+
+            // Clear regional matrices to free memory
+            clearRegionalMatrices();
+
+        } finally {
+            // Force garbage collection
+            System.gc();
         }
-        final OmxMatrix timeOmxSkimTransit = omx.getMatrix(matrixName);
-        final IndexedDoubleMatrix2D skim = Matrices.convertOmxToDoubleMatrix2D(timeOmxSkimTransit, lookup, factor);
-        matricesByMode.put(mode, skim);
-        omx.close();
-        travelTimesFromRegion.clear();
-        travelTimesToRegion.clear();
+    }
+
+    /**
+     * Clear regional matrices more aggressively to help with memory management
+     */
+    private void clearRegionalMatrices() {
+        if (!travelTimesFromRegion.isEmpty()) {
+            travelTimesFromRegion.clear();
+        }
+        if (!travelTimesToRegion.isEmpty()) {
+            travelTimesToRegion.clear();
+        }
     }
 
     /**
@@ -75,8 +96,7 @@ public class SkimTravelTimes implements TravelTimes {
         logger.info("Reading " + mode + " skim");
         IndexedDoubleMatrix2D skim = new CsvGzSkimMatrixReader().readAndConvertToDoubleMatrix2D(file, factor, zoneLookup);
         matricesByMode.put(mode, skim);
-        travelTimesFromRegion.clear();
-        travelTimesToRegion.clear();
+        clearRegionalMatrices();
     }
 
     // called from within SILO!
@@ -87,6 +107,10 @@ public class SkimTravelTimes implements TravelTimes {
         IndexedDoubleMatrix2D travelTimesFromRegionPt = new IndexedDoubleMatrix2D(regions, zones);
         IndexedDoubleMatrix2D travelTimesToRegionPt = new IndexedDoubleMatrix2D(zones, regions);
 
+        // Cache matrix references to avoid repeated ConcurrentHashMap lookups in hot loops
+        final IndexedDoubleMatrix2D carMatrix = matricesByMode.get(TransportMode.car);
+        final IndexedDoubleMatrix2D ptMatrix = matricesByMode.get(TransportMode.pt);
+
         regions.parallelStream().forEach( r -> {
             for(Zone zone: zones) {
                 int zoneId = zone.getZoneId();
@@ -96,19 +120,22 @@ public class SkimTravelTimes implements TravelTimes {
                 double minToPt = Double.MAX_VALUE;
 
                 for (Zone zoneInRegion : r.getZones()) {
-                    double travelTimeFromRegionCar = matricesByMode.get(TransportMode.car).getIndexed(zoneInRegion.getZoneId(), zoneId);
+                    int regionZoneId = zoneInRegion.getZoneId();
+
+                    // Use cached matrix references to avoid repeated map lookups
+                    double travelTimeFromRegionCar = carMatrix.getIndexed(regionZoneId, zoneId);
                     if (travelTimeFromRegionCar < minFromCar) {
                         minFromCar = travelTimeFromRegionCar;
                     }
-                    double travelTimeToRegionCar = matricesByMode.get(TransportMode.car).getIndexed(zoneId, zoneInRegion.getZoneId());
+                    double travelTimeToRegionCar = carMatrix.getIndexed(zoneId, regionZoneId);
                     if (travelTimeToRegionCar < minToCar) {
                         minToCar = travelTimeToRegionCar;
                     }
-                    double travelTimeFromRegionPt = matricesByMode.get(TransportMode.pt).getIndexed(zoneInRegion.getZoneId(), zoneId);
+                    double travelTimeFromRegionPt = ptMatrix.getIndexed(regionZoneId, zoneId);
                     if (travelTimeFromRegionPt < minFromPt) {
                         minFromPt = travelTimeFromRegionPt;
                     }
-                    double travelTimeToRegionPt = matricesByMode.get(TransportMode.pt).getIndexed(zoneId, zoneInRegion.getZoneId());
+                    double travelTimeToRegionPt = ptMatrix.getIndexed(zoneId, regionZoneId);
                     if (travelTimeToRegionPt < minToPt) {
                         minToPt = travelTimeToRegionPt;
                     }
@@ -139,16 +166,28 @@ public class SkimTravelTimes implements TravelTimes {
     }
 
     private double getMinimumPtTravelTime(int origin, int destination, double timeOfDay_s) {
+        // Cache matrix lookups to avoid repeated ConcurrentHashMap access
+        final IndexedDoubleMatrix2D busMatrix = matricesByMode.get("bus");
+        final IndexedDoubleMatrix2D tramMetroMatrix = matricesByMode.get("tramMetro");
+        final IndexedDoubleMatrix2D trainMatrix = matricesByMode.get("train");
+
         double travelTime = Double.MAX_VALUE;
-        if (matricesByMode.get("bus").getIndexed(origin, destination) < travelTime) {
-            travelTime = matricesByMode.get("bus").getIndexed(origin, destination);
+
+        double busTime = busMatrix.getIndexed(origin, destination);
+        if (busTime < travelTime) {
+            travelTime = busTime;
         }
-        if (matricesByMode.get("tramMetro").getIndexed(origin, destination) < travelTime){
-            travelTime = matricesByMode.get("tramMetro").getIndexed(origin, destination);
+
+        double tramMetroTime = tramMetroMatrix.getIndexed(origin, destination);
+        if (tramMetroTime < travelTime) {
+            travelTime = tramMetroTime;
         }
-        if (matricesByMode.get("train").getIndexed(origin, destination) < travelTime) {
-            travelTime = matricesByMode.get("train").getIndexed(origin, destination);
+
+        double trainTime = trainMatrix.getIndexed(origin, destination);
+        if (trainTime < travelTime) {
+            travelTime = trainTime;
         }
+
         return travelTime;
     }
 
@@ -226,3 +265,4 @@ public class SkimTravelTimes implements TravelTimes {
 			return matricesByMode.get(mode);
 	}
 }
+

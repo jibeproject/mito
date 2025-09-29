@@ -9,6 +9,22 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class DestinationUtilityCalculatorMEL extends AbstractDestinationUtilityCalculator {
+    // Cache predicates as static finals to avoid repeated object creation
+    private static final Predicate<MitoPerson> UNDER_18 = p -> p.getAge() < 18;
+    private static final Predicate<MitoPerson> IS_STUDENT = p -> p.getMitoOccupationStatus() == MitoOccupationStatus.STUDENT && p.getAge() >= 18;
+    private static final Predicate<MitoPerson> IS_EMPLOYED = p -> p.getMitoOccupationStatus() == MitoOccupationStatus.WORKER && p.getAge() >= 18;
+    private static final Predicate<MitoPerson> IS_UNEMPLOYED = p -> p.getMitoOccupationStatus() == MitoOccupationStatus.UNEMPLOYED && p.getAge() >= 18;
+    private static final Predicate<MitoPerson> IS_RETIRED = p -> p.getMitoOccupationStatus() == MitoOccupationStatus.RETIRED; // persons aged 65 and older
+
+    // Cache the complete categories list as immutable
+    private static final List<Predicate<MitoPerson>> CACHED_CATEGORIES = List.of(
+        UNDER_18,      // 0: <18
+        IS_STUDENT,    // 1: Student
+        IS_EMPLOYED,   // 2: Employed
+        IS_UNEMPLOYED, // 3: Unemployed
+        IS_RETIRED     // 4: Retired
+    );
+
     // Initial travel distance parameters for Melbourne are based on the average of three categories from the Manchester model
     // For impedance, using VISTA 2012-20 based estimates for Melbourne.  See https://github.com/jibeproject/mito/issues/76.
     // Subsequent calibration (see TravelDemandGeneratorMEL) updates the initial values based on sociodemographic categories from the VISTA 2012-20 dataset
@@ -108,21 +124,7 @@ public class DestinationUtilityCalculatorMEL extends AbstractDestinationUtilityC
 
     @Override
     public List<Predicate<MitoPerson>> getCategories() {
-
-        Predicate<MitoPerson> Under18  = p -> p.getAge() < 18;
-
-        Predicate<MitoPerson> isStudent    = p -> p.getMitoOccupationStatus() == MitoOccupationStatus.STUDENT && p.getAge() >= 18;
-        Predicate<MitoPerson> isEmployed   = p -> p.getMitoOccupationStatus() == MitoOccupationStatus.WORKER && p.getAge() >= 18;
-        Predicate<MitoPerson> isUnemployed = p -> p.getMitoOccupationStatus() == MitoOccupationStatus.UNEMPLOYED && p.getAge() >= 18;
-        Predicate<MitoPerson> isRetired    = p -> p.getMitoOccupationStatus() == MitoOccupationStatus.RETIRED; // persons aged 65 and older
-
-        List<Predicate<MitoPerson>> filters = new ArrayList<>(10);
-
-        filters.add(0, Under18);      // 0: <18
-        filters.add(1, isStudent);    // 1: Student
-        filters.add(2, isEmployed);   // 2: Employed
-        filters.add(3, isUnemployed); // 3: Unemployed
-        filters.add(4, isRetired);    // 4: Retired
-        return filters;
+        // Return cached immutable list
+        return CACHED_CATEGORIES;
     }
 }
