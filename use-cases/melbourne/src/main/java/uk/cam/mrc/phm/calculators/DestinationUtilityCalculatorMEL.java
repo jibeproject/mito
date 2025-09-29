@@ -116,7 +116,7 @@ public class DestinationUtilityCalculatorMEL extends AbstractDestinationUtilityC
         Predicate<MitoPerson> isUnemployed = p -> p.getMitoOccupationStatus() == MitoOccupationStatus.UNEMPLOYED && p.getAge() >= 18;
         Predicate<MitoPerson> isRetired    = p -> p.getMitoOccupationStatus() == MitoOccupationStatus.RETIRED; // persons aged 65 and older
 
-        List<Predicate<MitoPerson>> filters = new ArrayList<>(10);
+        List<Predicate<MitoPerson>> filters = new ArrayList<>(5);
 
         filters.add(0, Under18);      // 0: <18
         filters.add(1, isStudent);    // 1: Student
