@@ -28,16 +28,6 @@ public class MelbourneImplementationConfig implements ImplementationConfig {
         try (FileInputStream input = new FileInputStream("./project.properties")) {
             properties.load(input);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load project.properties file", e);
-        }
-        return properties;
-    }
-
-    public static Properties getMelbourneProperties() {
-        Properties properties = new Properties();
-        try (FileInputStream input = new FileInputStream("./project.properties")) {
-            properties.load(input);
-        } catch (IOException e) {
             logger.warn("Could not load project.properties file: {}. Loading test properties instead.", e.getMessage());
             return getTestProperties();
         }
