@@ -161,39 +161,39 @@ public class TripDistribution extends Module {
                 totalTasks += utilityCalculator.getCategories().size();
             }
         }
-
+        
         ConcurrentExecutor<Triple<Purpose, Integer, IndexedDoubleMatrix2D>> executor = ConcurrentExecutor.fixedPoolService(numberOfThreads);
         List<Callable<Triple<Purpose,Integer, IndexedDoubleMatrix2D>>> utilityCalcTasks = new ArrayList<>(totalTasks);
-
+        
         for (Purpose purpose : purposes) {
             // Distribution of airport trips to the airport does not need a matrix of weights
             if (!purpose.equals(AIRPORT)){
                 // Cache the tuple lookup to avoid repeated map access
-                Tuple<AbstractDestinationUtilityCalculator, TripDistributorType> calculatorTuple =
+                Tuple<AbstractDestinationUtilityCalculator, TripDistributorType> calculatorTuple = 
                     tripDistributionCalculatorsByPurpose.get(purpose);
                 AbstractDestinationUtilityCalculator utilityCalculator = calculatorTuple.getFirst();
-
+                
                 // Cache categories list to avoid repeated method calls
                 List<Predicate<MitoPerson>> categories = utilityCalculator.getCategories();
                 int categoryCount = categories.size();
-
+                
                 logger.info("Purpose: {}, Categories: {}", purpose, categoryCount);
-
+                
                 for(int i = 0; i < categoryCount; i++) {
                     logger.info("Creating task for purpose: {}, category index: {}", purpose, i);
                     utilityCalcTasks.add(new DestinationUtilityByPurposeGenerator(purpose, dataSet, utilityCalculator, i));
                 }
             }
         }
-
+        
         List<Triple<Purpose, Integer, IndexedDoubleMatrix2D>> results = executor.submitTasksAndWaitForCompletion(utilityCalcTasks);
-
+        
         // Process results - use primitive int for better performance
         for(Triple<Purpose, Integer, IndexedDoubleMatrix2D> result: results) {
             Purpose purpose = result.getLeft();
             int index = result.getMiddle(); // Use primitive int instead of Integer wrapper
             IndexedDoubleMatrix2D utilityMatrix = result.getRight();
-
+            
             // Cache the purpose data lookup to avoid repeated map access
             List<tripDistributionData> purposeData = tripDistributionDataByPurpose.get(purpose);
             purposeData.get(index).setUtilityMatrix(utilityMatrix);
