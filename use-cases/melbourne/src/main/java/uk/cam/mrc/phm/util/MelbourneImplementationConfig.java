@@ -3,6 +3,8 @@ package uk.cam.mrc.phm.util;
 import de.tum.bgu.msm.data.jobTypes.JobTypeFactory;
 import de.tum.bgu.msm.util.ImplementationConfig;
 import uk.cam.mrc.phm.jobTypes.MelbourneJobTypeFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,6 +12,7 @@ import java.util.Properties;
 
 public class MelbourneImplementationConfig implements ImplementationConfig {
 
+    private static final Logger logger = LogManager.getLogger(MelbourneImplementationConfig.class);
     private final static MelbourneImplementationConfig instance = new MelbourneImplementationConfig();
 
     private MelbourneImplementationConfig() {}

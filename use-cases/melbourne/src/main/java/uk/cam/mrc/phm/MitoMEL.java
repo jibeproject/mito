@@ -28,14 +28,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import static uk.cam.mrc.phm.util.MelbourneImplementationConfig.getMelbournePropertiesFile;
+import static uk.cam.mrc.phm.util.MelbourneImplementationConfig.getMelbourneProperties;
 
 public class MitoMEL {
 
     private static final Logger logger = LogManager.getLogger(MitoMEL.class);
 
     public static void main(String[] args) {
-        java.util.Properties mitoMelbourneProperties = getMelbournePropertiesFile(args[0]);
+        java.util.Properties mitoMelbourneProperties = getMelbourneProperties();
         String scenarioName = mitoMelbourneProperties.getProperty(Properties.SCENARIO_NAME);
         String scenarioYear = mitoMelbourneProperties.getProperty(Properties.SCENARIO_YEAR);
         String outputSubDirectory = "scenOutput/" + scenarioName + "/" + scenarioYear;
