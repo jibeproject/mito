@@ -1,19 +1,11 @@
 package uk.cam.mrc.phm.util;
 
 import de.tum.bgu.msm.data.Purpose;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import static org.junit.jupiter.api.Assertions.*;
+import static uk.cam.mrc.phm.util.ExtractCoefficient.extractCoefficient;
 
 /**
  * Test for the ExtractCoefficient class.
