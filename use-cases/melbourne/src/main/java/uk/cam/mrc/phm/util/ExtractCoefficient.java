@@ -31,30 +31,23 @@ public class ExtractCoefficient {
 
         Path csvFilePath;
 
-        // Check if Resources.instance is available
-        if (Resources.instance == null) {
-            // Try to access resources directly without immediate test mode warning
-            String purposeFileName = "mc_coefficients_" + purpose.toString().toLowerCase() + ".csv";
-            Path productionPath = java.nio.file.Paths.get("input/mito/modeChoice/" + purposeFileName);
-            if (java.nio.file.Files.exists(productionPath)) {
-                csvFilePath = productionPath;
-                logger.debug("{}: {}",  purpose, csvFilePath);
-            } else if (purpose == Purpose.NHBW) {
-                Path testPath = java.nio.file.Paths.get(TEST_MODE_NHBW_FILE);
-                if (java.nio.file.Files.exists(testPath)) {
-                    csvFilePath = testPath;
-                    logger.debug("Test mode NHBW: {}", csvFilePath);
-                } else {
-                    logger.error("No coefficient file found for purpose {} (Resources.instance unavailable and production file not found)", purpose);
-                    return null;
-                }
+        String purposeFileName = "mc_coefficients_" + purpose.toString().toLowerCase() + ".csv";
+        Path productionPath = java.nio.file.Paths.get("input/mito/modeChoice/" + purposeFileName);
+        if (java.nio.file.Files.exists(productionPath)) {
+            csvFilePath = productionPath;
+            logger.debug("{}: {}",  purpose, csvFilePath);
+        } else if (purpose == Purpose.NHBW) {
+            Path testPath = java.nio.file.Paths.get(TEST_MODE_NHBW_FILE);
+            if (java.nio.file.Files.exists(testPath)) {
+                csvFilePath = testPath;
+                logger.debug("Test mode NHBW: {}", csvFilePath);
             } else {
-                logger.error("No coefficient file found for purpose {} (Resources.instance unavailable and production file not found)", purpose);
+                logger.error("No coefficient file found for purpose {} (file not found: {})", purpose, testPath);
                 return null;
             }
         } else {
-            // Normal mode - use Resources.instance
-            csvFilePath = Resources.instance.getModeChoiceCoefficients(purpose);
+            logger.error("No coefficient file found for purpose {}", purpose);
+            return null;
         }
 
         if (csvFilePath == null) {
