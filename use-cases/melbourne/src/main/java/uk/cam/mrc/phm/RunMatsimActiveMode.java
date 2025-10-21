@@ -41,6 +41,7 @@ import uk.cam.mrc.phm.util.CoefficientLookup;
 import static uk.cam.mrc.phm.util.CoefficientLookup.CoefficientSet;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
 
 import static uk.cam.mrc.phm.util.MelbourneImplementationConfig.getMelbourneProperties;
@@ -201,21 +202,110 @@ public class RunMatsimActiveMode {
         bikeAttributes.add(l -> Math.max(Math.min(Gradient.getGradient(l),0.5),0.));
         bikeAttributes.add(l -> LinkStress.getStress(l,TransportMode.bike));
 
+        // Bike weights
+        Function<org.matsim.api.core.v01.population.Person,double[]> bikeWeights = p -> {
+            switch((Purpose) p.getAttributes().getAttribute("purpose")) {
+                case HBW -> {
+                    if(p.getAttributes().getAttribute("sex").equals(MitoGender.FEMALE)) {
+                        // https://github.com/jibeproject/matsim-jibe/blob/3d1a34d60a9a1aae5945967b728d5254ba596dd6/src/main/java/skim/RunSkimsMelbourne.java#L130
+                        return new double[] {0, 1.1705777 + 1.3119864};
+                    } else {
+                        // https://github.com/jibeproject/matsim-jibe/blob/3d1a34d60a9a1aae5945967b728d5254ba596dd6/src/main/java/skim/RunSkimsMelbourne.java#L129
+                        return new double[] {0, 1.1705777};
+                    }
+                }
+                case HBE -> {
+                    // https://github.com/jibeproject/matsim-jibe/blob/3d1a34d60a9a1aae5945967b728d5254ba596dd6/src/main/java/skim/RunSkimsMelbourne.java#L139
+                    return new double[] {65.8455067, 2.6375670};
+                }
+                case HBR -> {
+                    if ((int) p.getAttributes().getAttribute("age") < 16) {
+                        // https://github.com/jibeproject/matsim-jibe/blob/3d1a34d60a9a1aae5945967b728d5254ba596dd6/src/main/java/skim/RunSkimsMelbourne.java#L149
+                        return new double[] {8.7270880 + 51.9352371, 0 + 4.6070250};
+                    }
+                    else if(p.getAttributes().getAttribute("sex").equals(MitoGender.FEMALE)) {
+                        // https://github.com/jibeproject/matsim-jibe/blob/3d1a34d60a9a1aae5945967b728d5254ba596dd6/src/main/java/skim/RunSkimsMelbourne.java#L148
+                        return new double[] {8.7270880 + 23.5710917, 0 + 1.7298508};
+                    } else {
+                        // https://github.com/jibeproject/matsim-jibe/blob/3d1a34d60a9a1aae5945967b728d5254ba596dd6/src/main/java/skim/RunSkimsMelbourne.java#L147
+                        return new double[] {8.7270880, 0};
+                    }
+                }
+                case HBS, HBO -> {
+                    // https://github.com/jibeproject/matsim-jibe/blob/3d1a34d60a9a1aae5945967b728d5254ba596dd6/src/main/java/skim/RunSkimsMelbourne.java#L161
+                    return new double[]{331.2382835, 11.4359257};
+                }
+                case HBA -> {
+                    // https://github.com/jibeproject/matsim-jibe/blob/3d1a34d60a9a1aae5945967b728d5254ba596dd6/src/main/java/skim/RunSkimsMelbourne.java#L169
+                    return new double[]{21.4115565, 0};
+                }
+                case NHBW -> {
+                    // https://github.com/jibeproject/matsim-jibe/blob/3d1a34d60a9a1aae5945967b728d5254ba596dd6/src/main/java/skim/RunSkimsMelbourne.java#L175
+                    return new double[]{0, 3.9477647};
+                }
+                case NHBO -> {
+                    // https://github.com/jibeproject/matsim-jibe/blob/3d1a34d60a9a1aae5945967b728d5254ba596dd6/src/main/java/skim/RunSkimsMelbourne.java#L183
+                    return new double[]{0, 2.6660050};
+                }
+                default -> {
+                    return null;
+                }
+            }
+        };
+
         // Bicycle config group
         BicycleConfigGroup bicycle = (BicycleConfigGroup) bikePedConfig.getModules().get(BicycleConfigGroup.GROUP_NAME);
         bicycle.setAttributes(bikeAttributes);
-        bicycle.setWeights(RunMatsimActiveMode::calculateBikeWeights);
+        bicycle.setWeights(bikeWeights);
 
         // WALK ATTRIBUTES
         List<ToDoubleFunction<Link>> walkAttributes = new ArrayList<>();
         walkAttributes.add(l -> Math.max(0.,0.81 - LinkAmbience.getVgviFactor(l)));
         walkAttributes.add(l -> Math.min(1.,l.getFreespeed() / 22.35));
-        walkAttributes.add(l -> JctStress.getStressProp(l,TransportMode.walk));
+
+        // Walk weights
+        Function<org.matsim.api.core.v01.population.Person,double[]> walkWeights = p -> {
+            switch ((Purpose) p.getAttributes().getAttribute("purpose")) {
+                case HBW -> {
+                    // https://github.com/jibeproject/matsim-jibe/blob/3d1a34d60a9a1aae5945967b728d5254ba596dd6/src/main/java/skim/RunSkimsMelbourne.java#L131
+                    return new double[]{0, 2.2560371};
+                }
+                case HBE -> {
+                    // https://github.com/jibeproject/matsim-jibe/blob/3d1a34d60a9a1aae5945967b728d5254ba596dd6/src/main/java/skim/RunSkimsMelbourne.java#L140
+                    return new double[]{0, 0.8270912};
+                }
+                case HBR -> {
+                    if ((int) p.getAttributes().getAttribute("age") < 16) {
+                        // https://github.com/jibeproject/matsim-jibe/blob/3d1a34d60a9a1aae5945967b728d5254ba596dd6/src/main/java/skim/RunSkimsMelbourne.java#L151
+                        return new double[] {0.6866997, 0.6779886 + 1.0379374};
+                    } else {
+                        // https://github.com/jibeproject/matsim-jibe/blob/3d1a34d60a9a1aae5945967b728d5254ba596dd6/src/main/java/skim/RunSkimsMelbourne.java#L150
+                        return new double[] {0.6866997, 0.6779886};
+                    }
+                }
+
+                case HBS, HBO -> {
+                    // https://github.com/jibeproject/matsim-jibe/blob/3d1a34d60a9a1aae5945967b728d5254ba596dd6/src/main/java/skim/RunSkimsMelbourne.java#L162C120-L162C132
+                    return new double[]{0, 0.3421390};
+                }
+                case NHBW -> {
+                    // https://github.com/jibeproject/matsim-jibe/blob/3d1a34d60a9a1aae5945967b728d5254ba596dd6/src/main/java/skim/RunSkimsMelbourne.java#L176
+                    return new double[]{0, 4.3210968};
+                }
+                case NHBO -> {
+                    // https://github.com/jibeproject/matsim-jibe/blob/3d1a34d60a9a1aae5945967b728d5254ba596dd6/src/main/java/skim/RunSkimsMelbourne.java#L184
+                    return new double[]{0, 5.7158683};
+                }
+                default -> {
+                    return null;
+                }
+            }
+        };
 
         // Walk config group
         WalkConfigGroup walkConfigGroup = (WalkConfigGroup) bikePedConfig.getModules().get(WalkConfigGroup.GROUP_NAME);
         walkConfigGroup.setAttributes(walkAttributes);
-        walkConfigGroup.setWeights(RunMatsimActiveMode::calculateWalkWeights);
+        walkConfigGroup.setWeights(walkWeights);
 
         ActivityParams homeActivity = new ActivityParams("home").setTypicalDuration(getHoursAsSeconds(12));
         bikePedConfig.scoring().addActivityParams(homeActivity);
