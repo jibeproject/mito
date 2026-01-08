@@ -31,14 +31,15 @@
     </scm>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>msm</id>
-            <url>https://maven.cloudsmith.io/Public-Health-Modelling-Cambridge/mito/</url>
-        </snapshotRepository>
-        <repository>
-            <id>msm-snapshots</id>
-            <url>https://maven.cloudsmith.io/Public-Health-Modelling-Cambridge/mito/</url>
-        </repository>
+         <repository>
+              <id>github</id>
+              <name>GitHub Packages</name>
+              <url>https://maven.pkg.github.com/Public-Health-Modelling-Cambridge/mito</url>
+         </repository>
+         <snapshotRepository>
+              <id>github</id>
+              <url>https://maven.pkg.github.com/Public-Health-Modelling-Cambridge/mito</url>
+         </snapshotRepository>
     </distributionManagement>
 
     <repositories>
