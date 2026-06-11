@@ -1,5 +1,7 @@
 package routing.travelDisutility;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.router.util.TravelDisutility;
@@ -8,9 +10,13 @@ import org.matsim.vehicles.Vehicle;
 import routing.ActiveConfigGroup;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.ToDoubleFunction;
 
 public class ActiveDisutility implements TravelDisutility {
+
+    private final static Logger logger = LogManager.getLogger(ActiveDisutility.class);
+    private final static AtomicBoolean NON_ROUTABLE_LINK_WARNING_ISSUED = new AtomicBoolean(false);
 
     private final ActiveConfigGroup activeConfigGroup;
     private final TravelTime timeCalculator;
@@ -57,7 +63,16 @@ public class ActiveDisutility implements TravelDisutility {
                 return linkTime * streetEnvironmentAdjustment;
             }
         } else {
-            return Double.NaN;
+            // This link cannot be traversed by the routed mode, so the routing network should
+            // have been filtered to exclude it. Returning NaN here corrupts least-cost path
+            // search (NaN comparisons are always false, breaking the priority queue ordering),
+            // so return a large finite penalty instead.
+            if (NON_ROUTABLE_LINK_WARNING_ISSUED.compareAndSet(false, true)) {
+                logger.warn("Link " + link.getId() + " does not allow mode '" + activeConfigGroup.getMode() +
+                        "'. The routing network should be filtered to the routed mode before routing. " +
+                        "Applying a large finite disutility penalty (further warnings suppressed).");
+            }
+            return Math.max(link.getLength(), 1.) * 1.0e6;
         }
     }
 
